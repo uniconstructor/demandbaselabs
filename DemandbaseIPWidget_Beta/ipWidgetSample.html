@@ -7,21 +7,24 @@
         <script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="scripts/jquery-ui-1.8.21.custom.min.js"></script>
 
-        <!-- IP Widget Includes -->
+        <!-- Including IP Widget -->
         <link href="css/ipWidget.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="scripts/ipWidget_beta.js"></script>
         
-        <!--Including Demandbase Compant Autocomplete Widget For convenience (not used here) -->
+        <!--Including Demandbase Compant Autocomplete Widget -->
         <script src="http://api.demandbase.com/autocomplete/widget.js" type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="http://autocomplete.demandbase.com/autocomplete/stylesheet.v2.css" />
 
-        <!-- add Demandbase Client script -->
+        <!-- Including Demandbase API Client -->
         <script type="text/javascript" src="https://dkj2m377b0yzw.cloudfront.net/clients/javascript/demandbase-1.0.0-min.js"></script>
         
         <!-- Instantiate Client + call the Demandbase IP Address API -->
         <script type="text/javascript">
-            jQuery(document).ready(function() {
-            	var db_client = new DemandbaseClient("YOUR_KEY_HERE");
+        //jQuery(document).ready(
+            function runDemandbase() {
+                var dbKey = $('#db_key').val() != '' ? $('#db_key').val() : "[YOUR_KEY_HERE]";
+                //alert(dbKey);
+            	var db_client = new DemandbaseClient(dbKey);  //TODO: Add your Demandbase API Key here
             	overrideIP = jQuery("#overrideIpAddress").val() || '';
             	//if(db_client) {
             		//calling the IP address API, defining inline callback and calling IP Widget Callback
@@ -43,30 +46,51 @@
                             jQuery("#testP").html("Test page for the Demandbase IP Widget <br/> Detected Company: " + companyName);
                         }
 	            	});
-            	//}
-            });
+            	}
+        //});
         </script>
 	</head>
 	<body>
-		<h3 id="testP">
-			Test page for the Demandbase IP Widget <br/>
-			Detected Company: [company_name]
-		</h3>
-		<h4>See the <a href="Readme.txt">Readme File</a>  for info on how to get setup.</h4>
+        <h1 id="testP">
+            Test page for the Demandbase IP Widget <br/>
+            Detected Company: [company_name]
+        </h1>
+		<h2>Enter your Demandbase API Key to test this form:</h2>
+        <input id="db_key" type="text" />
+        <input value="Test" id="test" type="button" onclick="runDemandbase();"/>  (To skip this step, edit this page and add your Demandbase key.)
+        <h4>See the <a href="Readme.txt">Readme File</a>  for info on how to get setup.</h4>
 
+        <hr />
 		<p id="sampleForm">
 			<h2>Sample Form</h2>
-			<h4>Note: This is not connected to the IP Widget in this example</h4>
-			Email: <input type="text" id="emails"/> <br/>
+            <h3>To enable these forms, edit this page by replacing "[YOUR_KEY_HERE]" with your Demandbase Forms Key.</h3>
+			<h4>Note: The Company Autocomplete makes it's own call to the IP API, which is not overriden by the IP widget</h4>
+			Email: <input type="text" id="email"/> <br/>
 			Company: <input type="text" id="company"/>
 		</p>
 		<!--Call Autocomplete, attach input fields, pass key and callback-->
         <script type="text/javascript">
             Demandbase.CompanyAutocomplete.widget({
-                company: "company",  // attach autocomplete to input field with id = company
+                company: "company",         // attach autocomplete to input field with id = company
                 email: "email",             // attach autocomplete to input field with id = email
-                key: "YOUR_KEY_HERE",     //  add your Demandbase Forms key here
+                key: "[YOUR_KEY_HERE]",     //TODO: Add your Demandbase API Key here
                 label: "{marketing_alias} ({city}, {country}) - {industry}",
+                callback: DemandbaseLabs.IPWidget.demandbase_override   // the callback to call.
+            });
+        </script>
+
+        <p id="sampleForm">
+            <h2>Sample Form #2</h2>
+            <h4>A separate instance of the Company Autocomplete Widget, using default label</h4>
+            Email: <input type="text" id="email_2"/> <br/>
+            Company: <input type="text" id="company_2"/>
+        </p>
+        <!--Call Autocomplete, attach input fields, pass key and callback-->
+        <script type="text/javascript">
+            Demandbase.CompanyAutocomplete.widget({
+                company: "company_2",       // attach autocomplete to input field with id = company
+                email: "email_2",           // attach autocomplete to input field with id = email
+                key: "[YOUR_KEY_HERE]",     //TODO: Add your Demandbase API Key here
                 callback: DemandbaseLabs.IPWidget.demandbase_override   // the callback to call.
             });
         </script>
