@@ -1,0 +1,97 @@
+<!--
+  Name: Demandbase Google Analytics Integration Sample
+  Authors: Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), Matthew Downs (mdowns[at]demandbase[dot]com)
+  License: Copyright 2012. This code may not be reused without explicit permission by its owners. All rights reserved.
+
+  Contact Demandbase Strategic Services with questions about using this code.
+
+  This script can be generated automatically with your desired custom variables using the online script generator is available at: 
+  www.demandbaselabs.com/ga
+-->
+
+<!-- Start Asynchronous Solution (Recommended!) -->
+<!-- Standard Google Analytics Integration (no changes required if GA is already on page)-->
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', '[YOUR_GA_PROPERTY_ID]']);
+  _gaq.push(['_setDomainName', '[YOUR_DOMAIN]']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); 
+    ga.type = 'text/javascript'; 
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; 
+    s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+<!-- Send Demandbase Custom fields to Google Analytics (asynchronous) 
+     Add this to the end of the <head> of your HTML page
+-->
+<script type="text/javascript">
+  var Synapse = Synapse || {};
+  Synapse.demandbaseGA = {
+    key    : '[YOUR_DEMANDBASE_KEY]',   //TODO: add your Demandbase key
+    //TODO: choose Demandbase fields to send to GA 
+    fields : ['audience','employee_range','company_name','revenue_range', 'industry'], 
+    //TODO: add labels to use in GA     
+    fieldLabels: ['Audience', 'EmployeeRange', 'CompanyName', 'RevenueRange', 'Industry'],
+    track  : function(data){
+      for(field in this.fields){
+        this._var((parseInt(field)+1), this.fieldLabels[field], (data[this.fields[field]] || ''))
+      };
+      this._event();
+    },
+    load   : function(){
+      if (!window._gaq) window._gaq = [];
+      var db = document.createElement('script'); db.type = 'text/javascript'; db.async = true;
+        db.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'api.demandbase.com/api/v2/ip.json';
+        db.src += '?key='+this.key+'&callback=Synapse.demandbaseGA.track';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db, s);
+    },
+    _p     : function(t,v1,v2,v3,v4,v5){ window._gaq.push([t, v1, v2, v3, v4, v5]); },
+    _var   : function(i,k,v,s){ this._p('_setCustomVar', i, k, v, s); },
+    _event : function(){ this._p('_trackEvent', 'Demandbase', 'API Resolution', 'IP API', 0, 1); }
+  };
+  Synapse.demandbaseGA.load();
+</script>
+<!-- End Asynchronous Solution -->
+
+<!-- ************************************************************** -->
+
+<!-- Start Synchronous Solution (Only Use for Special Cases!)
+     Replaces the current GA script on your page.
+     Talk to your Demandbase representative before using this script!
+-->
+<!-- place this script in the <head> of the page -->
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.js?key=[YOUR_DEMANDBASE_KEY]"></script> 
+
+<!-- place this script at the end of the <body> of the page -->
+<script type="text/javascript">
+  //Note 'organization' is set by Demandbase API call above.  Use var parameter to override variable name, if neeeded
+  function formatCV(name){return organization[name]?organization[name]:''};
+  var _gaq=_gaq||[];
+  _gaq.push(['_setAccount','[YOUR_GA_PROPERTY_ID]']);
+  if(typeof organization!='undefined'){
+      //TODO: Update with field labels and Demandbase variable names to send to GA
+      //Note: Remove any lines for custom variables that are already used
+      _gaq.push(['_setCustomVar', 1, '[FIELD_NAME1]', formatCV('[DEMANDBASE_VARIABLE_NAME1]'), 1]);
+      _gaq.push(['_setCustomVar', 2, '[FIELD_NAME2]', formatCV('[DEMANDBASE_VARIABLE_NAME2]'), 1]);
+      _gaq.push(['_setCustomVar', 3, '[FIELD_NAME3]', formatCV('[DEMANDBASE_VARIABLE_NAME3]'), 1]);
+      _gaq.push(['_setCustomVar', 4, '[FIELD_NAME4]', formatCV('[DEMANDBASE_VARIABLE_NAME4]'), 1]);
+      _gaq.push(['_setCustomVar', 5, '[FIELD_NAME5]', formatCV('[DEMANDBASE_VARIABLE_NAME5]'), 1]);
+  }
+  _gaq.push(['_trackPageview']);
+  (function(){
+    var ga=document.createElement('script');
+    ga.type='text/javascript';
+    ga.async=true;
+    ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+    var s=document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga,s);
+  })();
+</script>
+<!-- End Synchronous Solution -->
+
