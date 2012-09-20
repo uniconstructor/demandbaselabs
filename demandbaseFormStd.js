@@ -4,38 +4,85 @@ Authors: Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), Matthew Downs (mdow
 License: Copyright 2012. This code may not be reused without explicit permission by its owners. All rights reserved.
 
 Instructions:
-Search for "TODO"" comments and fill-in required values
-	1.  Fill in Demandbase Key, Company ID, and Email ID
-	2.  Add field name for any hidden fields to be populated by Demandbase data 
-		(add additional fields or remove unused fields as needed)
-	3.  Add the form name (or add a form name map if using multiple forms with different names)
-Search for "Optional" comments and make additional adjustments as needed
+Step 1 - Add the Company Autocomplete widget to your HTML page (or landing page template)
+    <!--Including Demandbase Company Autocomplete Widget -->
+    <script src="http://api.demandbase.com/autocomplete/widget.js" type="text/javascript"></script>
+	<!-- stylesheet is optional -->
+	<link rel="stylesheet" type="text/css" href="http://autocomplete.demandbase.com/autocomplete/stylesheet.v2.css" />
+
+Step 2 - Add this file to your HTML page (or landing page template)
+    <!-- Including Demandbase Standard Forms Implementation -->
+    <script src="[YOUR_JS_PATH]/demandbaseFormStd.js" type="text/javascript"></script>
+
+Step 3 - Update this file with required info:
+	Search for "TODO" comments and fill-in required values
+		1.  Fill in Demandbase Key, Company ID, and Email ID
+		2.  Update nameMap - Add field name for any hidden fields to be populated by Demandbase data 
+			(add additional fields or remove unused fields as needed)
+		3.  Add the form name (or add a form name map if using multiple forms with different names)
+	Search for "Optional" comments and make additional adjustments as needed
 
 Testing:
 	-Set "debug" property to true to enable alerts if there is an error calling the API
 	-Set "testing" property to true to display a table of Demandbase fields on the page
 		-Be sure to set both these values to false before deploying this script to a production environment
 	-To simulate a visit from a particular IP address, specify a value for the 'query' parameter (on the s.src variable) 
-	 in the "_loadAsyncScript" function 
+	 in the "_loadAsyncScript" function
+	-See stdFormSample.html for an example of this file in action 
 
 When using this file for multiple forms or multiple landing pages, ensure that the email, company name 
 and any hidden fields populated by Demandbase have the same DOM name (or DOM ID) in your marketing
 automation system.  If the fields have different names (and it is not possible to rename (or recreate) the fields), then 
 create a mapping in this file to correlate form names, emailIDs and companyIDs.
 
-Contact Demandbase Strategic Services with questions, comments, or requests.
+Visit www.demandbaselabs.com for a live examples of Demandbase.
+Contact Demandbase Strategic Services with questions, comments, or requests. <demandbaselabs@demandbase.com>
 ***/
 
 var DemandbaseForm={};
 DemandbaseForm.demandbaseParser = {
 	name: 'Demandbase Parser',
-	key:"", 		//TODO: Required - Add your Demandbase key here
-	companyID: '', 	//TODO: Required - DOM ID of Company field
-	emailID: '', 	//TODO: Required - DOM ID of Email field
-	elType: 'hidden', //Controls element type/visiblity
-	form: null, 	//TODO: Optional - specify form name - Form object to append fields to (null selects first form found in the DOM)
-	debug: false, 	//Show errors to user
-	testing: false, //Testing mode (displays labels)
+	key:"", 						//TODO: Required - Add your Demandbase key here
+	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
+	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
+	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
+	debug: false, 					//Testing mode - Show errors to user
+	testing: true, 					//Testing mode (displays labels) - set this to false before deploying!
+	elType: 'hidden', 				//Controls element type/visiblity
+	nameMap: {
+		//TODO: Required - update this map with actual form field IDs (or HTML name) of form field to populate with Demandbase data and integrate with form processor
+		//TODO: Optional - add/remove Demandbase or Account Watch fields
+		'marketing_alias': '[HTML NAME GOES HERE]',
+		'industry': '',
+		'sub_industry': '',
+		'primary_sic': '',
+		'employee_range': '',
+		'revenue_range': '',
+		'street_address': '',
+		'city': '',
+		'state': '',
+		'zip': '',
+		'country': '',	//Country ISO code
+		'country_name': '',
+		'phone': '',
+		'fortune_1000': '',
+		'forbes_2000': '',
+		'isp': '',
+		'ip' : '',   //Demandbase recommends capturing the IP address of form submits
+		'watch_list_account_status': '',
+		'manual_review' : '' //Optional Manual Review flag set when Company API is used
+	},
+	/* TODO: Optional - If using this implementation on multiple forms/landing pages (or pages with more than one form)
+				  Uncomment this list, and add the IDs (or Names) of the forms here
+	*/
+	/* formNameList: { 
+		//Maintenance Tip: Add Eloqua Form ID here to enable Demandbase on a form
+		//The first form on a landing page that matches this list will be selected
+		'[HTML_FORM_NAME_GOES_HERE]' : '[HTML_FORM_NAME_GOES_HERE]' , 
+		'[HTML_FORM_NAME_GOES_HERE_2]' : '[HTML_FORM_NAME_GOES_HERE_2]' 
+	},*/
+	dbDataSet: null,	//Demandbase object used in form submit (set automatically)
+	dbDataSrc: null,	//Demandbase API that provided dbDataSet (leave these fields blank)
 	priorityMap: {
 		'IP': 2, 		//if Domain API doesnt identify, use IP Address API
 		'Company': 1,	//Company API is lowest priority (lowest number)
@@ -49,36 +96,58 @@ DemandbaseForm.demandbaseParser = {
 		});
 	},
 	parser: function(data) {
-		if(! data) return '';
-		if(! this.form) this.form=document.forms[0];
+		if(! data) return '';  //Protects against 404 errors or empty objects
+		/*
+			This parser function is called 3X during a form interaction
+			1st call - User lands on the form page, triggering a call to the Demandbase IP Address API
+			2nd call - User enters email address which returns a data.person object
+			3rd call - User enters company name which returns a data.pick object (or data.input_match, if they just type a name and do not actually select a company from the list)
+		*/
+		/* TODO: Optional - If using on multiple forms/landing pages (or pages with more than one form)
+				 Uncomment this section if defining formNameList above
+		*/
+		/*
+		for (formName in this.formNameList) {
+			this.form = document.forms[formName];
+			if(this.form != null) { break; }	
+		}
+		*/
+
+		if(! this.form) this.form=document.forms[0];	//use the first form in the DOM, if otherwise not specified
 		try {
 			//Identify data source and priority
-			var source, priority;
+			var priority, source;
 			if (typeof data.person == 'object') {
 				if (!data.person) return;
-				source = 'Email';
+				source = 'Email';		//Domain API data set
 				data = data.person;
 			} else if (data.pick || data.input_match) {
-				source = 'Company';
+				source = 'Company';		//Company API data set
 				if (data.pick) data = data.pick;
 				if (data.input_match) data = data.input_match;
-				//Add manual review flag when the Company Name API is used
-				data['manual_review'] = true;
+				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (incase of user input errors)
 			} else {
-				source = 'IP';
-				//Handle ISP traffic
-				if (data['isp']===true) return; 
+				source = 'IP';			//IP Address API data set
+				this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
+				if (data['isp']===true) return; //Handle ISP traffic
 			}
-			priority = this.priorityMap[source];
+			
 			//Check if data source takes precedence
-			if (priority < this._lastDataSource) return;
-		   	this._removeDataset();
+			priority = this.priorityMap[source];
+			if (priority < this._lastDataSource) return; 
+				
+			this.dbDataSet = data;  //Update the data object used
+			this.dbDataSrc = source;
+		   	this._removeDataset();	//Remove previously used data set
+		   	data = this._flattenData(data);
+
 			var fs = document.createElement('fieldset');
 			fs.id='db_data_container', fs.style.cssText='border:none;';
+
 			for(info in data){
-				var elName = this._normalize(info);
+				var elName = this._normalize(info); //Maps the Demandbase variable name to the form field to populate
 	            
-	            //Optional - If MAS renders the form with hidden fields present
+	            //If MAS renders the form with hidden fields present
 	            //we want to remove them to avoid multiple values in the POST
 	            var oldField = document.getElementById(elName);
 	            if (oldField) oldField.parentNode.removeChild(oldField);   
@@ -91,7 +160,7 @@ DemandbaseForm.demandbaseParser = {
 			    if(this.testing){
 			   		var testEl = document.createElement('div');
 			   		testEl.setAttribute('id',elName + '_container');
-			   		testEl.innerHTML='Field Name: <strong>'+newEl.id+'</strong><br/>';
+			   		testEl.innerHTML='<strong>'+newEl.id+'</strong>: '+newEl.value+'<br/>';
 				    fs.appendChild(testEl);
 			    } 
    				//Prepop
@@ -151,35 +220,8 @@ DemandbaseForm.demandbaseParser = {
 		return data;
 	},
 	_normalize: function(name) {
-		//TODO: Required - update with actual form field IDs (HTML name in Eloqua)
-		var prefix = 'db_', nameMap = {
-			'marketing_alias': '',
-			'industry': '',
-			'sub_industry': '',
-			'employee_count': '',
-			'employee_range': '',
-			'revenue_range': '',
-			'annual_sales': '',
-			'street_address': '',
-			'city': '',
-			'state': '',
-			'zip': '',
-			'country': '',
-			'country_name': '',
-			'phone': '',
-			'fortune_1000': '',
-			'forbes_2000': '',
-			'isp': '',
-			'web_site': '',
-			'stock_ticker': '',
-			'demandbase_sid': '',
-			'primary_sic': '',
-			'watch_list_account_status': '',
-			'manual_review' : ''
-			//TODO: Optional - use the manual_review flag to indicate that leads identified by the Company Name API should be verified or scored differently
-			//TODO: Optional - add more Demandbase or Account Watch fields
-		}
-		return nameMap[name] ? nameMap[name] : prefix + name;
+		var prefix = 'db_';
+		return this.nameMap[name] ? this.nameMap[name] : prefix + name;
 	},
 	_flattenData: function(data){
 		//some demandbase fields are returned as json objects (hq hierarchy and account watch)
@@ -198,6 +240,9 @@ DemandbaseForm.demandbaseParser = {
 		return data;
 	},
 	_attachCompanyAPI: function() {
+		//Instantiating the Company Autocomplete Widget - this automatically calls the Domain and Company Name APIs
+		//when the user enters an email or company name
+		//Be sure to include widget.js on the page
 		if (Demandbase.CompanyAutocomplete){
 			Demandbase.CompanyAutocomplete.widget({
 				company: this.companyID, 
@@ -208,6 +253,7 @@ DemandbaseForm.demandbaseParser = {
 		};
 	},
 	_loadAsyncScript: function() {
+		//calling the IP Address API
 		var s = document.createElement('script');
 		s.src = "http://api.demandbase.com/api/v2/ip.json?key="+this.key+"&callback=DemandbaseForm.demandbaseParser.parser&query";
 		document.getElementsByTagName('head')[0].appendChild(s);
