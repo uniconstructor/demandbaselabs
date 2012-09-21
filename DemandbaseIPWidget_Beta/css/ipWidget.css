@@ -17,6 +17,7 @@
 	overflow-y: visible;
 	overflow-x: visible;
 	z-index: 1000;
+	box-shadow: 2px 2px 10px 3px #333;
 }
 
 #ipDetails {
