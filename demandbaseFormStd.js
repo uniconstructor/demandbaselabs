@@ -128,8 +128,8 @@ DemandbaseForm.demandbaseParser = {
 				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (incase of user input errors)
 			} else {
 				source = 'IP';			//IP Address API data set
-				this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
 				if (data['isp']===true) return; //Handle ISP traffic
+				this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
 			}
 			
 			//Check if data source takes precedence
