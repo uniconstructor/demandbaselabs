@@ -46,10 +46,12 @@
     },
     load   : function(){
       if (!window._gaq) window._gaq = [];
-      var db = document.createElement('script'); db.type = 'text/javascript'; db.async = true;
-        db.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'api.demandbase.com/api/v2/ip.json';
-        db.src += '?key='+this.key+'&callback=Synapse.demandbaseGA.track';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db, s);
+      if (dbClient) dbClient.ip(Synapse.demandbaseGA.track);  //Call IP API, passing callback function
+      /* Alternative method - call api endpoint directly w/o using DemandbaseClient
+      var db=document.createElement('script');db.type='text/javascript';db.async=true;
+      db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json';
+      db.src+='?key='+this.key+'&callback=Synapse.demandbaseGA.track';
+      var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(db,s);*/
     },
     _p     : function(t,v1,v2,v3,v4,v5){ window._gaq.push([t, v1, v2, v3, v4, v5]); },
     _var   : function(i,k,v,s){ this._p('_setCustomVar', i, k, v, s); },
