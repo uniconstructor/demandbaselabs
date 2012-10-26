@@ -306,15 +306,16 @@ DemandbaseLabs.IPWidget = {
           + '<option value="4.18.62.1">East West Bank (Financial Services)</option>'
           + '<option value="4.21.101.1">AFIP (Healthcare & Medical)</option>'
           + '<option value="12.2.77.225">Japs-Olson (Printing & Publishing)</option>'
-          + '<option value="8.10.2.1">Prolexic (Telecommunications)</option>'
+          + '<option value="4.71.21.65">Hughes Telematics (Telecommunications)</option>'
           + '<option value="4.20.98.65">Williams-Sonoma (Retail & Distribution)</option>'
           + '<option value="12.4.23.1">Airline Pilots Assoc. (Transportation & Logistics)</option>'
           + '<option value="30.0.0.1">US Dept. of Defense (Government)</option>'
           + '<option value="3.0.0.1">General Electric (Financial Services)</option>'
           + '<option value="212.125.84.152">Ski Class (Business Services)</option>'
           + '<option value="4.21.76.33">Mro / IBM (Software & Technology)</option>'
-          + '<option value="12.131.200.224">Adobe (Customer)</option>'
-          + '<option value="173.203.22.40">Reachforce (Competitor)</option>'
+          + '<option value="12.131.200.224">Adobe (Software & Technology)</option>'
+          + '<option value="123.45.0.0">ISP (Basic)</option>'
+          
         + '</select>';
 
       this.ipWidget.innerHTML = '<input value="" id="ipWidgetShowHide" type=button onclick=DemandbaseLabs.IPWidget.toggleIpWidgetMode()>' 
