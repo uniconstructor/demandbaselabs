@@ -48,6 +48,7 @@ DemandbaseForm.demandbaseParser = {
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
 	debug: false, 					//Testing mode - Show errors to user
 	testing: true, 					//Testing mode (displays labels) - set this to false before deploying!
+	useCompanyInputMatch: true,		//true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
 	elType: 'hidden', 				//Controls element type/visiblity
 	nameMap: {
 		//TODO: Required - update this map with actual form field IDs (or HTML name) of form field to populate with Demandbase data and integrate with form processor
@@ -124,7 +125,7 @@ DemandbaseForm.demandbaseParser = {
 			} else if (data.pick || data.input_match) {
 				source = 'Company';		//Company API data set
 				if (data.pick) data = data.pick;
-				if (data.input_match) data = data.input_match;
+				if (useCompanyInputMatch && data.input_match) data = data.input_match;
 				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (incase of user input errors)
 			} else {
 				source = 'IP';			//IP Address API data set
