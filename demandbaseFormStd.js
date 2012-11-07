@@ -127,7 +127,7 @@ DemandbaseForm.demandbaseParser = {
 			} else if (data.pick || data.input_match) {
 				source = 'Company';		//Company API data set
 				if (data.pick) data = data.pick;
-				if (useCompanyInputMatch && data.input_match) data = data.input_match;
+				if (this.useCompanyInputMatch && data.input_match) data = data.input_match;
 				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (incase of user input errors)
 			} else {
 				source = 'IP';			//IP Address API data set
