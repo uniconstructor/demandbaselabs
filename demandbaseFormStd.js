@@ -17,7 +17,7 @@ Step 2 - Add this file to your HTML page (or landing page template)
 Step 3 - Update this file with required info:
 	Search for "TODO" comments and fill-in required values
 		1.  Fill in Demandbase Key, Company ID, and Email ID
-		2.  Update nameMap - Add field name for any hidden fields to be populated by Demandbase data 
+		2.  Update hiddenFieldMap - Add field name for any hidden fields to be populated by Demandbase data 
 			(add additional fields or remove unused fields as needed)
 		3.  Add the form name (or add a form name map if using multiple forms with different names)
 	Search for "Optional" comments and make additional adjustments as needed
@@ -46,13 +46,14 @@ DemandbaseForm.demandbaseParser = {
 	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
 	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
+	elType: 'hidden', 				//Controls element type/visiblity
 	debug: false, 					//Testing mode - Show errors to user - set this to false before deploying!
-	testing: true, 					//Testing mode - displays returned fields with labels - set this to false before deploying!
-	useCompanyInputMatch: true,		//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
+	testing: true, 					//Testing mode - displays returned fields with labels - TODO: set this to false before deploying!
 	useTestIp: false, 				//Testing mode - set to false when deploying to production - set to true to test using testIpAddress (sends value to IP API query parameter)
 	testIpAddress: '30.0.0.1',		//passed to query parameter when useTestIp is true - set to test any individual IP for testing
-	elType: 'hidden', 				//Controls element type/visiblity
-	nameMap: {
+	useCompanyInputMatch: true,		//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
+	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
+	hiddenFieldMap: {
 		//TODO: Required - update this map with actual form field IDs (or HTML name) of form field to populate with Demandbase data and integrate with form processor
 		//TODO: Optional - add/remove Demandbase or Account Watch fields
 		'marketing_alias': '[HTML NAME GOES HERE]',
@@ -74,6 +75,10 @@ DemandbaseForm.demandbaseParser = {
 		'ip' : '',   //Demandbase recommends capturing the IP address of form submits
 		'watch_list_account_status': '',
 		'manual_review' : '' //Optional Manual Review flag set when Company API is used
+	},
+	prepopFieldMap: {
+		/* Optional - map visible fields to pre-populate with Demandbase data */
+		'db_var_name' : 'html_field_name'
 	},
 	/* TODO: Optional - If using this implementation on multiple forms/landing pages (or pages with more than one form)
 				  Uncomment this list, and add the IDs (or Names) of the forms here
@@ -131,7 +136,7 @@ DemandbaseForm.demandbaseParser = {
 				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (incase of user input errors)
 			} else {
 				source = 'IP';			//IP Address API data set
-				if (data['isp']===true) return; //Handle ISP traffic
+				if (data['isp']===true && this.useIspFilter) return; //Handle ISP traffic
 				this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
 			}
 			
@@ -178,11 +183,10 @@ DemandbaseForm.demandbaseParser = {
   		}catch(e){if(this.debug)alert('Error: '+e);}
 	},
 	_prepopData: function(data,info) {
-		var select, dataToElMap = {
-		}
-		if (dataToElMap[info]){
+		var select; 
+		if (this.prepopFieldMap[info]){
 			var valSet = false,
-				field  = document.getElementById(dataToElMap[info]);
+				field  = document.getElementById(this.prepopFieldMap[info]);
 			if (field.type == 'select-one') {
 				for (var i=0;i<field.options.length;i++){
 					if (field.options[i].value == data[info]) {
@@ -205,6 +209,7 @@ DemandbaseForm.demandbaseParser = {
 		}
 	},
 	_ISPFilter: function(data) {
+		//Optional - not used by default
 		if (data.information_level == 'Basic') {
 			var dataPoint, registryPoint,
 				registryPrefix = 'registry_',
@@ -224,7 +229,7 @@ DemandbaseForm.demandbaseParser = {
 	},
 	_normalize: function(name) {
 		var prefix = 'db_';
-		return this.nameMap[name] ? this.nameMap[name] : prefix + name;
+		return this.hiddenFieldMap[name] ? this.hiddenFieldMap[name] : prefix + name;
 	},
 	_flattenData: function(data){
 		//some demandbase fields are returned as json objects (hq hierarchy and account watch)
