@@ -46,7 +46,7 @@ DemandbaseForm.demandbaseParser = {
 	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
 	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
-	elType: 'hidden', 				//Controls element type/visiblity
+	elType: 'hidden', 				//Controls element type/visiblity of fields in hiddenFieldMap
 	debug: false, 					//Testing mode - Show errors to user - set this to false before deploying!
 	testing: true, 					//Testing mode - displays returned fields with labels - TODO: set this to false before deploying!
 	useTestIp: false, 				//Testing mode - set to false when deploying to production - set to true to test using testIpAddress (sends value to IP API query parameter)
@@ -54,8 +54,8 @@ DemandbaseForm.demandbaseParser = {
 	useCompanyInputMatch: true,		//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
 	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
 	hiddenFieldMap: {
-		//TODO: Required - update this map with actual form field IDs (or HTML name) of form field to populate with Demandbase data and integrate with form processor
-		//TODO: Optional - add/remove Demandbase or Account Watch fields
+		//TODO: Required - update this map with actual DOM IDs of form field(s) to populate with Demandbase data and integrate with form processor
+		//TODO: Optional - add/remove Demandbase (use "watch_list_"+[variableName] to access custom Account Watch fields)
 		'marketing_alias': '[HTML NAME GOES HERE]',
 		'industry': '',
 		'sub_industry': '',
