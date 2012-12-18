@@ -55,8 +55,7 @@ DemandbaseForm.demandbaseParser = {
 	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
 	hiddenFieldMap: {
 		//TODO: Required - update this map with actual DOM IDs of form field(s) to populate with Demandbase data and integrate with form processor
-		//TODO: Optional - add/remove Demandbase (use "watch_list_"+[variableName] to access custom Account Watch fields)
-		'marketing_alias': '[HTML NAME GOES HERE]',
+		'marketing_alias': '[HTML ID GOES HERE]',
 		'industry': '',
 		'sub_industry': '',
 		'primary_sic': '',
@@ -73,7 +72,7 @@ DemandbaseForm.demandbaseParser = {
 		'forbes_2000': '',
 		'isp': '',
 		'ip' : '',   //Demandbase recommends capturing the IP address of form submits
-		'watch_list_account_status': '',
+		'watch_list_account_status': '',  //TODO: Optional - add/remove Demandbase (use "watch_list_"+[variableName] to access custom Account Watch fields)
 		'manual_review' : '' //Optional Manual Review flag set when Company API is used
 	},
 	prepopFieldMap: {
@@ -186,7 +185,12 @@ DemandbaseForm.demandbaseParser = {
 		var select; 
 		if (this.prepopFieldMap[info]){
 			var valSet = false,
-				field  = document.getElementById(this.prepopFieldMap[info]);
+			field  = document.getElementById(this.prepopFieldMap[info]);
+			if(field) {
+				field.value = data[info];
+				valSet = true;
+			}
+			/*example of pre-populating a single select or multi select menu
 			if (field.type == 'select-one') {
 				for (var i=0;i<field.options.length;i++){
 					if (field.options[i].value == data[info]) {
@@ -197,14 +201,12 @@ DemandbaseForm.demandbaseParser = {
 			} else {
 				field.value = data[info];
 				valSet = true;
-			}
+			}*/
+			
+			//Trigger change event when value is set
 			if (valSet) {
-				//Trigger event and hide field
-				jQuery(field)
-					.change()
-					.parents('p')
-					.addClass('db_hidden')
-					.hide();
+				Demandbase.jQuery(field).change().parents('p'); 
+				//.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
 			}
 		}
 	},
