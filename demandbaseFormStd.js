@@ -46,12 +46,12 @@ DemandbaseForm.demandbaseParser = {
 	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
 	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
-	elType: 'hidden', 				//Controls element type/visiblity of fields in hiddenFieldMap
-	debug: false, 					//Testing mode - Show errors to user - set this to false before deploying!
+	formNameList: ['FORM_NAME'],	//TODO: Optional - If using this on pages with more than one form, list form names here
+	debug: true, 					//Testing mode - Show errors to user - set this to false before deploying!
 	testing: true, 					//Testing mode - displays returned fields with labels - TODO: set this to false before deploying!
 	useTestIp: false, 				//Testing mode - set to false when deploying to production - set to true to test using testIpAddress (sends value to IP API query parameter)
 	testIpAddress: '30.0.0.1',		//passed to query parameter when useTestIp is true - set to test any individual IP for testing
-	useCompanyInputMatch: true,		//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
+	useCompanyInputMatch: false,	//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
 	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
 	dbDataSet: null,				//Demandbase object used in form submit (set automatically)
 	dbDataSrc: null,				//Demandbase API that provided dbDataSet (leave these fields blank)
@@ -67,15 +67,15 @@ DemandbaseForm.demandbaseParser = {
 		'city': '',
 		'state': '',
 		'zip': '',
-		'country': '',	//Country ISO code
+		'country': '',		//Country ISO code
 		'country_name': '',
 		'phone': '',
 		'fortune_1000': '',
 		'forbes_2000': '',
 		'isp': '',
-		'ip' : '',   //Demandbase recommends capturing the IP address of form submits
-		'watch_list_account_status': '',  //TODO: Optional - add/remove Demandbase (use "watch_list_"+[variableName] to access custom Account Watch fields)
-		'manual_review' : '' //Optional Manual Review flag set when Company API is used
+		'ip' : '',   						//Demandbase recommends capturing the IP address
+		'watch_list_account_status': '',  	//TODO: Optional - use "watch_list_"+[variableName] to access custom Account Watch fields
+		'manual_review' : '' 				//Optional Manual Review flag set when Company API is used
 	},
 	prepopFieldMap: {
 		/* Optional - map visible fields to pre-populate with Demandbase data */
@@ -88,15 +88,6 @@ DemandbaseForm.demandbaseParser = {
 	},
 	idTriggerFieldList : ['company_name'],    //a list of Demandbase variable names to determine if an API call has ID'd the visitor (if a field is blank, this counts as not ID'd)
 	toggleFieldList : ['FIELD_ID_GOES_HERE'], //a list of the DOM IDs of fields to show when company is not ID'd
-	/* TODO: Optional - If using this implementation on multiple forms/landing pages (or pages with more than one form)
-				  Uncomment this list, and add the IDs (or Names) of the forms here
-	*/
-	/* formNameList: { 
-		//Maintenance Tip: Add Eloqua Form ID here to enable Demandbase on a form
-		//The first form on a landing page that matches this list will be selected
-		'[HTML_FORM_NAME_GOES_HERE]' : '[HTML_FORM_NAME_GOES_HERE]' , 
-		'[HTML_FORM_NAME_GOES_HERE_2]' : '[HTML_FORM_NAME_GOES_HERE_2]' 
-	},*/
 	init: function(){
 		Demandbase.jQuery(function(){
 			var dbp = DemandbaseForm.demandbaseParser;
@@ -116,6 +107,7 @@ DemandbaseForm.demandbaseParser = {
 				 Uncomment this section if defining formNameList above
 		*/
 		/*
+		//The first form on a landing page that matches this list will be selected, otherwise the first form in the DOM is used
 		for (formName in this.formNameList) {
 			this.form = document.forms[formName];
 			if(this.form != null) { break; }	
@@ -161,25 +153,26 @@ DemandbaseForm.demandbaseParser = {
 			for(info in data){
 				var elName = this._normalize(info); //Maps the Demandbase variable name to the form field to populate
 	            
-	            //If MAS renders the form with hidden fields present
-	            //we want to remove them to avoid multiple values in the POST
+	            //If MAS renders the form with hidden fields present...
+	            //...remove them to avoid multiple values in the POST
 	            var oldField = document.getElementById(elName);
 	            if (oldField) oldField.parentNode.removeChild(oldField);   
 
 				var newEl = document.createElement('input');
 			    newEl.setAttribute('id',elName);
 			    newEl.setAttribute('name',elName);
-			    newEl.setAttribute('type',this.elType);
+			    newEl.setAttribute('type','hidden');  	//formerly using elType
 			    newEl.value = data[info];
+			    
 			    if(this.testing){
 			   		var testEl = document.createElement('div');
 			   		testEl.setAttribute('id',elName + '_container');
 			   		testEl.innerHTML='<strong>'+newEl.id+'</strong>: '+newEl.value+'<br/>';
 				    fs.appendChild(testEl);
 			    } 
-   				//Prepop
-   				//Optional - enable to prepopulate select fields
-				this._prepopData(data,info);
+   				
+   				//Prepopulate visible fields (Optional)
+				this._prepopVisibleFields(data,info);
 				fs.appendChild(newEl);
     		}
     		if(this.form) {
@@ -188,7 +181,27 @@ DemandbaseForm.demandbaseParser = {
 			}
   		}catch(e){if(this.debug)alert('Error: '+e);}
 	},
-	_prepopData: function(data,info) {
+	_normalize: function(name) {
+		var prefix = 'db_';
+		return this.hiddenFieldMap[name] ? this.hiddenFieldMap[name] : prefix + name;
+	},
+	_flattenData: function(data){
+		//some demandbase fields are returned as json objects (hq hierarchy and account watch)
+  		//this fcn breaks out each individual field in those objects andnormalizes the name, making
+  		//it possible to iterate through the entire data set without checking for objects
+		for (d in data){
+			if (typeof data[d] == 'object') {
+
+				for (nd in data[d]) {
+					data[d+'_'+nd] = data[d][nd];
+				}
+				delete data[d];
+			}
+		}
+	
+		return data;
+	},
+	_prepopVisibleFields: function(data,info) {
 		var select; 
 		if (this.prepopFieldMap[info]){
 			var valSet = false,
@@ -216,26 +229,6 @@ DemandbaseForm.demandbaseParser = {
 				//.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
 			}
 		}
-	},
-	_normalize: function(name) {
-		var prefix = 'db_';
-		return this.hiddenFieldMap[name] ? this.hiddenFieldMap[name] : prefix + name;
-	},
-	_flattenData: function(data){
-		//some demandbase fields are returned as json objects (hq hierarchy and account watch)
-  		//this fcn breaks out each individual field in those objects andnormalizes the name, making
-  		//it possible to iterate through the entire data set without checking for objects
-		for (d in data){
-			if (typeof data[d] == 'object') {
-
-				for (nd in data[d]) {
-					data[d+'_'+nd] = data[d][nd];
-				}
-				delete data[d];
-			}
-		}
-	
-		return data;
 	},
 	_attachCompanyAPI: function() {
 		//Instantiating the Company Autocomplete Widget - this automatically calls the Domain and Company Name APIs
@@ -276,10 +269,6 @@ DemandbaseForm.demandbaseParser = {
 			s.src = s.src + "=" + this.testIpAddress
 		}
 		document.getElementsByTagName('head')[0].appendChild(s);
-	},
-	_removeDataset: function() {
-		var fs = document.getElementById('db_data_container');
-		if (fs) this.form.removeChild(fs);		
 	},
 	_isIdComplete: function(data) {
 		//check for empty values that should trigger form to grow (false here means API has not fully identified)
@@ -339,6 +328,10 @@ DemandbaseForm.demandbaseParser = {
             DemandbaseForm.demandbaseParser._toggleFields();
         }
     },
+    _removeDataset: function() {
+		var fs = document.getElementById('db_data_container');
+		if (fs) this.form.removeChild(fs);		
+	},
 	_lastDataSource: null
 }
 
