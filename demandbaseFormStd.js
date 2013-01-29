@@ -41,8 +41,8 @@ Contact Demandbase Strategic Services with questions, comments, or requests. <de
 
 var DemandbaseForm={};
 DemandbaseForm.demandbaseParser = {
-	name: 'Demandbase Parser',
-	key:"", 						//TODO: Required - Add your Demandbase key here
+	name: 'Demandbase Form Module',
+	key:'YOUR_KEY_HERE', 			//TODO: Required - Add your Demandbase key here
 	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
 	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
@@ -53,6 +53,8 @@ DemandbaseForm.demandbaseParser = {
 	testIpAddress: '30.0.0.1',		//passed to query parameter when useTestIp is true - set to test any individual IP for testing
 	useCompanyInputMatch: true,		//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
 	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
+	dbDataSet: null,				//Demandbase object used in form submit (set automatically)
+	dbDataSrc: null,				//Demandbase API that provided dbDataSet (leave these fields blank)
 	hiddenFieldMap: {
 		//TODO: Required - update this map with actual DOM IDs of form field(s) to populate with Demandbase data and integrate with form processor
 		'marketing_alias': '[HTML ID GOES HERE]',
@@ -79,6 +81,13 @@ DemandbaseForm.demandbaseParser = {
 		/* Optional - map visible fields to pre-populate with Demandbase data */
 		'db_var_name' : 'html_field_name'
 	},
+	priorityMap: {
+		'IP': 2, 		//if Domain API doesnt identify, use IP Address API
+		'Company': 1,	//Company API is lowest priority (lowest number)
+		'Email': 3 		//highest # is top priority - Domain API "wins" over other APIs
+	},
+	idTriggerFieldList : ['company_name'],    //a list of Demandbase variable names to determine if an API call has ID'd the visitor (if a field is blank, this counts as not ID'd)
+	toggleFieldList : ['FIELD_ID_GOES_HERE'], //a list of the DOM IDs of fields to show when company is not ID'd
 	/* TODO: Optional - If using this implementation on multiple forms/landing pages (or pages with more than one form)
 				  Uncomment this list, and add the IDs (or Names) of the forms here
 	*/
@@ -88,13 +97,6 @@ DemandbaseForm.demandbaseParser = {
 		'[HTML_FORM_NAME_GOES_HERE]' : '[HTML_FORM_NAME_GOES_HERE]' , 
 		'[HTML_FORM_NAME_GOES_HERE_2]' : '[HTML_FORM_NAME_GOES_HERE_2]' 
 	},*/
-	dbDataSet: null,	//Demandbase object used in form submit (set automatically)
-	dbDataSrc: null,	//Demandbase API that provided dbDataSet (leave these fields blank)
-	priorityMap: {
-		'IP': 2, 		//if Domain API doesnt identify, use IP Address API
-		'Company': 1,	//Company API is lowest priority (lowest number)
-		'Email': 3 		//highest # is top priority - Domain API "wins" over other APIs
-	},
 	init: function(){
 		Demandbase.jQuery(function(){
 			var dbp = DemandbaseForm.demandbaseParser;
@@ -125,6 +127,7 @@ DemandbaseForm.demandbaseParser = {
 			//Identify data source and priority
 			var priority, source;
 			if (typeof data.person == 'object') {
+				this._sourceChecker.setSource('Email', this._isIdComplete(data), true);
 				if (!data.person) return;
 				source = 'Email';		//Domain API data set
 				data = data.person;
@@ -139,6 +142,10 @@ DemandbaseForm.demandbaseParser = {
 				this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
 			}
 			
+			// Record source and result. We define a positive identification as 
+            // whether or not the resulting data set contains the country attribute.
+            this._sourceChecker.setSource(source, this._isIdComplete(data), true);
+
 			//Check if data source takes precedence
 			priority = this.priorityMap[source];
 			if (priority < this._lastDataSource) return; 
@@ -210,25 +217,6 @@ DemandbaseForm.demandbaseParser = {
 			}
 		}
 	},
-	_ISPFilter: function(data) {
-		//Optional - not used by default
-		if (data.information_level == 'Basic') {
-			var dataPoint, registryPoint,
-				registryPrefix = 'registry_',
-				registryPoints = [ 
-					['country','country_name'],
-					['zip_code','zip'],
-					'state',
-					'city'					
-				];
-			for(registryPoint in registryPoints){
-				dataPoint 		= (registryPoints[registryPoint] instanceof Array ? registryPoints[registryPoint][1] : registryPoints[registryPoint]);
-				registryPoint 	= (registryPoints[registryPoint] instanceof Array ? registryPoints[registryPoint][0] : registryPoints[registryPoint]);
-				data[dataPoint] = data[registryPrefix + registryPoint];
-			}
-		}
-		return data;
-	},
 	_normalize: function(name) {
 		var prefix = 'db_';
 		return this.hiddenFieldMap[name] ? this.hiddenFieldMap[name] : prefix + name;
@@ -260,13 +248,30 @@ DemandbaseForm.demandbaseParser = {
 				key: this.key,   
 				callback: function(data){DemandbaseForm.demandbaseParser.parser(data)}
 	  		})
+
+	  		var self, djq;
+            self = DemandbaseForm.demandbaseParser;
+            djq = Demandbase.jQuery;
+            //Since the callback is not called when there is no match on company name
+            //we explictly check sources after an 'autocompletechange' event.
+            djq("#" + self.companyID).bind('autocompletecreate', function () {
+                djq(this).autocomplete('option', 'change', function (event, ui) {
+                    Demandbase.CompanyAutocomplete._change.call(this, event, ui);
+                    self._sourceChecker.checkSources();
+                });
+            }).blur(function () {
+            	//register hit API in the blur event
+                self._sourceChecker.setSource('Company');
+            });
 		};
 	},
 	_loadAsyncScript: function() {
+		//Register HIT with source checker
+		this._sourceChecker.setSource('IP'); 
 		//calling the IP Address API
 		var s = document.createElement('script');
 		s.src = "http://api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.URL+"&callback=DemandbaseForm.demandbaseParser.parser&query";
-		//override query parameter with test IP address, when bln is set
+		//override query parameter with test IP address when bln is set
 		if(this.useTestIp) {
 			s.src = s.src + "=" + this.testIpAddress
 		}
@@ -276,6 +281,64 @@ DemandbaseForm.demandbaseParser = {
 		var fs = document.getElementById('db_data_container');
 		if (fs) this.form.removeChild(fs);		
 	},
+	_isIdComplete: function(data) {
+		//check for empty values that should trigger form to grow (false here means API has not fully identified)
+		//list Demandbase variable names that trigger positive identification (company name is default indicator)
+		triggerFieldList = this.idTriggerFieldList;
+		if(data) {
+			for (field in triggerFieldList) {
+				if(!data[triggerFieldList[field]] || data[triggerFieldList[field]] == '') {
+					return false;
+				}		
+			}	
+		}
+		return true;
+	},
+	_toggleFields: function() {
+		for (field in this.toggleFieldList) {
+			fieldId = this.toggleFieldList[field];
+			Demandbase.jQuery('#' + fieldId).show();
+		}
+	},
+	_sourceChecker: {
+        'sources': {
+            'IP': {
+                'hit': false,
+                'result': false
+            },
+            'Company': {
+                'hit': false,
+                'result': false
+            },
+            'Email': {
+                'hit': false,
+                'result': false
+            }
+        },
+        'setSource': function (source, result, check) {
+            if (!result) result = false;
+            this.sources[source].hit = true;
+            this.sources[source].result = result;
+            if (check) this.checkSources();
+        },
+        'checkSources': function () {
+            var id = false,
+                allHit = true;
+            for (source in this.sources) {
+                if (this.sources[source].result) id = true;
+                if (!this.sources[source].hit) {
+                    allHit = false;
+                    break;
+                }
+            }
+            if (allHit && !id) this.onNoId();
+        },
+        'onNoId': function () {
+            //Callback when all three API's have been hit but no identification has been made.
+            //Example: call a function to show fields, etc
+            DemandbaseForm.demandbaseParser._toggleFields();
+        }
+    },
 	_lastDataSource: null
 }
 
