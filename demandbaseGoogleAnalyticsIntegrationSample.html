@@ -27,38 +27,62 @@
   })();
 </script>
 
-<!-- Send Demandbase Custom fields to Google Analytics (asynchronous) 
-     Add this to the end of the <head> of your HTML page
--->
+<!-- Demandbase/GA Integration -->
+<!-- This script works along side your current GA integration.  Place this script at the END of the HTML head -->  
 <script type="text/javascript">
-  var Synapse = Synapse || {};
-  Synapse.demandbaseGA = {
+  var DemandbaseAnalytics=DemandbaseAnalytics||{};
+  DemandbaseAnalytics.demandbaseGA={
     key    : '[YOUR_DEMANDBASE_KEY]',   //TODO: add your Demandbase key
-    //TODO: choose Demandbase fields to send to GA 
-    fields : ['audience','employee_range','company_name','revenue_range', 'industry'], 
-    //TODO: add labels to use in GA     
-    fieldLabels: ['Audience', 'EmployeeRange', 'CompanyName', 'RevenueRange', 'Industry'],
-    track  : function(data){
-      for(field in this.fields){
-        this._var((parseInt(field)+1), this.fieldLabels[field], (data[this.fields[field]] || ''))
-      };
-      this._event();
+    /* Customize which variables are sent to GA. 'fields' must be a Demandbase variable name */
+    fields : ['audience','industry','company_name','employee_range','revenue_range'],  //TODO: choose Demandbase fields to send to GA
+    dbDataSet: null,
+    track:function(data) {
+        try {
+          data=DemandbaseAnalytics.demandbaseGA._flatA(data);
+          DemandbaseAnalytics.demandbaseGA.dbDataSet = data;  /*allows access to db dataset in JS outside of this namespace */
+          for(field in DemandbaseAnalytics.demandbaseGA.fields){
+            var lbl=DemandbaseAnalytics.demandbaseGA._cA(DemandbaseAnalytics.demandbaseGA._toPC(DemandbaseAnalytics.demandbaseGA.fields[field]));
+            DemandbaseAnalytics.demandbaseGA._var((parseInt(field)+1),lbl,(data[DemandbaseAnalytics.demandbaseGA.fields[field]]||''),1);
+            DemandbaseAnalytics.demandbaseGA._logE(lbl + ' : ' + data[DemandbaseAnalytics.demandbaseGA.fields[field]]||'');
+          }
+          DemandbaseAnalytics.demandbaseGA._event();
+        } catch(e){ DemandbaseAnalytics.demandbaseGA._logE('Integration Error: '+e)}; 
+      },
+    load:function(){
+      try { 
+        if(!window._gaq) window._gaq=[];
+        var db=document.createElement('script');db.type='text/javascript'; db.async=true;
+            db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=DemandbaseAnalytics.demandbaseGA.track&page='+document.URL+'&referrer='+document.referrer;
+            var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
+            _gaq.push(['_addDevId', 'NE7T9']);
+            DemandbaseAnalytics.demandbaseGA._logE('Loaded Script ' + db.src);
+      } catch(e){ this._logE('Script Error: '+e)}; 
     },
-    load   : function(){
-      if (!window._gaq) window._gaq = [];
-      if (dbClient) dbClient.ip(Synapse.demandbaseGA.track);  //Call IP API, passing callback function
-      /* Alternative method - call api endpoint directly w/o using DemandbaseClient
-      var db=document.createElement('script');db.type='text/javascript';db.async=true;
-      db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json';
-      db.src+='?key='+this.key+'&callback=Synapse.demandbaseGA.track';
-      var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(db,s);*/
+    _cA:function(s){ 
+      var al=['IP','SID','HQ','DMA','ISP'];
+      for(a in al){ 
+        s=s.replace(new RegExp(al[a],'ig'),al[a])}return s;
     },
-    _p     : function(t,v1,v2,v3,v4,v5){ window._gaq.push([t, v1, v2, v3, v4, v5]); },
-    _var   : function(i,k,v,s){ this._p('_setCustomVar', i, k, v, s); },
-    _event : function(){ this._p('_trackEvent', 'Demandbase', 'API Resolution', 'IP API', 0, 1); }
+    _flatA:function(a){ 
+      for(d in a){ 
+        if(typeof a[d]=='object'){ 
+          for(cd in a[d]){a[d+'_'+cd]=a[d][cd]};
+          delete a[d];
+        }
+      }; 
+      return a;
+    },
+    _logE:function(m){ if(console.log)console.log('DB GA '+m); },
+    _toPC:function(s){ 
+      return s.replace(/_/g,' ').replace(/\w\S*/g,function(t){ return t.charAt(0).toUpperCase()+t.substr(1).toLowerCase() }); },
+    _p:function(t,v1,v2,v3,v4,v5){ window._gaq.push([t,v1,v2,v3,v4,v5]); },
+    _var:function(i,k,v,s){ this._p('_setCustomVar',i,k,v,s); },
+    _event:function(){ this._p('_trackEvent','Demandbase','API Resolution','IP API',0,1); }
   };
-  Synapse.demandbaseGA.load();
+  DemandbaseAnalytics.demandbaseGA.load();
 </script>
+<!-- End Demandbase/GA Integration -->
+
 <!-- End Asynchronous Solution -->
 
 <!-- ************************************************************** -->
