@@ -72,7 +72,7 @@
       }; 
       return a;
     },
-    _logE:function(m){ if(console.log)console.log('DB GA '+m); },
+    _logE:function(m){ if(window['console'] !== 'undefined' && typeof(console) !== 'undefined') console.log('DB GA '+m); },
     _toPC:function(s){ 
       return s.replace(/_/g,' ').replace(/\w\S*/g,function(t){ return t.charAt(0).toUpperCase()+t.substr(1).toLowerCase() }); },
     _p:function(t,v1,v2,v3,v4,v5){ window._gaq.push([t,v1,v2,v3,v4,v5]); },
