@@ -106,15 +106,13 @@ DemandbaseForm.demandbaseParser = {
 		/* TODO: Optional - If using on multiple forms/landing pages (or pages with more than one form)
 				 Uncomment this section if defining formNameList above
 		*/
-		/*
 		//The first form on a landing page that matches this list will be selected, otherwise the first form in the DOM is used
 		for (formName in this.formNameList) {
-			this.form = document.forms[formName];
+			this.form = document.forms[this.formNameList[formName]];
 			if(this.form != null) { break; }	
 		}
-		*/
-
 		if(! this.form) this.form=document.forms[0];	//use the first form in the DOM, if otherwise not specified
+
 		try {
 			//Identify data source and priority
 			var priority, source;
@@ -156,7 +154,12 @@ DemandbaseForm.demandbaseParser = {
 	            //If MAS renders the form with hidden fields present...
 	            //...remove them to avoid multiple values in the POST
 	            var oldField = document.getElementById(elName);
-	            if (oldField) oldField.parentNode.removeChild(oldField);   
+	            var fieldId = elName;
+	            if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0]
+	            if (oldField) {
+	            	fieldId = oldField.id;
+	            	oldField.parentNode.removeChild(oldField);   
+	            }
 
 				var newEl = document.createElement('input');
 			    newEl.setAttribute('id',elName);
