@@ -204,32 +204,28 @@ DemandbaseForm.demandbaseParser = {
 	
 		return data;
 	},
-	_prepopVisibleFields: function(data,info) {
-		var select; 
+	_prepopVisibleFields: function(data,info) { 
 		if (this.prepopFieldMap[info]){
 			var valSet = false,
 			field  = document.getElementById(this.prepopFieldMap[info]);
 			if(field) {
-				field.value = data[info];
-				valSet = true;
-			}
-			/*example of pre-populating a single select or multi select menu
-			if (field.type == 'select-one') {
-				for (var i=0;i<field.options.length;i++){
-					if (field.options[i].value == data[info]) {
-						valSet = field.options[i].selected = true; 
-						break;
+				/*example of pre-populating a single select or multi select menu*/
+				if (field.type == 'select-one') {
+					for (var i=0;i<field.options.length;i++){
+						if (field.options[i].value == data[info]) {
+							valSet = field.options[i].selected = true; 
+							break;
+						}
 					}
+				} else {
+					field.value = data[info];
+					valSet = true;
 				}
-			} else {
-				field.value = data[info];
-				valSet = true;
-			}*/
-			
-			//Trigger change event when value is set
-			if (valSet) {
-				Demandbase.jQuery(field).change().parents('p'); 
-				//.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
+				//Trigger change event when value is set
+				if (valSet) {
+					Demandbase.jQuery(field).change().parents('p'); 
+					//.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
+				}
 			}
 		}
 	},
