@@ -1,7 +1,8 @@
 /***
-Name: Demandbase Standard Forms Implementation
-Authors: Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), Matthew Downs (mdowns[at]demandbase[dot]com)
-License: Copyright 2012. This code may not be reused without explicit permission by its owners. All rights reserved.
+Name: Demandbase Form Module
+Authors: Matthew Downs (mdowns[at@]demandbase[dot.]com), Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), 
+Support Contact: strategicservices[at@]demandbase[dot.]com
+License: Copyright 2013. This code may not be reused without explicit permission by its owners. All rights reserved.
 
 Instructions:
 Step 1 - Add the Company Autocomplete widget to your HTML page (or landing page template)
@@ -12,15 +13,18 @@ Step 1 - Add the Company Autocomplete widget to your HTML page (or landing page 
 
 Step 2 - Add this file to your HTML page (or landing page template)
     <!-- Including Demandbase Standard Forms Implementation -->
-    <script src="[YOUR_JS_PATH]/demandbaseFormStd.js" type="text/javascript"></script>
+    <script src="[YOUR_JS_PATH]/demandbaseForm.js" type="text/javascript"></script>
 
 Step 3 - Update this file with required info:
 	Search for "TODO" comments and fill-in required values
 		1.  Fill in Demandbase Key, Company ID, and Email ID
-		2.  Update hiddenFieldMap - Add field name for any hidden fields to be populated by Demandbase data 
+		2a. Update hiddenFieldMap - Add field IDs for hidden fields to be populated by Demandbase data 
 			(add additional fields or remove unused fields as needed)
-		3.  Add the form name (or add a form name map if using multiple forms with different names)
-	Search for "Optional" comments and make additional adjustments as needed
+		2b. Update prepopFieldMap - Add field IDs for visible fields to be populated by Demandbase data 
+		3.  (Optional) Add the form name (or use formNameList if using multiple forms with different names)
+			Note: first form in DOM is used if no form is specified.
+
+		4. Search for "Optional" comments and make additional adjustments as needed
 
 Testing:
 	-Set "debug" property to true to enable alerts if there is an error calling the API
@@ -31,12 +35,12 @@ Testing:
 	-See stdFormSample.html for an example of this file in action 
 
 When using this file for multiple forms or multiple landing pages, ensure that the email, company name 
-and any hidden fields populated by Demandbase have the same DOM name (or DOM ID) in your marketing
-automation system.  If the fields have different names (and it is not possible to rename (or recreate) the fields), then 
+and any hidden fields populated by Demandbase have the same DOM name (or DOM ID).  
+If the fields have different names (and it is not possible to rename (or recreate) the fields), then 
 create a mapping in this file to correlate form names, emailIDs and companyIDs.
 
-Visit www.demandbaselabs.com for a live examples of Demandbase.
-Contact Demandbase Strategic Services with questions, comments, or requests. <demandbaselabs@demandbase.com>
+Visit www.demandbaselabs.com for a live examples of Demandbase in action.
+Contact Demandbase Strategic Services with questions, comments, or requests. <demandbaselabs[at@]demandbase[dot.]com>
 ***/
 
 var DemandbaseForm={};
