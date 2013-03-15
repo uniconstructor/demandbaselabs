@@ -42,7 +42,7 @@ Contact Demandbase Strategic Services with questions, comments, or requests. <de
 var DemandbaseForm={};
 DemandbaseForm.demandbaseParser = {
 	name: 'Demandbase Form Module',
-	key:'YOUR_KEY_HERE', 			//TODO: Required - Add your Demandbase key here
+	key:'YOUR_KEY_HERE',  //TODO: Required - Add your Demandbase key here
 	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
 	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
@@ -50,14 +50,13 @@ DemandbaseForm.demandbaseParser = {
 	debug: true, 					//Testing mode - Show errors to user - set this to false before deploying!
 	testing: true, 					//Testing mode - displays returned fields with labels - TODO: set this to false before deploying!
 	useTestIp: false, 				//Testing mode - set to false when deploying to production - set to true to test using testIpAddress (sends value to IP API query parameter)
-	testIpAddress: '30.0.0.1',		//passed to query parameter when useTestIp is true - set to test any individual IP for testing
+	testIpAddress: '3.0.0.1',		//passed to query parameter when useTestIp is true - set to test any individual IP for testing
 	useCompanyInputMatch: false,	//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
 	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
-	dbDataSet: null,				//Demandbase object used in form submit (set automatically)
-	dbDataSrc: null,				//Demandbase API that provided dbDataSet (leave these fields blank)
+	keepAudienceFields: false,		//True means the audience fields from the IP API will be added to the data sets returned by the Domain and Company APIs
 	hiddenFieldMap: {
 		//TODO: Required - update this map with actual DOM IDs of form field(s) to populate with Demandbase data and integrate with form processor
-		'marketing_alias': '[HTML ID GOES HERE]',
+		'marketing_alias': '',
 		'industry': '',
 		'sub_industry': '',
 		'primary_sic': '',
@@ -128,6 +127,11 @@ DemandbaseForm.demandbaseParser = {
 				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (incase of user input errors)
 			} else {
 				source = 'IP';			//IP Address API data set
+				//store fields returned only by IP API
+				this._detectedIP = data['ip'] || '';
+				this._detectedAudience = data['audience'] || '';
+				this._detectedAudienceSegment = data['audience_segment'] || '';
+
 				if (data['isp']===true && this.useIspFilter) return; //Handle ISP traffic
 				this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
 			}
@@ -140,13 +144,14 @@ DemandbaseForm.demandbaseParser = {
 			priority = this.priorityMap[source];
 			if (priority < this._lastDataSource) return; 
 				
-			this.dbDataSet = data;  //Update the data object used
-			this.dbDataSrc = source;
+			this._dbDataSet = data;  //Update the data object used
+			this._dbDataSrc = source;
 		   	this._removeDataset();	//Remove previously used data set
 		   	data = this._flattenData(data);
 
 			var fs = document.createElement('fieldset');
 			fs.id='db_data_container', fs.style.cssText='border:none;';
+			this._restoreIpFields(data);
 
 			for(info in data){
 				var elName = this._normalize(info); //Maps the Demandbase variable name to the form field to populate
@@ -203,6 +208,22 @@ DemandbaseForm.demandbaseParser = {
 		}
 	
 		return data;
+	},
+	_restoreIpFields: function(data) {
+		if(data) {
+			if(typeof data['ip'] == 'undefined'  && this._detectedIP !== null) {
+				data['ip'] = this._detectedIP;
+			}
+
+			if(this.keepAudienceFields) {
+				if(typeof data['audience' == 'undefined'] && this._detectedAudience !== null) {
+					data['audience'] = this._detectedAudience;
+				}
+				if(typeof data['audience_segment' == 'undefined'] && this._detectedAudienceSegment !== null) {
+					data['audience_segment'] = this._detectedAudienceSegment;
+				}
+			}
+		}
 	},
 	_prepopVisibleFields: function(data,info) { 
 		if (this.prepopFieldMap[info]){
@@ -331,7 +352,12 @@ DemandbaseForm.demandbaseParser = {
 		var fs = document.getElementById('db_data_container');
 		if (fs) this.form.removeChild(fs);		
 	},
-	_lastDataSource: null
+	_lastDataSource: null,
+	_detectedIP: null,
+	_detectedAudience: null,
+	_detectedAudienceSegment: null,
+	_dbDataSet: null,				//Demandbase object used in form submit (set automatically)
+	_dbDataSrc: null				//Demandbase API that provided _dbDataSet (leave these fields blank)
 }
 
 DemandbaseForm.demandbaseParser.init();
