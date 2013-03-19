@@ -57,7 +57,7 @@ DemandbaseForm.demandbaseParser = {
 	testIpAddress: '3.0.0.1',		//passed to query parameter when useTestIp is true - set to test any individual IP for testing
 	useCompanyInputMatch: false,	//Testing mode - true means user input for company field will match the nearest company, false means company name API will only match a company when the user selects something from the drop down menu
 	useIspFilter: true,				//False means IP addresses that resolve to an ISP will count as a match (true is recommended value)
-	keepAudienceFields: false,		//True means the audience fields from the IP API will be added to the data sets returned by the Domain and Company APIs
+	keepAudienceFields: false,		//True means the audience fields from the IP API will be added to the data sets returned by the Domain and Company APIs	
 	hiddenFieldMap: {
 		//TODO: Required - update this map with actual DOM IDs of form field(s) to populate with Demandbase data and integrate with form processor
 		'marketing_alias': '',
@@ -191,7 +191,7 @@ DemandbaseForm.demandbaseParser = {
     			this.form.appendChild(fs);
 				this._lastDataSource = priority;
 			}
-  		}catch(e){if(this.debug)alert('Error: '+e);}
+  		}catch(e){if(this.debug)alert('Error: '+e+ ' : '+e.message);}
 	},
 	_normalize: function(name) {
 		var prefix = 'db_';
@@ -262,7 +262,7 @@ DemandbaseForm.demandbaseParser = {
 			Demandbase.CompanyAutocomplete.widget({
 				company: this.companyID, 
 				email:   this.emailID,
-				key: this.key,   
+				key: this.key, 
 				callback: function(data){DemandbaseForm.demandbaseParser.parser(data)}
 	  		})
 
