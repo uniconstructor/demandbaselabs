@@ -11,7 +11,7 @@ Step 1 - Add the Company Autocomplete widget to your HTML page (or landing page 
 
 Step 2 - Add this file to your HTML page (or landing page template)
     <!-- Including Demandbase Standard Forms Implementation -->
-    <script src="[YOUR_JS_PATH]/demandbaseForm.js" type="text/javascript"></script>
+    <script src="[YOUR_JS_PATH]/demandbaseFormStd.js" type="text/javascript"></script>
 
 Step 3 - Update this file with required info:
 	Search for "TODO" comments and fill-in required values
@@ -44,7 +44,7 @@ Contact Demandbase Strategic Services with questions, comments, or requests. <de
 var DemandbaseForm={};
 DemandbaseForm.demandbaseParser = {
 	name: 'Demandbase Form Module',
-	key:'YOUR_KEY_HERE',  //TODO: Required - Add your Demandbase key here
+	key:'YOUR_KEY_HERE',  			//TODO: Required - Add your Demandbase key here
 	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
 	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
@@ -172,7 +172,7 @@ DemandbaseForm.demandbaseParser = {
 			    newEl.setAttribute('id',elName);
 			    newEl.setAttribute('name',elName);
 			    newEl.setAttribute('type','hidden');  	//formerly using elType
-			    newEl.value = data[info];
+			    newEl.value = data[info] || '(not set)';
 			    
 			    if(this.testing){
 			   		var testEl = document.createElement('div');
@@ -200,8 +200,7 @@ DemandbaseForm.demandbaseParser = {
   		//this fcn breaks out each individual field in those objects andnormalizes the name, making
   		//it possible to iterate through the entire data set without checking for objects
 		for (d in data){
-			if (typeof data[d] == 'object') {
-
+			if (typeof data[d] == 'object' && data[d] !== '') {
 				for (nd in data[d]) {
 					data[d+'_'+nd] = data[d][nd];
 				}
