@@ -1,0 +1,81 @@
+<!-- Google Analytics -->
+<script type="text/javascript">
+  ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};(function(f,a,s,t){
+  s=a.createElement(f),t=a.getElementsByTagName(f)[0];s.async=true;s.src='//www.google-analytics.com/analytics.js';t.parentNode.insertBefore(s,t)})('script',document);
+  ga('create', 'UA-35977085-1');
+
+  /*start Demandbase integration */
+  var demandbaseGUA = demandbaseGUA || {};
+  demandbaseGUA={
+      key:'[YOUR_KEY_HERE]',
+      /* Customize which variables are sent to GA. 
+         'fields' must be a Demandbase variable name
+         'fieldLabels' is free form this is the custom variable key in GA */
+      fields:['company_name','industry','sub_industry','employee_range','revenue_range','audience','audience_segment','fortune_1000','forbes_2000','watch_list_account_type','watch_list_buying_stage','watch_list_crm_system','watch_list_has_product_a','watch_list_has_product_b','watch_list_primary_product_family','watch_list_target_product_family'],
+      fieldLabels: ['CompanyName', 'Industry', 'Sub-Industry', 'EmployeeRange', 'RevenueRange','Audience','Audience Segment','Fortune 1000','Forbes 2000','Account Status','Buying Stage','CRM System', 'Product A', 'Product B', 'Primary Product Family', 'Target Product Family'],
+      track:function(data) {
+        try {
+          data=demandbaseGUA._flatA(data);
+          var dflt='(not set)'
+          for(field in demandbaseGUA.fields){
+            var l=demandbaseGUA._cA(demandbaseGUA._toPC(demandbaseGUA.fieldLabels[field])),v=data[demandbaseGUA.fields[field]]||dflt;
+            demandbaseGUA._var((parseInt(field)+1),l,v,1)
+            demandbaseGUA._logE((parseInt(field)+1)+' ' +l +' : '+v);
+          };
+          demandbaseGUA._event();
+          
+          demandbaseGUA._cEvent(data['audience']||dflt,data['industry']||dflt,data['company_name']||dflt);
+          demandbaseGUA._cEvent(data['watch_list_account_type']||dflt,data['watch_list_buying_stage']||dflt,data['company_name']||dflt);
+        } catch(e){ demandbaseGUA._logE('Integration Error: '+e) }; 
+      },
+      load:function(){
+        try { 
+          if(!window.ga) window.ga=[];
+          var db=document.createElement('script');db.type='text/javascript'; db.async=true;
+          /* Remove 'sandbox.' from src URL when deploying to production */
+          db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=demandbaseGUA.track&page='+document.URL+'&referrer='+document.referrer;
+          var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
+          demandbaseGUA._logE('Loaded Script ' + db.src);
+        } catch(e){ this._logE('Script Error: '+e)}; 
+      },
+      _cA:function(s){ 
+        var al=['IP','SID','HQ','DMA','ISP'];
+        for(a in al){ s=s.replace(new RegExp(al[a],'ig'),al[a])}return s;
+      },
+      _flatA:function(a){ 
+        for(d in a){ 
+          if(typeof a[d]=='object'&&a[d]!==null){ 
+            for(cd in a[d]){a[d+'_'+cd]=a[d][cd]};
+            delete a[d];
+          }
+        }; 
+        return a;
+      },
+      _logE:function(m){ if(typeof(console) !== 'undefined' && window['console'] !== 'undefined') { console.log('DB GA '+m); } },
+      _toPC:function(s){ return s.replace(/_/g,' ').replace(/\w\S*/g,function(t){ return t.charAt(0).toUpperCase()+t.substr(1).toLowerCase() }); },
+      _var:function(i,k,v,s){ ga('set','dimension'+i,v); },
+      _event:function(){ 
+          ga("send", "event", {
+          eventCategory: "Demandbase",
+          eventAction: "API Resolution",
+          eventLabel: "IP Address API",
+          nonInteraction: true
+        });
+        demandbaseGUA._logE('Sent Custom Event: Demandbase/API Resolution/IP Address API');
+      },
+      _cEvent:function(c,a,l){
+        ga("send", "event", {
+          eventCategory: c,
+          eventAction: a,
+          eventLabel: l,
+          nonInteraction: true
+        });
+        demandbaseGUA._logE('Sent Custom Event:'+c+'/'+a+'/'+l);
+      }
+  };
+  demandbaseGUA.load();
+  /* end Demandbase integration */
+  ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
