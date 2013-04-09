@@ -32,9 +32,9 @@
 <script type="text/javascript">
   var DemandbaseAnalytics=DemandbaseAnalytics||{};
   DemandbaseAnalytics.demandbaseGA={
-    key    : '[YOUR_DEMANDBASE_KEY]',   //TODO: add your Demandbase key
+    key:'[YOUR_DEMANDBASE_KEY]',
     /* Customize which variables are sent to GA. 'fields' must be a Demandbase variable name */
-    fields : ['audience','industry','company_name','employee_range','revenue_range'],  //TODO: choose Demandbase fields to send to GA
+    fields:["audience","industry","revenue_range","employee_range","company_name"],
     dbDataSet: null,
     track:function(data) {
         try {
@@ -42,12 +42,22 @@
           DemandbaseAnalytics.demandbaseGA.dbDataSet = data;  /*allows access to db dataset in JS outside of this namespace */
           for(field in DemandbaseAnalytics.demandbaseGA.fields){
             var lbl=DemandbaseAnalytics.demandbaseGA._cA(DemandbaseAnalytics.demandbaseGA._toPC(DemandbaseAnalytics.demandbaseGA.fields[field]));
-            DemandbaseAnalytics.demandbaseGA._var((parseInt(field)+1),lbl,(data[DemandbaseAnalytics.demandbaseGA.fields[field]]||''),1);
-            DemandbaseAnalytics.demandbaseGA._logE(lbl + ' : ' + data[DemandbaseAnalytics.demandbaseGA.fields[field]]||'');
+            var val=data[DemandbaseAnalytics.demandbaseGA.fields[field]]||'(not set)';
+            DemandbaseAnalytics.demandbaseGA._var((parseInt(field)+1),lbl,val,1);
+            DemandbaseAnalytics.demandbaseGA._logE(lbl+' : '+val);
+          }
+          
+          /*  additional event with Demandbase data as category/action/label  */
+          if(data) {
+            var cat=data['audience'] || '(not detected)';
+            var act=data['industry'] || '(not detected)';
+            var lbl=data['company_name'] || '(not detected)';
+            DemandbaseAnalytics.demandbaseGA._p('_trackEvent',cat,act,lbl,0,1);
+            DemandbaseAnalytics.demandbaseGA._logE('Custom Event Tracked: '+cat+' : '+act+' : '+lbl);
           }
           DemandbaseAnalytics.demandbaseGA._event();
         } catch(e){ DemandbaseAnalytics.demandbaseGA._logE('Integration Error: '+e)}; 
-      },
+    },
     load:function(){
       try { 
         if(!window._gaq) window._gaq=[];
@@ -72,7 +82,7 @@
       }; 
       return a;
     },
-    _logE:function(m){ if(window['console'] !== 'undefined' && typeof(console) !== 'undefined') console.log('DB GA '+m); },
+    _logE:function(m){ if(window['console'] !== 'undefined' && typeof(console) !== 'undefined') { console.log('DB GA '+m); } },
     _toPC:function(s){ 
       return s.replace(/_/g,' ').replace(/\w\S*/g,function(t){ return t.charAt(0).toUpperCase()+t.substr(1).toLowerCase() }); },
     _p:function(t,v1,v2,v3,v4,v5){ window._gaq.push([t,v1,v2,v3,v4,v5]); },
