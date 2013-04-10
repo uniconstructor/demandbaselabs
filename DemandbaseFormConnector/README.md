@@ -16,12 +16,11 @@ Extensive technical documentation is available at:
 	http://www.demandbaselabs.com/docs/form_connector
 
 New Features:
+	
 	- "connect" function provides an easy way to set/override properties from outside the demandbaseForm.js file
 	- added "authorize" function to validate Demandbase key
 	- "_restoreIpFields" function adds detected IP back to data sets from Domain and Company API, so IP address can be captured with every visit.
 	- "keepAudienceFields" option to always capture audience and audience segment, regardless of the winning API
-
-	- elements specified in toggleFieldList are automatically hidden when script loads
 	- Domain API call is triggered even when Email field has a prepopulated value
 	- added "hook" function so class functionality can be extended.  
 		- db_hook_init is called in init function
@@ -30,6 +29,8 @@ New Features:
 		- db_hook_after_parse is called after a data set is parsed (only called for overriding data sets)
 
 Enhancements:
+	
+	- elements specified in toggleFieldList are automatically hidden when script loads
 	- visible and hidden elements can be mapped by name or ID (uses _getElmByIdOrName function)
 	- only elements within the specified form are considered when mapping by name (uses _getElmByIdOrName function)
 	- Company Autocomplete label can now be set via property instead of modifying function
@@ -43,6 +44,7 @@ Enhancements:
 	- cleaned/clarified header comments and instructions
 
 Bug Fixes:
+	
 	- null/empty attributes are no longer stripped-out by the _flattenData function
 	- if a field is not returned by an overriding data set, the previously set value will now be set to blank instead of persisting (_resetFields) function
 	- more robust detection of widget.js file - IP API is still called even if widget.js is not present.
