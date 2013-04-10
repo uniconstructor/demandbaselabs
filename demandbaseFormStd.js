@@ -284,7 +284,7 @@ DemandbaseForm.demandbaseParser = {
 		this._sourceChecker.setSource('IP'); 
 		//calling the IP Address API
 		var s = document.createElement('script');
-		s.src = "http://api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.demandbaseParser.parser&query";
+		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.demandbaseParser.parser&query";
 		//override query parameter with test IP address when bln is set
 		if(this.useTestIp) {
 			s.src = s.src + "=" + this.testIpAddress
