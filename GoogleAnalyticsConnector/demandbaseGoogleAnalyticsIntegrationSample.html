@@ -32,9 +32,10 @@
 <script type="text/javascript">
   var DemandbaseAnalytics=DemandbaseAnalytics||{};
   DemandbaseAnalytics.demandbaseGA={
-    key:'[YOUR_DEMANDBASE_KEY]',
+    key:'YOUR_DEMANDBASE_ANALYTICS_KEY_HERE',
     /* Customize which variables are sent to GA. 'fields' must be a Demandbase variable name */
     fields:["audience","industry","revenue_range","employee_range","company_name"],
+    version:'2.0',
     dbDataSet: null,
     track:function(data) {
         try {
