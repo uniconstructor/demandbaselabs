@@ -76,7 +76,7 @@
     },
     _flatA:function(a){ 
       for(d in a){ 
-        if(typeof a[d]=='object'){ 
+        if(typeof a[d]=='object' && a[d]!==null){ 
           for(cd in a[d]){a[d+'_'+cd]=a[d][cd]};
           delete a[d];
         }
