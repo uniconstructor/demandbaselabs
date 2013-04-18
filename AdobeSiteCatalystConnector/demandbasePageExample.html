@@ -7,15 +7,20 @@
 <p>Demandbase Implementation Example</p>
 <hr />
 
-<script language="JavaScript" type="text/javascript" src="demandbasePlugin-min.js"></script>
-<script language="JavaScript" type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=ENTER-DEMANDBASE-KEY-HERE&var=dbInfo&callback=demandbasePlugin.demandbaseParse"></script>
-<script language="JavaScript" type="text/javascript" src="s_code.js"></script>
-<script language="JavaScript" type="text/javascript"><!--
+<script language="JavaScript" type="text/javascript" src="demandbasePlugin.js"></script>
+<script type="text/javascript">
+      var myKey = 'YOUR_KEY_HERE';//"Your_Demandbase_Key_Here";
+      var s = document.createElement('script');
+      s.src = "http://api.demandbase.com/api/v2/ip.json?key="+myKey+"&callback=DemandbaseAnalytics.demandbaseSC.demandbaseParse&page="+document.location.href+"&page_title="+document.title+"&referrer="+document.referrer+'&query=';
+      document.getElementsByTagName('head')[0].appendChild(s);
+</script>
+
+<!--script language="JavaScript" type="text/javascript" src="s_code.js"></script>
+<script language="JavaScript" type="text/javascript">
 /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
 var s_code=s.t(); 
 if(s_code)document.write(s_code); 
-//-->
-</script>
 
+</script-->
 </body>
 </html>
