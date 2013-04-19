@@ -6,14 +6,19 @@ License: Copyright 2013. All rights reserved.
 
 demandbaseForm.js is a replacement for demandbaseFormStd.js.  This new-and-improved framework is a public beta.  
 
+Technical documentation is available at:
+	http://www.demandbaselabs.com/docs/form_connector
+	
+Getting Started Guide (work-in-progress)
+	http://wiki.demandbaselabs.com/mwiki/index.php?title=Demandbase_Form_Connector
+
 Demonstration page with Eloqua form integration is available at:
 	http://www.demandbaselabs.com/sandbox/form.html
 
 Unit test page using qUnit is currently in-developement at:
 	http://www.demandbaselabs.com/form/FormConnectorTest.html
 
-Extensive technical documentation is available at:
-	http://www.demandbaselabs.com/docs/form_connector
+
 
 New Features:
 	
