@@ -45,8 +45,8 @@ var DemandbaseForm={};
 DemandbaseForm.demandbaseParser = {
 	name: 'Demandbase Form Module',
 	key:'YOUR_KEY_HERE',  			//TODO: Required - Add your Demandbase key here
-	emailID: 'email_input_id', 		//TODO: Required - DOM ID of Email field
-	companyID: 'company_input_id', 	//TODO: Required - DOM ID of Company field
+	emailID: 'email_input_id', 			//TODO: Required - DOM ID of Email field
+	companyID: 'company_input_id', 		//TODO: Required - DOM ID of Company field
 	form: null, 					//TODO: Optional - specify form name - Form object to populate with Db data and send to MAS (null selects first form found in the DOM)  !Warning! - if your landing page has another <form> element (common for search or login functionality), define this element
 	formNameList: ['FORM_NAME'],	//TODO: Optional - If using this on pages with more than one form, list form names here
 	debug: true, 					//Testing mode - Show errors to user - set this to false before deploying!
@@ -58,6 +58,7 @@ DemandbaseForm.demandbaseParser = {
 	keepAudienceFields: false,		//True means the audience fields from the IP API will be added to the data sets returned by the Domain and Company APIs	
 	hiddenFieldMap: {
 		//TODO: Required - update this map with actual DOM IDs of form field(s) to populate with Demandbase data and integrate with form processor
+		//Demandbase variable name on left / MAS/DOM ID on right
 		'marketing_alias': '',
 		'industry': '',
 		'sub_industry': '',
@@ -308,6 +309,7 @@ DemandbaseForm.demandbaseParser = {
 		for (field in this.toggleFieldList) {
 			fieldId = this.toggleFieldList[field];
 			Demandbase.jQuery('#' + fieldId).show();
+			//Note for Marketo forms, change to use: Demandbase.jQuery('#' + fieldId).parents('li').toggle();
 		}
 	},
 	_sourceChecker: {
