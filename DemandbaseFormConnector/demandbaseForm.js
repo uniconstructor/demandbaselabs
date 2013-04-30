@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.1
+  File: demandbaseForm.js  v.beta_0.2
   Name: Demandbase Form Module
   Authors: Matthew Downs (mdowns[at@]demandbase[dot.]com), Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), 
   Support Contact: strategicservices[at@]demandbase[dot.]com
@@ -419,7 +419,7 @@ DemandbaseForm.formConnector = {
 				if (!data.person) return; //TODO: MD - why here? better way?
 				data = data.person;
 				/* if Domain API returns same SID as existing data set, do not override */
-				if (data.demandbase_sid == this._dbDataSet.demandbase_sid) return;
+				if (this._dbDataSet && data.demandbase_sid == this._dbDataSet.demandbase_sid) return;
 				
 			} else if (data.pick || data.input_match) {
 				source = 'company';		//Company API data set
@@ -428,7 +428,7 @@ DemandbaseForm.formConnector = {
 					data = data.input_match;
 					this._log('Using input_match object from Company Name API...');
 				}
-				data['manual_review'] = true;	//Add manual review flag when the Company Name API is used (can be captured to flag for potential user input errors)
+				data['manual_review'] = true;	/*Add manual review flag when the Company Name API is used (can be captured to flag for potential user input errors)*/
 				
 			} else {
 				source = 'ip';			//IP Address API data set
@@ -443,12 +443,17 @@ DemandbaseForm.formConnector = {
 			}
 			this._log('Parsing response from API: ' + source); 
             this._sourceChecker.setSource(source, this._isIdComplete(data), true);  // Record source and result.
-            db_hook_before_parse(data,source);
+            
+            if(this._dbDataSet) isIdMatch = data.demandbase_sid == this._dbDataSet.demandbase_sid;
+            
+            db_hook_before_parse(data,source); //call hook function before parsing
 
 			//Check if data source takes precedence
 			priority = this.priorityMap[source];
-			if (this._lastDataSource !== null && priority < this._lastDataSource) return; 
-				
+			if (this._lastDataSource !== null && priority < this._lastDataSource) {
+				//by pass API priority if current result from Domain API matches SID from subsequent result
+				if(!isIdMatch && this._dbDataSet !== 'domain') return;
+			}
 			this._dbDataSet = data;  //Update the data object used
 			this._dbDataSrc = source;
 		   	this._removeDataset(data);	//Remove previously used data set
@@ -680,8 +685,9 @@ DemandbaseForm.formConnector = {
 		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.formConnector.parser&query=";
 		//override query parameter with test IP address when bln is set
 		if(this.useTestIp) {
-			if(this.testIpAddress == '') {
-				this.testIpAddress = this._getQueryParam('dbip');
+			var testIp = this._getQueryParam('dbip');
+			if(testIp && testIp !== '') {
+				this.testIpAddress = testIp;
 				this._log('Overriding IP Address from query string: ' + this.testIpAddress);
 			} else {
 				this._log('Overriding IP Address from internal: ' + this.testIpAddress);
@@ -857,7 +863,7 @@ DemandbaseForm.formConnector = {
 	@protected
 	@final
 	**/
-	_version: 'beta_0.1',
+	_version: 'beta_0.2',
 	/**
 	@class _sourceChecker
 	@extensionfor formConncector
@@ -922,6 +928,7 @@ DemandbaseForm.formConnector = {
             DemandbaseForm.formConnector._log('All APIs hit with no identification. Running onNoId function...');
             //Calling function to show elements defined in toggleFieldList
             DemandbaseForm.formConnector.toggleFields();
+            db_hook_no_id();
         },
         /**
         This function is called when all three APIs have been queried, regardless of the results.
@@ -945,6 +952,9 @@ if(typeof db_hook_init == "undefined") db_hook_init = function(){};
 
 /** this function is called after all APIs have been queried **/
 if(typeof db_hook_all_hit == "undefined") db_hook_all_hit = function(){};
+
+/** this function is called after all APIs have been queried but non have returned the values for the fields in requiredFieldList**/
+if(typeof db_hook_no_id == "undefined") db_hook_no_id = function(){};
 
 /**This fcn is called by DemandbaseForm.formConnector.parser for each field when a returned data set is parsed**/
 if(typeof db_hook_attr == "undefined") db_hook_attr = function(){};
