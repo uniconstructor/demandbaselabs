@@ -280,9 +280,9 @@ DemandbaseForm.formConnector = {
 	@static
 	@default 
 		priorityMap: {
-			'Email': 3,					//highest # is top priority - Domain API "wins" over other APIs
-			'IP': 2, 					//if Domain API doesnt identify, use IP Address API
-			'Company': 1				//Company API is lowest priority (lowest number)
+			'domain': 3,					//highest # is top priority - Domain API "wins" over other APIs
+			'ip': 2, 					//if Domain API doesnt identify, use IP Address API
+			'company': 1				//Company API is lowest priority (lowest number)
 		}
 	@required
 	**/
@@ -418,6 +418,8 @@ DemandbaseForm.formConnector = {
 				this._sourceChecker.setSource(source, this._isIdComplete(data), true);
 				if (!data.person) return; //TODO: MD - why here? better way?
 				data = data.person;
+				/* if Domain API returns same SID as existing data set, do not override */
+				if (data.demandbase_sid == this._dbDataSet.demandbase_sid) return;
 				
 			} else if (data.pick || data.input_match) {
 				source = 'company';		//Company API data set
@@ -610,6 +612,24 @@ DemandbaseForm.formConnector = {
 		return elm;
 	},
 	/**
+	Used to get the IP address from the query string, this function can retrieve the value of any parameter from the URL query string.
+	@method _getQueryParam
+	@params {String} param - The name of the query parameter whose value to retrieve
+	@static
+	**/
+	_getQueryParam: function(param) {
+	    var qs = window.location.search.substring(1); //remove the leading '?'
+	    var pairs = qs.split('&');
+	    var params = {};
+	    for (var i = 0; i < pairs.length; i++) {
+	      var nvArray = pairs[i].split('=');
+	      var name = nvArray[0];
+	      var value = nvArray[1];
+	      params[name] = value; 
+	    }
+	    return params[param];
+	},
+	/**
 	Attaches the Demandbase Company Autocomplete Widget to the input fields specified by companyID and emailID.
 	In addition to the dynamci autocomplete list of companies, this makes calls to the Domain API and Company Name API when the user enters information.
 	Required widget.js file is already loaded.
@@ -657,11 +677,16 @@ DemandbaseForm.formConnector = {
 		
 		//calling the IP Address API
 		var s = document.createElement('script');
-		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.formConnector.parser&query";
+		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.formConnector.parser&query=";
 		//override query parameter with test IP address when bln is set
 		if(this.useTestIp) {
-			s.src = s.src + "=" + this.testIpAddress
-			this._log('Overriding IP Address: ' + this.testIpAddress);
+			if(this.testIpAddress == '') {
+				this.testIpAddress = this._getQueryParam('dbip');
+				this._log('Overriding IP Address from query string: ' + this.testIpAddress);
+			} else {
+				this._log('Overriding IP Address from internal: ' + this.testIpAddress);
+			}
+			s.src = s.src + this.testIpAddress
 		}
 		document.getElementsByTagName('head')[0].appendChild(s);
 		this._log('Loaded IP Address API');
@@ -885,7 +910,8 @@ DemandbaseForm.formConnector = {
                     break;
                 }
             }
-            if (allHit && !id) this.onNoId();
+            if (allHit) 		this.onAllHit();
+            if (allHit && !id) 	this.onNoId();
         },
         /**
         This function is called when all APIs have been hit but none have provided the required fields.  The primary use is to show additional form fields to the visitor.
@@ -896,6 +922,15 @@ DemandbaseForm.formConnector = {
             DemandbaseForm.formConnector._log('All APIs hit with no identification. Running onNoId function...');
             //Calling function to show elements defined in toggleFieldList
             DemandbaseForm.formConnector.toggleFields();
+        },
+        /**
+        This function is called when all three APIs have been queried, regardless of the results.
+        In general, this function is run after the visitors has entered a company name.
+        Note: this may be run more than once, if the user goes back and corrects the email address or company name they entered
+        @method onAllHit
+        **/
+        'onAllHit' : function(){
+        	db_hook_all_hit();
         }
     }
 }
@@ -903,15 +938,21 @@ DemandbaseForm.formConnector = {
 /** ensure console.log and console.debug exist **/
 if(typeof window.console == "undefined") window.console = {log: function(){}, debug: function(){}};
 
-/**define hook functions, if not defined elsewhere **/
+/** Safety: define hook functions, in case they're not defined elsewhere **/
 /** These hooks provide extensibility.  They are global functions that can be defined any where are called by the init and parser functions.**/
 /**This fcn is called at the end of DemandbaseForm.formConnector.init**/
 if(typeof db_hook_init == "undefined") db_hook_init = function(){};
+
+/** this function is called after all APIs have been queried **/
+if(typeof db_hook_all_hit == "undefined") db_hook_all_hit = function(){};
+
 /**This fcn is called by DemandbaseForm.formConnector.parser for each field when a returned data set is parsed**/
 if(typeof db_hook_attr == "undefined") db_hook_attr = function(){};
+
 /**This fcn is called by DemandbaseForm.formConnector.parser before a data set is processed.
 This function runs regardless of whether the returned data set overrides the current data set.**/
 if(typeof db_hook_before_parse == "undefined") db_hook_before_parse = function(){};
+
 /**This fcn is called at the end of DemandbaseForm.formConnector.parser, after a data set is processed.
 This function runs only when the returned data set overrides the current data set.**/
 if(typeof db_hook_after_parse == "undefined") db_hook_after_parse = function(){};
