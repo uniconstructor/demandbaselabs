@@ -456,6 +456,7 @@ DemandbaseForm.formConnector = {
 			}
 			this._dbDataSet = data;  //Update the data object used
 			this._dbDataSrc = source;
+			data['data_source']=source;
 		   	this._removeDataset(data);	//Remove previously used data set
 		   	this._log('Parsing data response from: ' + this._dbDataSrc);
 		   	this._log('New Data Set:');
