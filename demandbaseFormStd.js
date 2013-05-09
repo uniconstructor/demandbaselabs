@@ -118,7 +118,7 @@ DemandbaseForm.demandbaseParser = {
 		try {
 			//Identify data source and priority
 			var priority, source;
-			if (typeof data.person == 'object') {
+			if (data.person) {
 				this._sourceChecker.setSource('Email', this._isIdComplete(data), true);
 				if (!data.person) return;
 				source = 'Email';		//Domain API data set
@@ -170,7 +170,7 @@ DemandbaseForm.demandbaseParser = {
 	            }
 
 				var newEl = document.createElement('input');
-			    newEl.setAttribute('id',elName);
+			    newEl.setAttribute('id',fieldId);
 			    newEl.setAttribute('name',elName);
 			    newEl.setAttribute('type','hidden');  	//formerly using elType
 			    newEl.value = data[info] || '(not set)';
