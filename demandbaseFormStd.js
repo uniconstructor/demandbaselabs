@@ -118,7 +118,7 @@ DemandbaseForm.demandbaseParser = {
 		try {
 			//Identify data source and priority
 			var priority, source;
-			if (data.person) {
+			if (typeof data.person == 'object') {
 				this._sourceChecker.setSource('Email', this._isIdComplete(data), true);
 				if (!data.person) return;
 				source = 'Email';		//Domain API data set
