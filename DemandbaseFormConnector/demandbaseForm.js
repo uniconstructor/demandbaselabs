@@ -778,7 +778,7 @@ DemandbaseForm.formConnector = {
 	@method _log
 	**/
 	_log: function(){
-	    if(this.logging) console.log.apply(window.console, ["DemandbaseForm:"].concat([].splice.call(arguments,0)))
+	    if(this.logging) window.console.log(msg);
 	},
     /**
     Queries the IP address API to validate the provided key.
