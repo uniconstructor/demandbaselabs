@@ -611,10 +611,11 @@ DemandbaseForm.formConnector = {
 	**/
 	_getElmByIdOrName: function(field) {
 		var elm = document.getElementById(field);
-		if(!elm) {
+		if(!elm && this.form) {
 			elm = this.form.elements.namedItem(field);
 			if(elm && elm instanceof NodeList) elm=elm[0];
 		}
+		//TODO: what if elm is still undefined?
 		return elm;
 	},
 	/**
@@ -666,7 +667,7 @@ DemandbaseForm.formConnector = {
                 });
             }).blur(function () {
             	//register hit API in the blur event
-                self._sourceChecker.setSource('company'); //,self._isIdComplete()
+                //self._sourceChecker.setSource('company'); //,self._isIdComplete()
             });
 		};
 		this._log('Attached CompanyAutocomplete Widget to email/company fields: ' + this.emailID + ' / ' + this.companyID);
