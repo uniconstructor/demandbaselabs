@@ -1,20 +1,25 @@
 <html>
 <head>
 <title>Demandbase Implementation Example</title>
+<!--include Demandbase plugin within head-->
+<script type="text/javascript" src="demandbasePlugin.js"></script>
+
 
 </head>
 <body>
-<p>Demandbase Implementation Example</p>
-<hr />
-
-<script type="text/javascript" src="demandbasePlugin.js"></script>
+<!-- call Demandbase IP API in top of body-->
 <script type="text/javascript">
-      var myKey = 'YOUR_KEY_HERE';//"Your_Demandbase_Key_Here";
+      var myKey = 'YOUR_KEY_HERE';
       var s = document.createElement('script');
       s.src = "http://api.demandbase.com/api/v2/ip.json?key="+myKey+"&callback=DemandbaseAnalytics.demandbaseSC.demandbaseParse&page="+document.location.href+"&page_title="+document.title+"&referrer="+document.referrer+'&query=';
       document.getElementsByTagName('head')[0].appendChild(s);
 </script>
 
+<p>Demandbase Implementation Example</p>
+<hr />
+
+
+<!-- s_code.js must be loaded after Demandbase plugin and API call -->
 <!--script language="JavaScript" type="text/javascript" src="s_code.js"></script>
 <script language="JavaScript" type="text/javascript">
 /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
