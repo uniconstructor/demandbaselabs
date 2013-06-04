@@ -777,7 +777,7 @@ DemandbaseForm.formConnector = {
 	Safe log method. All logging can be disabled by setting logging to false.
 	@method _log
 	**/
-	_log: function(){
+	_log: function(msg){
 	    if(this.logging) window.console.log(msg);
 	},
     /**
