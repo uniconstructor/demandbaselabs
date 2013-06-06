@@ -919,6 +919,7 @@ DemandbaseForm.formConnector = {
                 }
             }
             if (allHit) 		this.onAllHit();
+            //TODO: possibly comment this out...
             if (allHit && !id) 	this.onNoId();
         },
         /**
@@ -939,6 +940,9 @@ DemandbaseForm.formConnector = {
         @method onAllHit
         **/
         'onAllHit' : function(){
+        	//check _dbDataSet for values in reqdAttrsList
+    	    //isIDREALLYComplete = DemandbaseForm.formConnector._isIDComplete(DemandbaseForm.formConnector._dbDataSet)
+    	    //if(!isIDREALLYComplete) this.onNoId();
         	db_hook_all_hit();
         }
     }
