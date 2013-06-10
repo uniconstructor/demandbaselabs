@@ -436,7 +436,7 @@ DemandbaseForm.formConnector = {
 				this._detectedIP = data['ip'] || '';
 				this._detectedAudience = data['audience'] || '';
 				this._detectedAudienceSegment = data['audience_segment'] || '';
-				//this._sourceChecker.setSource('IP', this._isIdComplete(data), true);
+				this._sourceChecker.setSource('IP', this._isIdComplete(data), true);
 				this._log('Queried IP Address: ' + this._detectedIP);
 				if (data['isp']===true && this.useIspFilter) return; //Handle ISP traffic
 				//this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
@@ -667,7 +667,7 @@ DemandbaseForm.formConnector = {
                 });
             }).blur(function () {
             	//register hit API in the blur event
-                //self._sourceChecker.setSource('company'); //,self._isIdComplete()
+                self._sourceChecker.setSource('company'); //,self._isIdComplete()
             });
 		};
 		this._log('Attached CompanyAutocomplete Widget to email/company fields: ' + this.emailID + ' / ' + this.companyID);
@@ -791,7 +791,11 @@ DemandbaseForm.formConnector = {
           dataType: 'jsonp',
           timeout : 2000,
           success: function(d,t,x){ DemandbaseForm.formConnector._isAuthorized=true; DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized);},
-          error: function(d,t,x){ DemandbaseForm.formConnector._isAuthorized=false;  DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized); alert('The Demandbase key is not valid.'); }
+          error: function(d,t,x){ 
+          	DemandbaseForm.formConnector._isAuthorized=false;  
+          	DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized); 
+          	//alert('The Demandbase key is not valid.'); 
+          }
         });
         
 	},
