@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.2
+  File: demandbaseForm.js  v.beta_0.5
   Name: Demandbase Form Module
   Authors: Matthew Downs (mdowns[at@]demandbase[dot.]com), Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), 
   Support Contact: strategicservices[at@]demandbase[dot.]com
@@ -181,7 +181,7 @@ DemandbaseForm.formConnector = {
 	@example 
 		'50.59.18.196'
 	**/					 				
-	testIpAddress: '30.0.0.1',
+	testIpAddress: '3.0.0.1',
 	/**
 	Optional - True means user input for company field will match the nearest company, false means company name API will only match a company when the user selects 
 	a company from the autocomplete list.
@@ -317,6 +317,17 @@ DemandbaseForm.formConnector = {
 	**/
 	toggleFieldList : [], 					//Array of the DOM IDs of fields to show when company is not ID'd
 	/**
+	Indicates whether the form fields in toggleFieldList are shown by default.  
+	The default value, true, indicates fields will be hidden when the page loads.  
+	This is updated whenever the _toggleFields function is called to indicate whether fields should be shown or hidden.
+	This helps prevent fields from being re-hidden if the vistior interacts with the company/email fields multiple times
+	@property areToggleFieldsVisible
+	@static
+	@default true
+	@optional
+	**/
+	areToggleFieldsVisible : true,
+	/**
 	This method accepts an object containing any parameters to be set from outside the formConnector, providing the flexibility to modify the field mapping, form, and autocomplete fields.
 	Call the connect method from the page, rather than creating a unique version of the form module for a particular page.  This is very useful on sites that do not have a formalized
 	naming convention for fields and forms.  See example for how to use within a page.
@@ -387,7 +398,7 @@ DemandbaseForm.formConnector = {
 				if(! dbf.form) dbf.form=document.forms[0];	
 
 				if(Demandbase.jQuery('#'+dbf.emailID).val() !== '') Demandbase.CompanyAutocomplete.getPerson(Demandbase.CompanyAutocomplete.callback);
-				if(dbf.toggleFieldList.length > 0) dbf.toggleFields();
+				if(dbf.toggleFieldList.length > 0 && dbf.areToggleFieldsVisible) dbf.toggleFields();
 				db_hook_init();
 			});
 			this._log('Initializing ' + this.name + ' v.' + this._version);	
@@ -422,34 +433,41 @@ DemandbaseForm.formConnector = {
 				if (this._dbDataSet && data.demandbase_sid == this._dbDataSet.demandbase_sid) return;
 				
 			} else if (data.pick || data.input_match) {
-				source = 'company';		//Company API data set
-				if (data.pick) data = data.pick;
-				if (this.useCompanyInputMatch && data.input_match) {
+				source = 'company';		/*Company API returns data*/
+				if (data.pick) {
+					data = data.pick;
+					/*set dbDataSet early when no other dataset has been popld yet - reqd for checkSources/onNoId*/
+					if(this._dbDataSet == null) this._dbDataSet = data; 
+				} else if(data.input_match) {
 					data = data.input_match;
-					this._log('Using input_match object from Company Name API...');
+					if (this.useCompanyInputMatch) {
+						this._log('Using input_match object from Company Name API...');
+					} else {
+						//this._sourceChecker.setSource(source, false, true);  // Record source and result.
+						this._log('input_match object detected from Company Name API...exiting because useCompanyInputMatch=false');
+						return;
+					}					
 				}
 				data['manual_review'] = true;	/*Add manual review flag when the Company Name API is used (can be captured to flag for potential user input errors)*/
-				
 			} else {
-				source = 'ip';			//IP Address API data set
-				//store fields returned only by IP API
+				source = 'ip';			/*IP Address API returns data*/
+				/*store fields returned only by IP API*/
 				this._detectedIP = data['ip'] || '';
 				this._detectedAudience = data['audience'] || '';
 				this._detectedAudienceSegment = data['audience_segment'] || '';
-				this._sourceChecker.setSource('IP', this._isIdComplete(data), true);
+				this._sourceChecker.setSource('ip', this._isIdComplete(data), false);
 				this._log('Queried IP Address: ' + this._detectedIP);
 				if (data['isp']===true && this.useIspFilter) return; //Handle ISP traffic
 				//this._lastDataSource = this.priorityMap[source]; 	//initialize lastDataSource when IP API is called
 			}
 			this._log('Parsing response from API: ' + source); 
-            this._sourceChecker.setSource(source, this._isIdComplete(data), true);  // Record source and result.
+            this._sourceChecker.setSource(source, this._isIdComplete(data), true);  /* Record source and result.*/
             
             if(this._dbDataSet) isIdMatch = data.demandbase_sid == this._dbDataSet.demandbase_sid;
             
-            db_hook_before_parse(data,source); //call hook function before parsing
+            db_hook_before_parse(data,source); /*call hook function before parsing*/
 
-			//Check if data source takes precedence
-			priority = this.priorityMap[source];
+			priority = this.priorityMap[source]; /*Check if data source takes precedence*/
 			if (this._lastDataSource !== null && priority < this._lastDataSource) {
 				//by pass API priority if current result from Domain API matches SID from subsequent result
 				if(!isIdMatch && this._dbDataSet !== 'domain') return;
@@ -494,7 +512,7 @@ DemandbaseForm.formConnector = {
 	@params  {Object} [data] - The JSON data set returned from any of the three Demandbase APIs
 	**/
 	_flattenData: function(data){
-		for (d in data){
+		for (d in data) {
 			if (typeof data[d] == 'object' && data[d] !== null) {
 				for (nd in data[d]) {
 					data[d+'_'+nd] = data[d][nd];
@@ -502,7 +520,6 @@ DemandbaseForm.formConnector = {
 				delete data[d];
 			}
 		}
-	
 		return data;
 	},
 	/**
@@ -515,7 +532,6 @@ DemandbaseForm.formConnector = {
 			if(typeof data['ip'] == 'undefined'  && !this._isNullEmpty(this._detectedIP)) {
 				data['ip'] = this._detectedIP;
 			}
-
 			if(this.keepAudienceFields) {
 				if(typeof data['audience' == 'undefined'] && !this._isNullEmpty(this._detectedAudience)) {
 					data['audience'] = this._detectedAudience;
@@ -547,12 +563,11 @@ DemandbaseForm.formConnector = {
  	_buildHiddenField: function(attr,val) {
  		var elName = this._normalize(attr); //Maps the Demandbase variable name to the form field to populate
 	            
-        //If MAS renders the form with hidden fields present...
-        //...remove them to avoid multiple values in the POST
+        /*If MAS renders the form with hidden fields present...
+        ...remove them to avoid multiple values in the POST*/
         var oldField = this._getElmByIdOrName(elName);
         var fieldId = elName;
         //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
-
         if (oldField) {
         	fieldId = oldField.id;
         	//TODO: MD - possibly popl single select menu here, instead of creating new element
@@ -658,16 +673,18 @@ DemandbaseForm.formConnector = {
 	  		var self, djq;
             self = DemandbaseForm.formConnector;
             djq = Demandbase.jQuery;
-            //Since the callback is not called when there is no match on company name
-            //we explictly check sources after an 'autocompletechange' event.
+            /*Since the callback is not called when there is no match on company name
+            we explictly check sources after an 'autocompletechange' event.*/
             djq("#" + self.companyID).bind('autocompletecreate', function () {
                 djq(this).autocomplete('option', 'change', function (event, ui) {
                     Demandbase.CompanyAutocomplete._change.call(this, event, ui);
-                    self._sourceChecker.checkSources();
+                    self._sourceChecker.checkSources();  //this runs after the blur event
                 });
             }).blur(function () {
-            	//register hit API in the blur event
+            	/*register hit API in the blur event
+            	this runs right after the user tabs-out of the company name field*/
                 self._sourceChecker.setSource('company'); //,self._isIdComplete()
+                
             });
 		};
 		this._log('Attached CompanyAutocomplete Widget to email/company fields: ' + this.emailID + ' / ' + this.companyID);
@@ -680,9 +697,6 @@ DemandbaseForm.formConnector = {
 	@uses testIpAddress
 	**/
 	_loadAsyncScript: function() {
-		//Register HIT with source checker
-		
-		//calling the IP Address API
 		var s = document.createElement('script');
 		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.formConnector.parser&query=";
 		//override query parameter with test IP address when bln is set
@@ -698,7 +712,7 @@ DemandbaseForm.formConnector = {
 		}
 		document.getElementsByTagName('head')[0].appendChild(s);
 		this._log('Loaded IP Address API');
-		this._sourceChecker.setSource('ip'); 
+		this._sourceChecker.setSource('ip');  //Register HIT with source checker
 	},
 	/**
 	Checks for empty values that should trigger form to grow (false here means API has not "fully" identified according to implemented definition)
@@ -714,7 +728,7 @@ DemandbaseForm.formConnector = {
 					return false;
 				}		
 			}	
-		}
+		} else { return false; } /* return false if arg is null*/
 		return true;
 	},
 	/**
@@ -724,14 +738,22 @@ DemandbaseForm.formConnector = {
 	@method toggleFields
 	**/
 	toggleFields: function() {
-
+		var toggled = false;
 		for (field in this.toggleFieldList) {
 			fieldId = this.toggleFieldList[field];
 			if(fieldId !== "") {
-				Demandbase.jQuery('#' + fieldId).toggle();	
+				 if(this.areToggleFieldsVisible) {
+					//For Marketo: Demandbase.jQuery('#' + fieldId).parents('li').hide(); 
+					Demandbase.jQuery('#' + fieldId).hide();
+					toggled=true;
+				 } else {
+					//For Marketo: Demandbase.jQuery('#' + fieldId).parents('li').show();
+				    Demandbase.jQuery('#' + fieldId).show();  
+					toggled=true;
+				 }	 	
 			}
-			/*?TODO: MD - break out into show/hide fcns that detects if fields are visible?*/
 		}
+		if(toggled) this.areToggleFieldsVisible = !this.areToggleFieldsVisible;
 	},
     /**
     If an already-set field is not returned by an overriding dataset, this function will reset the field value to the empty string.
@@ -791,10 +813,8 @@ DemandbaseForm.formConnector = {
           dataType: 'jsonp',
           timeout : 2000,
           success: function(d,t,x){ DemandbaseForm.formConnector._isAuthorized=true; DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized);},
-          error: function(d,t,x){ 
-          	DemandbaseForm.formConnector._isAuthorized=false;  
-          	DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized); 
-          	//alert('The Demandbase key is not valid.'); 
+          error: function(d,t,x){ DemandbaseForm.formConnector._isAuthorized=false;  DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized); 
+          /*alert('The Demandbase key is not valid.'); */
           }
         });
         
@@ -869,7 +889,7 @@ DemandbaseForm.formConnector = {
 	@protected
 	@final
 	**/
-	_version: 'beta_0.2',
+	_version: 'beta_0.5',
 	/**
 	@class _sourceChecker
 	@extensionfor formConncector
@@ -922,9 +942,8 @@ DemandbaseForm.formConnector = {
                     break;
                 }
             }
-            if (allHit) 		this.onAllHit();
-            //TODO: possibly comment this out...
-            if (allHit && !id) 	this.onNoId();
+            if (allHit)	this.onAllHit();
+            /*if (allHit && !id) 	this.onNoId();*/
         },
         /**
         This function is called when all APIs have been hit but none have provided the required fields.  The primary use is to show additional form fields to the visitor.
@@ -944,9 +963,8 @@ DemandbaseForm.formConnector = {
         @method onAllHit
         **/
         'onAllHit' : function(){
-        	//check _dbDataSet for values in reqdAttrsList
-    	    //isIDREALLYComplete = DemandbaseForm.formConnector._isIDComplete(DemandbaseForm.formConnector._dbDataSet)
-    	    //if(!isIDREALLYComplete) this.onNoId();
+           	isId = DemandbaseForm.formConnector._isIdComplete(DemandbaseForm.formConnector._dbDataSet)
+    	    if(!isId) this.onNoId();
         	db_hook_all_hit();
         }
     }
