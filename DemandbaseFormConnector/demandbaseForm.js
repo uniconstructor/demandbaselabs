@@ -455,6 +455,7 @@ DemandbaseForm.formConnector = {
 				this._detectedIP = data['ip'] || '';
 				this._detectedAudience = data['audience'] || '';
 				this._detectedAudienceSegment = data['audience_segment'] || '';
+				this._ipDataSet = data;
 				this._sourceChecker.setSource('ip', this._isIdComplete(data), false);
 				this._log('Queried IP Address: ' + this._detectedIP);
 				if (data['isp']===true && this.useIspFilter) return; //Handle ISP traffic
@@ -470,7 +471,7 @@ DemandbaseForm.formConnector = {
 			priority = this.priorityMap[source]; /*Check if data source takes precedence*/
 			if (this._lastDataSource !== null && priority < this._lastDataSource) {
 				//by pass API priority if current result from Domain API matches SID from subsequent result
-				if(!isIdMatch && this._dbDataSet !== 'domain') return;
+				if(!isIdMatch /*&& this._dbDataSrc !== 'domain'*/) return;
 			}
 			this._dbDataSet = data;  //Update the data object used
 			this._dbDataSrc = source;
@@ -855,6 +856,15 @@ DemandbaseForm.formConnector = {
 	@static
 	**/
 	_detectedAudienceSegment: null,
+	/**
+	Demandbase data object returned from the IP address API
+	@property _ipDataSet
+	@type Object
+	@default null
+	@protected
+	@static
+	**/
+	_ipDataSet: null,
 	/**
 	Demandbase object used in form submit (set automatically)
 	@property _dbDataSet
