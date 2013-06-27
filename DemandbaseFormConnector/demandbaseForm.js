@@ -368,6 +368,7 @@ DemandbaseForm.formConnector = {
 		if(typeof options.useIspFilter !== 'undefined' && !this._isNullEmpty(options.useIspFilter))		this.useIspFilter 	= options.useIspFilter;
 		if(typeof options.useCompanyInputMatch !== 'undefined' && !this._isNullEmpty(options.useCompanyInputMatch)) this.useCompanyInputMatch = options.useCompanyInputMatch;
 		if(typeof options.keepAudienceFields !== 'undefined' && !this._isNullEmpty(options.keepAudienceFields))		this.keepAudienceFields = options.keepAudienceFields;
+		if(typeof options.areToggleFieldsVisible !== 'undefined' && !this._isNullEmpty(options.areToggleFieldsVisible))		this.areToggleFieldsVisible = options.areToggleFieldsVisible;
 		this._log('Module Run with Options: ');
 		this._log(options);
 	},
