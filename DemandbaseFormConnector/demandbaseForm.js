@@ -139,6 +139,7 @@ DemandbaseForm.formConnector = {
 	debug: true, 					
 	/**
 	Testing mode - Shows a table of all fields in the winning Demandbase data set under the form
+	While set to false in production, this can be set from the URL query string using "db_debug=true"
 	Warning: set to false before deploying!
 	@property testing
 	@type Boolean
@@ -152,6 +153,7 @@ DemandbaseForm.formConnector = {
 	/**
 	Testing mode - logs messages to console on key events and actions
 	Advise: set to false before deploying.
+	Note: this can also be set in the query string, for example: add "?db_logging=true" to the landing page URL to enable on production form
 	@property logging
 	@type Boolean
 	@static
@@ -164,6 +166,7 @@ DemandbaseForm.formConnector = {
 	/**
 	Testing mode - set to false when deploying to production.
 	Set to true to test using testIpAddress (overrides value sent to IP API query parameter)
+	Note: this can also be set in the query string, for example: add "?db_useTestIp=true" to the landing page URL to enable
 	Advise: set to false before deploying.
 	@property useTestIp
 	@type Boolean
@@ -173,7 +176,8 @@ DemandbaseForm.formConnector = {
 	useTestIp: false,
 	/**
 	Testing mode - IP passed to query parameter when useTestIp is true,
-	Set to test any individual IP for testing
+	Set to test any individual IP for testing.  This value can also be set from the URL query string, for example "?db_ip=3.0.0.1".  
+	If useTestIp is not set to true this value will be ignored
 	@property testIpAddress
 	@type String
 	@static
@@ -504,7 +508,9 @@ DemandbaseForm.formConnector = {
 				this._lastDataSource = priority;
 			}
 			db_hook_after_parse(data,source);
-  		}catch(e){if(this.debug)alert('Error: '+e+ ' \n '+e.stack);}
+  		}catch(e) {
+  			if(this.debug || this._getQueryParam('db_debug')==='true')	alert('Error: '+e+ ' \n '+e.stack);
+  		}
 	},
  	/**
 	Some demandbase fields are returned as objects (hq hierarchy and Account Watch)
@@ -702,8 +708,8 @@ DemandbaseForm.formConnector = {
 		var s = document.createElement('script');
 		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.formConnector.parser&query=";
 		//override query parameter with test IP address when bln is set
-		if(this.useTestIp) {
-			var testIp = this._getQueryParam('dbip');
+		if(this.useTestIp || this._getQueryParam('db_useTestIp')==='true') {
+			var testIp = this._getQueryParam('db_ip');
 			if(testIp && testIp !== '') {
 				this.testIpAddress = testIp;
 				this._log('Overriding IP Address from query string: ' + this.testIpAddress);
@@ -804,7 +810,7 @@ DemandbaseForm.formConnector = {
 	@method _log
 	**/
 	_log: function(msg){
-	    if(this.logging) window.console.log(msg);
+	    if(this.logging || this._getQueryParam('db_logging')==='true') window.console.log('DB Form Connector: ' + msg);
 	},
     /**
     Queries the IP address API to validate the provided key.
