@@ -13,7 +13,7 @@ Step 1 - Add the Company Autocomplete widget to your HTML page (or landing page 
     <script src="http://autocomplete.demandbase.com/autocomplete/widget.js" type="text/javascript"></script>
 
 Step 2 - Add this file to your HTML page (or landing page template)
-    <!-- Including Demandbase Standard Forms Implementation -->
+    <!-- Including Demandbase Form Connector -->
     <script src="[YOUR_JS_PATH]/demandbaseForm.js" type="text/javascript"></script>
 
 Step 3 - Update this file with required info:
