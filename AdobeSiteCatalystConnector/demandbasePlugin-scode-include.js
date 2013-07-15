@@ -1,55 +1,60 @@
-/******* do Plugins *******/
+/* ******** Start of Demandbase Plugin *********
+The following snippets are placed within the "s_doPlugins" function.
 
-/********* Start of Demandbase Plugin **********/
+Set demandbase values with window.db_company
+db_company is set by the Demandbase API in page-level code.  See demandbasePageExample.html
 
-/*
-Set demandbase values with window.dbr
-The fields in dbr have the same varialbe names as the Demandbase IP API response
-For a full list of fields, see: http://wiki.demandbaselabs.com/mwiki/index.php?title=Demandbase_API_Documentation#Sample_Responses
+See: http://wiki.demandbaselabs.com/mwiki/index.php?title=Demandbase_API_Documentation#Sample_Responses
+for variable names in the Demandbase IP API response and a full list of fields.
 
-The plugin will flatten nested objects, so HQ and Account Watch fields can be accessed using the object name as a prefix.
-For example:
-s.eVar1 = dbs.watch_list_account_type	||defaultVal;
-s.eVar2 = dbs.hq_company_name			||defaultVal;
-s.eVar3 = dbs.worldhq_industry			||defaultVal;
+'||defaultVal' is reqd when assigning fields to make operations null safe.  This ensures the evars are always assigned.
 
-Note: using  '||defaultVal' when assigning fields is required!!  
-This ensures the evars are still assigned, even if the field is not in the returned data set.
-*/
+********* Demandbase Plugin ******** */
 
-var dbs = (window.dbr)||{}, defaultVal="[EMPTY]";
-s.eVar15 = dbs.audience||defaultVal;
-s.eVar16 = dbs.audience_segment||defaultVal;
-s.eVar17 = dbs.industry||defaultVal;
-s.eVar18 = dbs.sub_industry||defaultVal;
-s.eVar19 = dbs.revenue_range||defaultVal;
-s.eVar20 = dbs.company_name||defaultVal;
-s.zip = dbs.zip||dbs.registry_zip_code||defaultVal;
+var dbs = (window.db_company)||{}, defaultVal='(Non-Company Visitor)';
+s.eVar1 = dbs.audience 			||defaultVal;
+s.eVar2 = dbs.audience_segment	||defaultVal;
+s.eVar3 = dbs.industry 			||defaultVal;
+s.eVar4 = dbs.employee_range 	||defaultVal;
+s.eVar5 = dbs.revenue_range 	||defaultVal;
+s.eVar6 = dbs.company_name 		||defaultVal;
 
-/* Optional - Set sprops for each eVar 
-   Note: be sure your s_code.js version supports this kind of assignment, otherwise, use the format:
-   s.prop1 = dbs.company_name||defaultVal;
-*/
-if (s.eVar15) { s.prop15 = 'D=v15';}
-if (s.eVar16) { s.prop16 = 'D=v16';}
-if (s.eVar17) { s.prop17 = 'D=v17';}
-if (s.eVar18) { s.prop18 = 'D=v18';}
-if (s.eVar19) { s.prop19 = 'D=v19';}
-if (s.eVar20) { s.prop20 = 'D=v20';}
+/* Optional - Assign special eVars for zip and state
+	Note attempts to use public registry info if not available from company profile */
+s.zip 	= dbs.zip 				||dbs.registry_zip_code ||'(No Zip Code)';
+s.state = dbs.state				||dbs.registry_state	||'(No State)';
+
+/* Account Watch Example */
+if(typeof dbs.watch_list !== 'undefined') {
+	s.eVar7 = dbs.watch_list.user_defined_var || defaultVal;
+} else {
+	s.eVar7 = 'Non-Account Watch Visitor'
+}
+
+/* HQ Hierarchy Example */
+if(typeof dbs.worldhq !== 'undefined') {
+	s.eVar8 = dbs.worhq.compy_name || defaultVal;
+}
+
+/* Optional - Set sprops (traffic variables), only if needed 
+   Note: be sure your s_code.js version supports assignment shorthand, 
+   otherwise, use the format: s.prop1 = dbs.company_name||defaultVal;  */
+if (s.eVar1) { s.prop1 = 'D=v1'; }
+if (s.eVar2) { s.prop2 = 'D=v2'; }
+if (s.eVar3) { s.prop3 = 'D=v3'; }
+if (s.eVar4) { s.prop4 = 'D=v4'; }
+if (s.eVar5) { s.prop5 = 'D=v5'; }
+if (s.eVar6) { s.prop6 = 'D=v6'; }
 
 
-/* 	Alternatively, send all Demandbase fields to contextData
-	With this method, fields are assigned to eVars and sprops using Processing Rules.
-	This option requires a resource who is approved to write processing rules and 
-	
-	**Requires Site Catalyst version 15.3 or higher AND s_code.js version H23 or higher.
-*/
+/* ***** 	Using Context Data    *****
+	Optional, send all Demandbase fields to contextData (instead of eVars)
+	This requires assigining eVars and sprops using Processing Rules.
+	!! Notice: Requires Site Catalyst version 15.3 or higher AND s_code.js version H23 or higher.
+	Requires Adobe approval to write processing rules.  */
+
 	for(var field in dbs) {
 		s.contextData[field] = dbs[field]||'';
 	}
 
-
-
-/******* End of Demandbase Plugin *********/
-
-/****** End of Plugins *********/
+/******* End Demandbase Plugin *********/
