@@ -575,9 +575,11 @@ DemandbaseForm.formConnector = {
         ...remove them to avoid multiple values in the POST*/
         var oldField = this._getElmByIdOrName(elName);
         var fieldId = elName;
+        var fieldName=elName;
         //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
         if (oldField) {
         	fieldId = oldField.id;
+        	if(oldField.name) fieldName = oldField.name;
         	if(!fieldId) fieldId = elName; /* just in case existing element does not have ID set */
         	//TODO: MD - possibly popl single select menu here, instead of creating new element
         	oldField.parentNode.removeChild(oldField);   
@@ -585,7 +587,7 @@ DemandbaseForm.formConnector = {
 
 		var newEl = document.createElement('input');
 	    newEl.setAttribute('id',fieldId);
-	    newEl.setAttribute('name',elName);
+	    newEl.setAttribute('name',fieldName);
 	    newEl.setAttribute('type','hidden');
 	    newEl.value = val;
 
