@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.5
+  File: demandbaseForm.js  v.beta_0.5.1
   Name: Demandbase Form Module
   Authors: Matthew Downs (mdowns[at@]demandbase[dot.]com), Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), 
   Support Contact: strategicservices[at@]demandbase[dot.]com
@@ -909,7 +909,7 @@ DemandbaseForm.formConnector = {
 	@protected
 	@final
 	**/
-	_version: 'beta_0.5',
+	_version: 'beta_0.5.1',
 	/**
 	@class _sourceChecker
 	@extensionfor formConncector
