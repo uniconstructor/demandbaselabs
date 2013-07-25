@@ -578,6 +578,7 @@ DemandbaseForm.formConnector = {
         //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
         if (oldField) {
         	fieldId = oldField.id;
+        	if(!fieldId) fieldId = elName; /* just in case existing element does not have ID set */
         	//TODO: MD - possibly popl single select menu here, instead of creating new element
         	oldField.parentNode.removeChild(oldField);   
         }
