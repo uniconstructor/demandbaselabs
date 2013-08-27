@@ -67,7 +67,7 @@ Demandbase.IP = {
             var s = document.createElement('script');
             s.async = true;
             s.id = 'db_ip_api';
-            s.src = 'http://api.demandbase.com/api/v2/ip.json?key=' + this._key + '&referrer=' + document.referrer + '&page=' + document.location.href + '&page_title=' + document.title + '&callback=Demandbase.IP._parser&query';//+this._callback+
+            s.src = ('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key=' + this._key + '&referrer=' + document.referrer + '&page=' + document.location.href + '&page_title=' + document.title + '&callback=Demandbase.IP._parser&query';//+this._callback+
             if (this._useTestIp) {
                 //override query parameter with test IP address when bln is set
                 if (this._testIpAddress == '') {
@@ -94,12 +94,38 @@ Demandbase.runConnectors = function(data) {
         	var db_industry = Demandbase.CompanyProfile.industry || '';
 			Demandbase.Connectors.AudienceManager.send(Demandbase.CompanyProfile);
     **/
-
-
+    Demandbase.Connectors.AudienceManager.send(Demandbase.CompanyProfile);
 };
 
 Demandbase.Connectors.AudienceManager = {
+    domain :	'my_domain.n.net',
+    dbToAmMap:	{ //optionally specify audience manager field name, if blank, Demandbase API name is used be default
+    	'audience' 		: '', 
+    	'industry' 		: '', 
+    	'company_name' 	: '',
+    	'revenue_range'	: '' 
+    },
     send: function(data) {
-        alert('sending to AAM - ' + data.company_name || 'non-company visitor');
+        var s = document.createElement('script');
+        s.async = true;
+        s.id = 'adbe_am_api';
+        
+        var cStr = '', prefix = 'c_';
+        for (field in this.dbToAmMap) {
+	       //build customer variable string - Example: c_likes=britney+spears&c_loves=lady+gaga& 
+	       var db_value = Demandbase.CompanyProfile[field] || 'default';
+	       db_value.replace(' ', '+');
+		   cStr = cStr + prefix + this.dbToAmMap[field] + '=' + db_value + '&';
+        }
+        
+        s.src = 'http://'+this.domain'/event?d_stuff=1&d_dst=1&d_rtbd=json&d_ld=some+data+to+log&'+cStr+'d_cb=Demandbase.Connectors.AudienceManager.callback';
+        //Note: removed deprecated d_px=123,456,789&
+        document.getElementsByTagName('head')[0].appendChild(s);
+        alert('sending to ADBE AM for ' + data.company_name || 'non-company visitor');
+    },
+    callback: function(data) {
+	    //this function is called when audience manager returns data.
+	    alert(data);
     }
+    
 };
