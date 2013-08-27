@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.5.1
+  File: demandbaseForm.js  v.beta_0.65
   Name: Demandbase Form Module
   Authors: Matthew Downs (mdowns[at@]demandbase[dot.]com), Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com), 
   Support Contact: strategicservices[at@]demandbase[dot.]com
@@ -27,7 +27,7 @@ Step 3 - Update this file with required info:
 
 Testing:
 	-Set "debug" property to true to enable alerts if there is an error calling the API
-	-Set "testing" property to true to display a table of Demandbase fields on the page
+	-Set "showResult" property to true to display a table of Demandbase fields on the page
 		-Be sure to set both these values to false before deploying this script to a production environment
 	-To simulate a visit from a particular IP address, specify a value for the 'query' parameter (on the s.src variable) 
 	 in the "_loadAsyncScript" function
@@ -62,7 +62,6 @@ DemandbaseForm.formConnector = {
 	name: 'Demandbase Form Module',
 	/**
 	Required - Demandbase API key for authenticating calls to IP address API and Company Autocomplete Widget
-	When testing mode is enabled, 
 	@property key
 	@type string
 	@static
@@ -124,9 +123,10 @@ DemandbaseForm.formConnector = {
 	@example
 		['formName1', 'formName2', 'formName3']
 	**/
-	formNameList: [''],				//Optional - If using this on pages with more than one form, list form names here
+	formNameList: [''],				
 	/**
 	Testing mode - Show alert to use if there are errors.
+	To enable in production/deployed page, set "db_debug=true" in URL query string.
 	Warning: set to false before deploying!
 	@property debug
 	@type Boolean
@@ -138,18 +138,29 @@ DemandbaseForm.formConnector = {
 	**/
 	debug: true, 					
 	/**
-	Testing mode - Shows a table of all fields in the winning Demandbase data set under the form
-	While set to false in production, this can be set from the URL query string using "db_debug=true"
+	Testing mode - Shows a div of all fields in the winning Demandbase data with the configured field mapping
+	This cannot be enabled via query string parameter.
 	Warning: set to false before deploying!
-	@property testing
+	@property showResult
 	@type Boolean
 	@static
-	@default true
+	@default false
 	@required
 	@example
 		false
 	**/
-	testing: true,
+	showResult: true,
+	/**
+	Testing mode - set to true to run QUnit tests and display results on the page
+	This can be enabled via query string parameter by setting "db_runTests=true".
+	Warning: set to false before deploying!
+	@property runTests
+	@static
+	@default false
+	@example
+		true
+	**/
+	runTests: false,
 	/**
 	Testing mode - logs messages to console on key events and actions
 	Advise: set to false before deploying.
@@ -366,7 +377,7 @@ DemandbaseForm.formConnector = {
 		if(options.toggleFieldList)		this.toggleFieldList = options.toggleFieldList;
 		
 		if(typeof options.debug !== 'undefined' && !this._isNullEmpty(options.debug))					this.debug			= options.debug;
-		if(typeof options.testing !== 'undefined' && !this._isNullEmpty(options.testing))				this.testing		= options.testing;
+		if(typeof options.showResult !== 'undefined' && !this._isNullEmpty(options.showResult))			this.showResult		= options.showResult;
 		if(typeof options.logging !== 'undefined'  && !this._isNullEmpty(options.logging))				this.logging		= options.logging;
 		if(typeof options.useTestIp !== 'undefined'  && !this._isNullEmpty(options.useTestIp))			this.useTestIp 		= options.useTestIp;
 		if(typeof options.useIspFilter !== 'undefined' && !this._isNullEmpty(options.useIspFilter))		this.useIspFilter 	= options.useIspFilter;
@@ -379,17 +390,17 @@ DemandbaseForm.formConnector = {
 	/**
 	This method initializes the DemandbaseForm connector, attaching the Company Autocomplete Widget to the form and loading a script tag to call the IP address API.
 	First, this function checks to ensure the Demandbase namespace is available, an indication that the widget.js file has loaded.  
-	When testing mode is enabled, the key will be validated before proceeding.
 	@method init
 	**/
 	init: function(){
 		if(typeof Demandbase !== 'undefined') {
 			Demandbase.jQuery(document).ready(function(){
 				var dbf = DemandbaseForm.formConnector;
-				if(dbf.testing)  { 
-					dbf._authorize();
+				//MD: removed due to async issues
+				//if(dbf.testing)  { 
+				//	dbf._authorize();
 					//if(!dbf._isAuthorized) return;
-				}
+				//}
 				dbf._loadAsyncScript(); //TODO: MD - test running this function outside of doc ready so IP API is called regardless of CAC
 				dbf._attachCompanyAPI();
 				
@@ -404,6 +415,7 @@ DemandbaseForm.formConnector = {
 
 				if(Demandbase.jQuery('#'+dbf.emailID).val() !== '') Demandbase.CompanyAutocomplete.getPerson(Demandbase.CompanyAutocomplete.callback);
 				if(dbf.toggleFieldList.length > 0 && dbf.areToggleFieldsVisible) dbf.toggleFields();
+
 				db_hook_init();
 			});
 			this._log('Initializing ' + this.name + ' v.' + this._version);	
@@ -416,7 +428,7 @@ DemandbaseForm.formConnector = {
 	/**
 	This method is the "engine" that runs the formConnector, accepting the data set returned by each API call, determining which API returned data and populating fields on the form.
 	The parser uses the priorityMap to determine when a returned dataset should override the existing one, and it creates a field set for the fields in the hiddenFieldMap.
-	When testing is set to true, this method outputs a table of the returned attributes.  When debug is true, this method will display alerts if there is a JS error.
+	When showResult is set to true, this method outputs a table of the returned attributes.  When debug is true, this method will display alerts if there is a JS error.
 	This parser function is called 3X during a form interaction
 			1st call - User lands on the form page, triggering a call to the Demandbase IP Address API
 			2nd call - User enters email address which returns a data.person object
@@ -493,7 +505,7 @@ DemandbaseForm.formConnector = {
 			for(attr in data){
 				var val = data[attr] || '';
 				var newEl = this._buildHiddenField(attr,val);
-   				if(this.testing){
+   				if(this.showResult){
 			   		var testEl = document.createElement('div');
 			   		testEl.setAttribute('id',newEl.id + '_container');
 			   		testEl.innerHTML='<strong>'+newEl.id+'</strong>: '+newEl.value+'<br/>';
@@ -570,15 +582,17 @@ DemandbaseForm.formConnector = {
  	**/
  	_buildHiddenField: function(attr,val) {
  		var elName = this._normalize(attr); //Maps the Demandbase variable name to the form field to populate
-	            
-        /*If MAS renders the form with hidden fields present...
+ 		        
+        var fieldId 	= elName;
+        var fieldName	= elName;
+		
+		/*If MAS renders the form with hidden fields present...
         ...remove them to avoid multiple values in the POST*/
         var oldField = this._getElmByIdOrName(elName);
-        var fieldId = elName;
-        var fieldName=elName;
         //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
         if (oldField) {
         	fieldId = oldField.id;
+        	
         	if(oldField.name) fieldName = oldField.name;
         	if(!fieldId) fieldId = elName; /* just in case existing element does not have ID set */
         	//TODO: MD - possibly popl single select menu here, instead of creating new element
@@ -614,7 +628,7 @@ DemandbaseForm.formConnector = {
 							break;
 						}
 					}
-				} else {
+				}else {
 					field.value = val;
 					valSet = true;
 				}
@@ -710,6 +724,8 @@ DemandbaseForm.formConnector = {
 	_loadAsyncScript: function() {
 		var s = document.createElement('script');
 		s.src = ("https:"==document.location.protocol?"https://":"http://")+"api.demandbase.com/api/v2/ip.json?key="+this.key+"&referrer="+document.referrer+"&page="+document.location.href+"&page_title="+document.title+"&callback=DemandbaseForm.formConnector.parser&query=";
+		s.id="db_ip_api";
+		s.async=true;
 		//override query parameter with test IP address when bln is set
 		if(this.useTestIp || this._getQueryParam('db_useTestIp')==='true') {
 			var testIp = this._getQueryParam('db_ip');
@@ -724,6 +740,7 @@ DemandbaseForm.formConnector = {
 		document.getElementsByTagName('head')[0].appendChild(s);
 		this._log('Loaded IP Address API');
 		this._sourceChecker.setSource('ip');  //Register HIT with source checker
+		this._attachUnitTests();
 	},
 	/**
 	Checks for empty values that should trigger form to grow (false here means API has not "fully" identified according to implemented definition)
@@ -752,13 +769,13 @@ DemandbaseForm.formConnector = {
 		var toggled = false;
 		for (field in this.toggleFieldList) {
 			fieldId = this.toggleFieldList[field];
-			if(fieldId !== "") {
+			if(fieldId !== "") { 
 				 if(this.areToggleFieldsVisible) {
-					//For Marketo: Demandbase.jQuery('#' + fieldId).parents('li').hide(); 
+			 //Demandbase.jQuery('#' + fieldId).parents('li').hide(); 
 					Demandbase.jQuery('#' + fieldId).hide();
 					toggled=true;
-				 } else {
-					//For Marketo: Demandbase.jQuery('#' + fieldId).parents('li').show();
+				 } else { 
+					 //Demandbase.jQuery('#' + fieldId).parents('li').show();
 				    Demandbase.jQuery('#' + fieldId).show();  
 					toggled=true;
 				 }	 	
@@ -823,7 +840,7 @@ DemandbaseForm.formConnector = {
 		Demandbase.jQuery.ajax({
           url : "http://api.demandbase.com/api/v2/ip.json",
           data : { key : this.key},
-          dataType: 'jsonp',
+          dataType: "jsonp",
           timeout : 2000,
           success: function(d,t,x){ DemandbaseForm.formConnector._isAuthorized=true; DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized);},
           error: function(d,t,x){ DemandbaseForm.formConnector._isAuthorized=false;  DemandbaseForm.formConnector._log("Validating key....authorized=" + DemandbaseForm.formConnector._isAuthorized); 
@@ -831,6 +848,34 @@ DemandbaseForm.formConnector = {
           }
         });
         
+	},
+	/**
+	Adds unit test files to page when flag set in file or in query string.
+	Qunit is loaded first and actual test file is loaded in callback after qunit is loaded.
+	Stylesheet for qunit is also added to head.
+	@method _attachUnitTests
+	**/
+	_attachUnitTests : function() {
+		if(this.runTests || (this._getQueryParam("db_runTests") == "true") ) {
+			
+			var qu = document.getElementById('qunit'), quf = document.getElementById('qunit-fixture');
+			if (!qu || !quf) {
+				/* append divs for qunit fixture */
+				var b = document.getElementsByTagName('body');
+				b.appendChild('<div id="qunit"></div><div id="qunit-fixture"></div>');				
+			}
+
+			Demandbase.jQuery('<link>').appendTo('head').attr({
+				rel: 	"stylesheet",
+				type:	"text/css",
+				href: 	"http://www.demandbaselabs.com/css/qunit.css"
+		    });
+			
+			Demandbase.jQuery.getScript('http://www.demandbaselabs.com/scripts/qunit.js', function(data, textStatus, jqxhr){
+				Demandbase.jQuery.getScript('http://www.demandbaselabs.com/scripts/fcUnitTests.js');				
+			});
+
+		}	
 	},
 	/**
 	The number from priorityMap of the most recent Demandbase API who's data set has been used.
@@ -897,10 +942,12 @@ DemandbaseForm.formConnector = {
 	_dbDataSrc: null,				
 	/**
 	When in testing mode, set to true once API key has been validated.
+	MD: this feature is in beta and is disabled by default
 	@property _isAuthorized
 	@type Boolean
 	@default null
 	@protected
+	@beta
 	**/
 	_isAuthorized: null,
 	/**
@@ -911,7 +958,7 @@ DemandbaseForm.formConnector = {
 	@protected
 	@final
 	**/
-	_version: 'beta_0.5.1',
+	_version: 'beta_0.65',
 	/**
 	@class _sourceChecker
 	@extensionfor formConncector
@@ -955,6 +1002,7 @@ DemandbaseForm.formConnector = {
 		@method checkSources
 		**/
         'checkSources': function () {
+            
             var id = false,
                 allHit = true;
             for (source in this.sources) {
@@ -993,7 +1041,7 @@ DemandbaseForm.formConnector = {
 }
 
 /** ensure console.log and console.debug exist **/
-if(typeof window.console == "undefined") window.console = {log: function(){}, debug: function(){}};
+if(typeof window.console === "undefined") window.console = {log: function(){}, debug: function(){}};
 
 /** Safety: define hook functions, in case they're not defined elsewhere **/
 /** These hooks provide extensibility.  They are global functions that can be defined any where are called by the init and parser functions.**/
