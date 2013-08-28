@@ -118,7 +118,7 @@ Demandbase.Connectors.AudienceManager = {
 		   cStr = cStr + prefix + this.dbToAmMap[field] + '=' + db_value + '&';
         }
         
-        s.src = 'http://'+this.domain'/event?d_stuff=1&d_dst=1&d_rtbd=json&d_ld=some+data+to+log&'+cStr+'d_cb=Demandbase.Connectors.AudienceManager.callback';
+        s.src = 'http://'+this.domain+'/event?d_stuff=1&d_dst=1&d_rtbd=json&d_ld=some+data+to+log&'+cStr+'d_cb=Demandbase.Connectors.AudienceManager.callback';
         //Note: removed deprecated d_px=123,456,789&
         document.getElementsByTagName('head')[0].appendChild(s);
         alert('sending to ADBE AM for ' + data.company_name || 'non-company visitor');
