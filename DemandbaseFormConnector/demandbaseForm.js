@@ -403,16 +403,10 @@ DemandbaseForm.formConnector = {
         if (typeof Demandbase !== 'undefined') {
             Demandbase.jQuery(document).ready(function() {
                 var dbf = DemandbaseForm.formConnector;
-                //MD: removed due to async issues
-                //if(dbf.testing)  {
-                //    dbf._authorize();
-                    //if(!dbf._isAuthorized) return;
-                //}
                 dbf._loadAsyncScript(); //TODO: MD - test running this function outside of doc ready so IP API is called regardless of CAC
                 dbf._attachCompanyAPI();
 
-                //Assign form to use
-                //Select the first form that matches a value in formNameList...
+                //Assign form to use Select the first form that matches a value in formNameList...
                 for (formName in dbf.formNameList) {
                     dbf.form = document.forms[dbf.formNameList[formName]];
                     if (dbf.form != null) { break; }
@@ -500,11 +494,11 @@ DemandbaseForm.formConnector = {
             this._dbDataSet = data;  //Update the data object used
             this._dbDataSrc = source;
             data['data_source'] = source;
-               this._removeDataset(data);    //Remove previously used data set
-               this._log('Parsing data response from: ' + this._dbDataSrc);
-               this._log('New Data Set:');
-               this._log(this._dbDataSet);
-               data = this._flattenData(data);
+            this._removeDataset(data);    //Remove previously used data set
+            this._log('Parsing data response from: ' + this._dbDataSrc);
+            this._log('New Data Set:');
+            this._log(this._dbDataSet);
+            data = this._flattenData(data);
             this._restoreIpFields(data);
 
             var fs = document.createElement('fieldset');
@@ -512,10 +506,10 @@ DemandbaseForm.formConnector = {
             for (attr in data) {
                 var val = data[attr] || '';
                 var newEl = this._buildHiddenField(attr, val);
-                   if (this.showResult) {
-                       var testEl = document.createElement('div');
-                       testEl.setAttribute('id', newEl.id + '_container');
-                       testEl.innerHTML = '<strong>' + newEl.id + '</strong>: ' + newEl.value + '<br/>';
+                if (this.showResult) {
+                    var testEl = document.createElement('div');
+                    testEl.setAttribute('id', newEl.id + '_container');
+                    testEl.innerHTML = '<strong>' + newEl.id + '</strong>: ' + newEl.value + '<br/>';
                     fs.appendChild(testEl);
                 }
                 this._prepopVisibleFields(attr, val);
@@ -796,7 +790,6 @@ DemandbaseForm.formConnector = {
     @param {Object} data
     **/
     _resetFields: function(data) {
-
         if (data) {
             for (field in this.visibleFieldMap) {
                 if (typeof data[field] == 'undefined' || this._isNullEmpty(data[field])) {
@@ -819,9 +812,9 @@ DemandbaseForm.formConnector = {
     **/
     _removeDataset: function(data) {
         var fs = document.getElementById('db_data_container');
-        if (fs) {
-            this.form.removeChild(fs);
-              this._resetFields(data);
+        if (fs && fs.parentNode) {
+            fs.parentNode.removeChild(fs);
+            this._resetFields(data);
         }
     },
     /**
