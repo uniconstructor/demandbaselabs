@@ -1095,7 +1095,7 @@ DemandbaseForm.formConnector = {
             });
 
             this.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/qunit.js', function(data, textStatus, jqxhr) {
-                this.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/fcUnitTests.js');
+                this.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/unitTest_WebForm.js');
             });
 
         }
