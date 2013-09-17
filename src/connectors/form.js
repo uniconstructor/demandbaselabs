@@ -6,7 +6,8 @@ Demandbase.Connectors namespace - Contains all functions and properties for a De
 @beta
 **/
 'use strict';
-Demandbase.Connectors=window.Demandbase.Connectors||{};
+Demandbase = window.Demandbase || {};
+Demandbase.Connectors=window.Demandbase.Connectors || {};
 
 /**
 Connects three Demandbase APIs to a form using the CompanyAutocomplete Widget and the IP Address API.
