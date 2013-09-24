@@ -1,3 +1,13 @@
+/**
+  File: form.js  v.beta_0.8
+  Name: Demandbase Form Module
+  Authors:  Matthew Downs (mdowns[at@]demandbase[dot.]com),
+            Ehsan Ketabchi (eketabchi[at@]demandbase[dot.]com),
+            Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com)
+
+  Support Contact: strategicservices[at@]demandbase[dot.]com
+  License: Copyright 2013. This code may not be reused without explicit permission by its owners. All rights reserved.
+**/
 
 /**
 Demandbase.Connectors namespace - Contains all functions and properties for a Demandbase-enabled form

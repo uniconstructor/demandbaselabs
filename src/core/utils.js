@@ -1,7 +1,14 @@
+/**
+    File: utils.js
+    Name: Demandbase Helper Utilities Class
+    Authors: Matthew Downs (mdowns[at@]demandbase[dot.]com)
+    Support Contact: strategicservices[at@]demandbase[dot.]com
+    License: Copyright 2013. This code may not be reused without explicit permission by its owners. All rights reserved.
+**/
+'use strict';
 // ensure console.log and console.debug exist
 if (typeof window.console === 'undefined') window.console = {log: function() {}, debug: function() {}};
 if (typeof window.localStorage === 'undefined') window.localStorage = function() {};
-'use strict';
 var Demandbase = window.Demandbase || {};
 Demandbase.utils = window.Demandbase.utils || {};
 Demandbase.utils = {
@@ -26,6 +33,20 @@ Demandbase.utils = {
 	    }
 	    return params[param];
 	},
+    /**
+    @method flattenData
+    **/
+    flattenData: function(data) {
+        for (var d in data) {
+            if (typeof data[d] == 'object' && data[d] !== null) {
+                for (var nd in data[d]) {
+                    data[d + '_' + nd] = data[d][nd];
+                }
+                delete data[d];
+            }
+        }
+        return data;
+    },
     /**
     Puts an object into localStorage (parses each field from object)
     @method putLS
@@ -80,7 +101,7 @@ Demandbase.utils = {
 	        window.console.log('Demandbase: ' + msg);
 	    }
 	},
-    runConnectors: function(data) {}
+    runConnectors: function(data) { alert('Testing function extension'); this._log('Testing function extension'); }
 };
 
 Demandbase.utils.runConnectors = function(data) {
