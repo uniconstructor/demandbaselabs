@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.72
+  File: demandbaseForm.js  v.beta_0.8
   Name: Demandbase Form Module
   Authors:  Matthew Downs (mdowns[at@]demandbase[dot.]com),
             Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com),
@@ -39,7 +39,7 @@ Visit www.demandbaselabs.com for a live examples of Demandbase in action.
 Contact Demandbase Strategic Services with questions, comments, or requests. <demandbaselabs[at@]demandbase[dot.]com>
 ***/
 
-/** This section contains libraries and the widget.js **/
+/** This section contains JS libraries and widget.js **/
 /** !!!!!!!!!!!!! DO NOT MODIFY ANYTHING BETWEEN THESE LINES !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! **/
 (function(e,p){function f(a){return c.isWindow(a)?a:9===a.nodeType?a.defaultView||a.parentWindow:!1}function k(a){if(!fa[a]){var b=c("<"+a+">").appendTo("body"),d=b.css("display");b.remove();if("none"===d||""===d)d="block";fa[a]=d}return fa[a]}function m(a,b){var d={};c.each(qa.concat.apply([],qa.slice(0,b)),function(){d[this]=a});return d}function l(){try{return new e.XMLHttpRequest}catch(a){}}function q(){c(e).unload(function(){for(var a in M)M[a](0,1)})}function w(a,b,d,g){if(c.isArray(b)&&b.length)c.each(b,
 function(b,h){d||Oa.test(a)?g(a,h):w(a+"["+("object"===typeof h||c.isArray(h)?b:"")+"]",h,d,g)});else if(d||null==b||"object"!==typeof b)g(a,b);else if(c.isArray(b)||c.isEmptyObject(b))g(a,"");else for(var h in b)w(a+"["+h+"]",b[h],d,g)}function x(a,b,c,g,h,n){h=h||b.dataTypes[0];n=n||{};n[h]=!0;h=a[h];for(var s=0,e=h?h.length:0,f=a===ga,E;s<e&&(f||!E);s++)E=h[s](b,c,g),"string"===typeof E&&(!f||n[E]?E=p:(b.dataTypes.unshift(E),E=x(a,b,c,g,E,n)));!f&&E||n["*"]||(E=x(a,b,c,g,"*",n));return E}function v(a){return function(b,
@@ -243,6 +243,8 @@ this.options.autoFocus&&this.menu.next(new e.Event("mouseover"))},_resizeMenu:fu
 e):this.activate(k,this.element.children(f))):this.activate(k,this.element.children(f))},nextPage:function(p){if(this.hasScroll())if(!this.active||this.last())this.activate(p,this.element.children(".ui-menu-item:first"));else{var f=this.active.offset().top,k=this.element.height(),m=this.element.children(".ui-menu-item").filter(function(){var l=e(this).offset().top-f-k+e(this).height();return 10>l&&-10<l});m.length||(m=this.element.children(".ui-menu-item:last"));this.activate(p,m)}else this.activate(p,
 this.element.children(".ui-menu-item").filter(!this.active||this.last()?":first":":last"))},previousPage:function(p){if(this.hasScroll())if(!this.active||this.first())this.activate(p,this.element.children(".ui-menu-item:last"));else{var f=this.active.offset().top,k=this.element.height();result=this.element.children(".ui-menu-item").filter(function(){var m=e(this).offset().top-f+k-e(this).height();return 10>m&&-10<m});result.length||(result=this.element.children(".ui-menu-item:first"));this.activate(p,
 result)}else this.activate(p,this.element.children(".ui-menu-item").filter(!this.active||this.first()?":last":":first"))},hasScroll:function(){return this.element.height()<this.element.attr("scrollHeight")},select:function(e){this._trigger("selected",e,{item:this.active})}})})(jQuery);(function(e){e.nano=function(p,f){return p.replace(/\{([\w\.]*)\}/g,function(k,m){var l=m.split("."),p=f[l.shift()];e.each(l,function(){p=p[this]});return null===p||void 0===p?"":p})}})(jQuery);
+/*End JS Libraries */
+/*Start Demandbase Company Autocomplete Widget */
 var Demandbase=Demandbase||{};Demandbase.host=Demandbase.host||("https:"==document.location.protocol?"https://":"http://")+"autocomplete.demandbase.com";Demandbase.xhost=Demandbase.xhost||("https:"==document.location.protocol?"https://":"http://")+"api-admin.demandbase.com";Demandbase.jQuery=Demandbase.jQuery||jQuery.noConflict(!0);Demandbase.callback=Demandbase.callback||function(e){console.log("Demandbase data:",e)};"undefined"==typeof window.console&&(window.console={log:function(){},debug:function(){}});
 Demandbase.CompanyAutocomplete={dialog:null,jQuery:Demandbase.jQuery,textField:null,errors:[],log:function(){console.log.apply(window.console,["Demandbase.CompanyAutocomplete:"].concat([].splice.call(arguments,0)))},setup:!1,initialized:!1,version:"v1.7.2",dataType:"jsonp",company:null,email:null,label:"{marketing_alias} ({city}, {state})",sequence:0,session:(new Date).getTime()+""+Math.random(),debug:null,latest_result:[],callback:null,widget:function(e){var p=Demandbase.jQuery;e||(e={});this.key=
 e.key;e.company&&(this.company=e.company);e.email&&(this.email=e.email);e.label&&(this.label=e.label);e.dataType&&(this.dataType=e.dataType);e.callback&&(this.callback=e.callback);if(!this.company)throw this.log("company is required"),"company is required";if(!this.callback)throw this.log("callback is required"),"callback is required";this.setup=!0;p(function(){Demandbase.CompanyAutocomplete.init()})},init:function(){if(this.setup&&!this.initialized){var e=Demandbase.jQuery;this._append_stylesheet();
@@ -255,27 +257,28 @@ l.status){if(l.sequence>f.latest_result.sequence||!f.latest_result.sequence)f.la
 l);p([]);f.textField.autocomplete("destroy")}})},filter:function(e,p){if("function"!==typeof p)throw new TypeError;for(var f=e.length>>>0,k=[],m=0;m<f;m++)if(m in e){var l=e[m];p.call(e,l,m,e)&&k.push(l)}return k},_change:function(e,p){if(!p.item){var f=Demandbase.CompanyAutocomplete,k=f.jQuery,m=void 0,l=k.trim(k(this).val()),q={key:f.key,input:f.textField.val(),email:k("#"+f.email).val(),timezone:-(new Date).getTimezoneOffset()/60,session:f.session,sequence:f.sequence};try{q.domain=k("#"+f.email).val().split("@").pop()}catch(w){}k.getJSON(Demandbase.host+
 "/analysis/autocomplete/"+f.version+"/log.json?callback=?",q,function(e){});try{if(0<l.length&&(f.latest_result&&f.latest_result.picks&&0<f.latest_result.picks.length)&&(m=f.filter(f.latest_result.picks,function(e){return e.company_name.match(RegExp("^"+l,"i"))})[0]))try{f.callback({input_match:m})}catch(x){f.errors.push(x),f.log("Demandbase.CompanyAutocomplete:","ERROR:","An error occurred in the callback"),f.log(x)}}catch(v){f.errors.push(v),f.log("Demandbase.CompanyAutocomplete:","ERROR:","Unable to detect input match: ",
 v)}}}};
+/*End Demandbase Company Autocomplete Widget */
 /** !!!!!!!!!!!!! DO NOT MODIFY ANYTHING ABOVE THIS LINE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! **/
 
 
 /**
-DemandbaseForm namespace - Contains all functions and properties for a Demandbase-enabled form
-@module DemandbaseForm
-@main DemandbaseForm
+Demandbase.Connectors namespace - Contains all functions and properties for a Demandbase-enabled form
+@module Demandbase.Connectors
+@main Demandbase.Connectors
 @beta
 **/
 'use strict';
-var DemandbaseForm = window.DemandbaseForm || {};
+Demandbase.Connectors=window.Demandbase.Connectors||{};
 
 /**
 Connects three Demandbase APIs to a form using the CompanyAutocomplete Widget and the IP Address API.
 Includes functionality to determine API priority order, populate hidden and visible fields, and show additional fields
 when hidden fields are not provided by Demandbase.
-@class formConnector
+@class Demandbase.Connectors.WebForm
 @static
 @beta
 **/
-DemandbaseForm.formConnector = {
+Demandbase.Connectors.WebForm = {
     name: 'Demandbase Form Module',
     /**
     Required - Demandbase API key for authenticating calls to IP address API and Company Autocomplete Widget
@@ -480,19 +483,7 @@ DemandbaseForm.formConnector = {
             'revenue_range': 'DBRevRange',
         }
     **/
-    hiddenFieldMap: {
-        'company_name': '',
-        'audience' : '',
-        'audience_segment' : '',
-        'industry': '',
-        'sub_industry': '',
-        'employee_range': '',
-        'revenue_range': '',
-        'ip' : '',
-        'demandbase_sid' : '',
-        'watch_list_account_status': '',
-        'manual_review' : ''
-    },
+    hiddenFieldMap: {},
     /**
     Optional - map visible form fields to pre-populate with Demandbase data.
     This set of name/values pairs has the Demandbase variable name on left, and the ID (or name) of the input field or select element to populate on the right
@@ -566,13 +557,13 @@ DemandbaseForm.formConnector = {
     **/
     areToggleFieldsVisible: true,
     /**
-    This method accepts an object containing any parameters to be set from outside the formConnector, providing the flexibility to modify the field mapping, form, and autocomplete fields.
+    This method accepts an object containing any parameters to be set from outside the Demandbase.Connectors.WebForm, providing the flexibility to modify the field mapping, form, and autocomplete fields.
     Call the connect method from the page, rather than creating a unique version of the form module for a particular page.  This is very useful on sites that do not have a formalized
     naming convention for fields and forms.  See example for how to use within a page.
     @method connect
-    @param {Object} [options] Fields to set in formConnector class.  Any public property can be passed.
+    @param {Object} [options] Fields to set in Demandbase.Connectors.WebForm class.  Any public property can be passed.
     @example
-        var dbf = DemandbaseForm.formConnector;
+        var dbf = Demandbase.Connectors.WebForm;
         dbf.connect({
             emailID : "email_input_id",
             companyID : "company_input_id",
@@ -611,14 +602,14 @@ DemandbaseForm.formConnector = {
         this._log(options);
     },
     /**
-    This method initializes the DemandbaseForm connector, attaching the Company Autocomplete Widget to the form and loading a script tag to call the IP address API.
+    This method initializes the connector, attaching the Company Autocomplete Widget to the form and loading a script tag to call the IP address API.
     First, this function checks to ensure the Demandbase namespace is available, an indication that the widget.js file has loaded.
     @method init
     **/
     init: function() {
         if (typeof Demandbase !== 'undefined') {
             Demandbase.jQuery(document).ready(function() {
-                var dbf = DemandbaseForm.formConnector;
+                var dbf = Demandbase.Connectors.WebForm;
                 dbf.djq = Demandbase.jQuery;
                 dbf._loadAsyncScript(); //TODO: MD - test running this function outside of doc ready so IP API is called regardless of CAC
                 dbf._attachCompanyAPI();
@@ -644,7 +635,7 @@ DemandbaseForm.formConnector = {
 
     },
     /**
-    This method is the "engine" that runs the formConnector, accepting the data set returned by each API call, determining which API returned data and populating fields on the form.
+    This method is the "engine" that runs the Demandbase.Connectors.WebForm, accepting the data set returned by each API call, determining which API returned data and populating fields on the form.
     The parser uses the priorityMap to determine when a returned dataset should override the existing one, and it creates a field set for the fields in the hiddenFieldMap.
     When showResult is set to true, this method outputs a table of the returned attributes.  When debug is true, this method will display alerts if there is a JS error.
     This parser function is called 3X during a form interaction
@@ -911,10 +902,10 @@ DemandbaseForm.formConnector = {
                     email: this.emailID,
                     key: this.key,
                     label: this.cacLabel,
-                    callback: function(data) {DemandbaseForm.formConnector.parser(data)}
+                    callback: function(data) {Demandbase.Connectors.WebForm.parser(data)}
                 });
                 var self;
-                self = DemandbaseForm.formConnector;
+                self = Demandbase.Connectors.WebForm;
                 /*Since the callback is not called when there is no match on company name
                 we explictly check sources after an 'autocompletechange' event.*/
                 self.djq('#' + self.companyID).bind('autocompletecreate', function() {
@@ -936,7 +927,7 @@ DemandbaseForm.formConnector = {
     **/
     _loadAsyncScript: function() {
         var s = document.createElement('script');
-        s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'api.demandbase.com/api/v2/ip.json?key=' + this.key + '&referrer=' + document.referrer + '&page=' + document.location.href + '&page_title=' + document.title + '&callback=DemandbaseForm.formConnector.parser&query=';
+        s.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'api.demandbase.com/api/v2/ip.json?key=' + this.key + '&referrer=' + document.referrer + '&page=' + document.location.href + '&page_title=' + document.title + '&callback=Demandbase.Connectors.WebForm.parser&query=';
         s.id = 'db_ip_api';
         s.async = true;
         //override query parameter with test IP address when bln is set
@@ -983,18 +974,30 @@ DemandbaseForm.formConnector = {
         for (var field in this.toggleFieldList) {
             fieldId = this.toggleFieldList[field];
             if (fieldId !== '') {
-                if (this.areToggleFieldsVisible) {
-                    //    this.djq('#' + fieldId).parents('li').hide();
-                    this.djq('#' + fieldId).hide();
-                    toggled = true;
+                var elmToToggle = this._getToggleElm(fieldId);
+                if(elmToToggle) {
+                  if (this.areToggleFieldsVisible) {
+                      this.djq(elmToToggle).hide();
+                      toggled = true;
+                  } else {
+                      this.djq(elmToToggle).show();
+                      toggled = true;
+                  }                  
                 } else {
-                    //    this.djq('#' + fieldId).parents('li').show();
-                    this.djq('#' + fieldId).show();
-                    toggled = true;
+                  this._log('Failed attempt to toggle element with ID ' + fieldId + '. _getToggleElm could not find this element.')
                 }
+
             }
         }
         if (toggled) this.areToggleFieldsVisible = !this.areToggleFieldsVisible;
+    },
+    /**
+    @method _getToggleElm
+    @param String id - the DOM id of HTML element
+    **/
+    _getToggleElm : function(id) {
+      //For Marketo, override to "return this.djq('#' + fieldId).parents('li');""
+      return this.djq('#' + id);
     },
     /**
     If an already-set field is not returned by an overriding dataset, this function will reset the field value to the empty string.
@@ -1045,27 +1048,6 @@ DemandbaseForm.formConnector = {
         if (this.logging || this._getQueryParam('db_logging') === 'true') window.console.log('DB Form Connector: ' + msg);
     },
     /**
-    Queries the IP address API to validate the provided key.
-    @method _authorize
-    **/
-    _authorize: function() {
-        this.djq.ajax({
-            url: 'http://api.demandbase.com/api/v2/ip.json',
-            data: { key: this.key},
-            dataType: 'jsonp',
-            timeout: 2000,
-            success: function(d,t,x) {
-              DemandbaseForm.formConnector._isAuthorized = true;
-              DemandbaseForm.formConnector._log('Validating key....authorized=' + DemandbaseForm.formConnector._isAuthorized);
-            },
-            error: function(d,t,x) {
-                DemandbaseForm.formConnector._isAuthorized = false;
-                DemandbaseForm.formConnector._log('Validating key....authorized=' + DemandbaseForm.formConnector._isAuthorized);
-                /*alert('The Demandbase key is not valid.'); */
-            }
-        });
-    },
-    /**
     Adds unit test files to page when flag set in file or in query string.
     Qunit is loaded first and actual test file is loaded in callback after qunit is loaded.
     Stylesheet for qunit is also added to head.
@@ -1095,7 +1077,8 @@ DemandbaseForm.formConnector = {
             });
 
             this.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/qunit.js', function(data, textStatus, jqxhr) {
-                this.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/unitTest_WebForm.js');
+            
+                Demandbase.Connectors.WebForm.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/unitTest_WebForm.js');
             });
 
         }
@@ -1164,16 +1147,6 @@ DemandbaseForm.formConnector = {
     **/
     _dbDataSrc: null,
     /**
-    When in testing mode, set to true once API key has been validated.
-    MD: this feature is in beta and is disabled by default
-    @property _isAuthorized
-    @type Boolean
-    @default null
-    @protected
-    @beta
-    **/
-    _isAuthorized: null,
-    /**
     Namespace propery for jQuery - grabbed from CAC
     This is set in the init function because we need to check for jQuery
     @property djq
@@ -1182,14 +1155,14 @@ DemandbaseForm.formConnector = {
     **/
     djq : null,
     /**
-    Version for DemandbaseForm.formConnector file
+    Version for Demandbase.Connectors.WebForm file
     @property _version
     @type String
     @default (varies)
     @protected
     @final
     **/
-    _version: 'beta_0.72',
+    _version: 'beta_0.8',
     /**
     @class _sourceChecker
     @extensionfor formConncector
@@ -1225,7 +1198,7 @@ DemandbaseForm.formConnector = {
             if (!result) result = false;
             this.sources[source].hit = true;
             this.sources[source].result = result;
-            DemandbaseForm.formConnector._log('API response logged with SourceChecker: ' + source + ' : ' + result);
+            Demandbase.Connectors.WebForm._log('API response logged with SourceChecker: ' + source + ' : ' + result);
             if (check) this.checkSources();
         },
         /**
@@ -1252,9 +1225,9 @@ DemandbaseForm.formConnector = {
         **/
         'onNoId': function() {
             //Callback when all three API's have been hit but no identification has been made.
-            DemandbaseForm.formConnector._log('All APIs hit with no identification. Running onNoId function...');
+            Demandbase.Connectors.WebForm._log('All APIs hit with no identification. Running onNoId function...');
             //Calling function to show elements defined in toggleFieldList
-            DemandbaseForm.formConnector.toggleFields();
+            Demandbase.Connectors.WebForm.toggleFields();
             db_hook_no_id();
         },
         /**
@@ -1264,9 +1237,9 @@ DemandbaseForm.formConnector = {
         @method onAllHit
         **/
         'onAllHit' : function() {
-            isId = DemandbaseForm.formConnector._isIdComplete(DemandbaseForm.formConnector._dbDataSet);
+            isId = Demandbase.Connectors.WebForm._isIdComplete(Demandbase.Connectors.WebForm._dbDataSet);
             if (!isId) this.onNoId();
-        db_hook_all_hit();
+            db_hook_all_hit();
         }
     }
 };
@@ -1276,7 +1249,7 @@ if (typeof window.console === 'undefined') window.console = {log: function() {},
 
 /** Safety: define hook functions, in case they're not defined elsewhere **/
 /** These hooks provide extensibility.  They are global functions that can be defined any where are called by the init and parser functions.**/
-/**This fcn is called at the end of DemandbaseForm.formConnector.init**/
+/**This fcn is called at the end of Demandbase.Connectors.WebForm.init**/
 if (typeof db_hook_init === 'undefined') db_hook_init = function() {};
 
 /** this function is called after all APIs have been queried **/
@@ -1285,18 +1258,18 @@ if (typeof db_hook_all_hit === 'undefined') db_hook_all_hit = function() {};
 /** this function is called after all APIs have been queried but non have returned the values for the fields in requiredFieldList**/
 if (typeof db_hook_no_id === 'undefined') db_hook_no_id = function() {};
 
-/**This fcn is called by DemandbaseForm.formConnector.parser for each field when a returned data set is parsed**/
+/**This fcn is called by Demandbase.Connectors.WebForm.parser for each field when a returned data set is parsed**/
 if (typeof db_hook_attr === 'undefined') db_hook_attr = function() {};
 
-/**This fcn is called by DemandbaseForm.formConnector.parser before a data set is processed.
+/**This fcn is called by Demandbase.Connectors.WebForm.parser before a data set is processed.
 This function runs regardless of whether the returned data set overrides the current data set.**/
 if (typeof db_hook_before_parse === 'undefined') db_hook_before_parse = function() {};
 
-/**This fcn is called at the end of DemandbaseForm.formConnector.parser, after a data set is processed.
+/**This fcn is called at the end of Demandbase.Connectors.WebForm.parser, after a data set is processed.
 This function runs only when the returned data set overrides the current data set.**/
 if (typeof db_hook_after_parse === 'undefined') db_hook_after_parse = function() {};
 
-DemandbaseForm.formConnector.init();
+Demandbase.Connectors.WebForm.init();
 /********* CREDITS *****************/
 /*
  * jQuery JavaScript Library v1.5.1
