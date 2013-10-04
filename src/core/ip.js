@@ -9,11 +9,12 @@
 var Demandbase = window.Demandbase || {};
 Demandbase.utils = window.Demandbase.utils || {};
 Demandbase.Connectors = window.Demandbase.Connectors || {};
+var _dbc = window._dbc || {};
 Demandbase.IP = {
     name: 'Demandbase IP API Wrapper',
     _version: 1.0,
     CompanyProfile: {},
-    _key: window._dbc.key || '',
+    _key: window._dbc.key || 'YOUR_KEY_HERE',
     _useTestIp: false,  //Note: Set to 'false' before deploying to production
     _testIpAddress: window._dbc.testIp || '3.0.0.1',
     _debug: true,
