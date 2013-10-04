@@ -5,7 +5,19 @@
     Support Contact: strategicservices[at@]demandbase[dot.]com
     License: Copyright 2013. This code may not be reused without explicit permission by its owners. All rights reserved.
 
-    Content connector - create conditions and segments, pair with content blocks.
+    Content Segment Connector - create conditions and segments, pair with content blocks.
+    To use this file, include utils.js, ip.js, segments.js (in order), or comile them into a single file using Closure Compiler.
+    1. place your Demandbase Content key in ip.js
+    2. Define the _conditions and _segments lists in this file
+    3. Use named segments in JS conditions
+    	Example:
+    		var dbs = Demandbase.Segments;
+    		if(dbs.SMBSegment) {
+				//JS to customize content here
+    		} else {
+				//default experience here
+    		}
+
 **/
 'use strict';
 var Demandbase 				= window.Demandbase || {};
@@ -82,6 +94,7 @@ var DBConditionBuilder = {
 		return condObj;
 	}	
 };
+
 /*
 Examples of DBCondition and DBSegment usage
 var t = new DBCondition('test', '=', 'test', 'true cond');
