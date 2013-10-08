@@ -288,37 +288,43 @@ Demandbase.CompanyAutocomplete = {
       data: data,
       success: function(result) {
         if(result) {
-          if(result.status == 'ok') {
-            // ensures slow responses with old data don't overwrite newer
-            if(result.sequence > auto.latest_result.sequence || !auto.latest_result.sequence){
-              auto.latest_result = result;
-            }
-            
-            try{ if(auto.response_callback && typeof(auto.response_callback) === "function") auto.response_callback(auto.latest_result) }catch(e){ console.log("response callback error: ", e) }
-            //detect if state field is used in label and empty in result; replace state with country where applicable
-            if(auto.label.indexOf('{state}' !== -1) && !auto.latest_result.state && auto.latest_result.country) {
-            	auto.label = auto.label.replace('{state}', '{country}');
-            } 
-            response(
-              jQuery.map(auto.latest_result.picks, function(pick) {
-                return {
-                  label: jQuery.nano((typeof(auto.label) == "function" ? auto.label.apply(this, [jQuery, pick]) : auto.label), pick),
-                  value: request.term,
-                  ip: result.ip,
-                  pick: pick
-                }
-              })
-            );
-          } else { // error from server
+         	if(result.status == 'ok') {
+	            // ensures slow responses with old data don't overwrite newer
+	            if(result.sequence > auto.latest_result.sequence || !auto.latest_result.sequence){
+	              auto.latest_result = result;
+	            }
+	            
+	            try{ 
+	            	if(auto.response_callback && typeof(auto.response_callback) === "function") {
+	            		auto.response_callback(auto.latest_result);	
+	            	}  
+	            }catch(e){ console.log("response callback error: ", e); }
+	            
+	            response(
+	              	jQuery.map(auto.latest_result.picks, function(pick) {
+		                //detect if state field is used in label and empty/a number in result; replace state with country where applicable
+		                var tmpLabel = auto.label;
+		                if(auto.label.indexOf('{state}' !== -1) && (!pick.state || !isNaN(pick.state)) && pick.country) {
+		                  tmpLabel = auto.label.replace('{state}', '{country}');
+		                } 
+		                return {
+		                  label: jQuery.nano((typeof(auto.label) == "function" ? auto.label.apply(this, [jQuery, pick]) : tmpLabel), pick),
+		                  value: request.term,
+		                  ip: result.ip,
+		                  pick: pick
+		                }
+	            	})
+	            );
+         	} else { // error from server
             auto.log("ERROR: ", result.error);
-            response([]) // closes and removes 'loading' graphic
+            response([]); // closes and removes 'loading' graphic
             auto.textField.autocomplete('destroy');
           }
         }
       },
       error: function(xhr, textStatus, errorThrown) {
         auto.log(textStatus, errorThrown);
-        response([]) // closes and removes 'loading' graphic
+        response([]); // closes and removes 'loading' graphic
         auto.textField.autocomplete('destroy');
       }
     });
