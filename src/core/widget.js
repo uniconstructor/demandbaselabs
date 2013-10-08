@@ -304,9 +304,11 @@ Demandbase.CompanyAutocomplete = {
 	              	jQuery.map(auto.latest_result.picks, function(pick) {
 		                //detect if state field is used in label and empty/a number in result; replace state with country where applicable
 		                var tmpLabel = auto.label;
-		                if(auto.label.indexOf('{state}' !== -1) && (!pick.state || !isNaN(pick.state)) && pick.country) {
-		                  tmpLabel = auto.label.replace('{state}', '{country}');
-		                } 
+		                if(typeof auto.label !== 'function') {
+		                	if(auto.label.indexOf('{state}' !== -1) && (!pick.state || !isNaN(pick.state)) && pick.country) {
+			                  tmpLabel = auto.label.replace('{state}', '{country}');
+			                }	
+		                }
 		                return {
 		                  label: jQuery.nano((typeof(auto.label) == "function" ? auto.label.apply(this, [jQuery, pick]) : tmpLabel), pick),
 		                  value: request.term,
