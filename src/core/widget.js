@@ -295,7 +295,10 @@ Demandbase.CompanyAutocomplete = {
             }
             
             try{ if(auto.response_callback && typeof(auto.response_callback) === "function") auto.response_callback(auto.latest_result) }catch(e){ console.log("response callback error: ", e) }
-            
+            //detect if state field is used in label and empty in result; replace state with country where applicable
+            if(auto.label.indexOf('{state}' !== -1) && !auto.latest_result.state && auto.latest_result.country) {
+            	auto.label = auto.label.replace('{state}', '{country}');
+            } 
             response(
               jQuery.map(auto.latest_result.picks, function(pick) {
                 return {
@@ -338,7 +341,7 @@ Demandbase.CompanyAutocomplete = {
     return res
   },
   
-  _change: function(event, ui) {
+ _change: function(event, ui) {
     if (ui.item) {
       // User selected an item from the autocomplete dropdown
       return;
@@ -348,7 +351,7 @@ Demandbase.CompanyAutocomplete = {
       , jQuery  = auto.jQuery
       , pick    = undefined
       , input   = jQuery.trim(jQuery(this).val())
-
+      , result  = {input_match:{}}
     // analysis
     var data =  { key:      auto.key
                 , input:    auto.textField.val()
@@ -368,14 +371,16 @@ Demandbase.CompanyAutocomplete = {
           })[0] // first pick that matches the input
 
           if(pick) {
-            try{
-              auto.callback({input_match: pick})
-            }catch(e){
-              auto.errors.push(e)
-              auto.log("Demandbase.CompanyAutocomplete:", 'ERROR:', 'An error occurred in the callback')
-              auto.log(e)
-            }
+            result = {input_match: pick};
           }
+        }
+        //callback function is always invoked when there is user input
+        try {
+          auto.callback(result);
+        } catch(e) {
+          auto.errors.push(e)
+          auto.log("Demandbase.CompanyAutocomplete:", 'ERROR:', 'An error occurred in the callback')
+          auto.log(e)
         }
       }
     } catch(e) {
