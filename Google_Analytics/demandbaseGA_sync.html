@@ -1,0 +1,35 @@
+/* Start Synchronous Solution 
+  Legacy Implementation (Only Use for Special Cases!)
+  Replaces the current GA script on your page.
+  Talk to your Demandbase representative before using this script!
+*/
+/*  place this script in the <head> of the page
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.js?key=[YOUR_DEMANDBASE_KEY]"></script> 
+*/
+
+/* place this script at the end of the <body> of the page, or deploy via Tag Manager */
+<script type="text/javascript">
+  //Note 'organization' is set by Demandbase API call above.  Use var parameter to override variable name, if neeeded
+  function formatCV(name){return organization[name]?organization[name]:''};
+  var _gaq=_gaq||[];
+  _gaq.push(['_setAccount','[YOUR_GA_PROPERTY_ID]']);
+  if(typeof organization!='undefined'){
+      //TODO: Update with field labels and Demandbase variable names to send to GA
+      //Note: Remove any lines for custom variables that are already used
+      _gaq.push(['_setCustomVar', 1, '[FIELD_NAME1]', formatCV('[DEMANDBASE_VARIABLE_NAME1]'), 1]);
+      _gaq.push(['_setCustomVar', 2, '[FIELD_NAME2]', formatCV('[DEMANDBASE_VARIABLE_NAME2]'), 1]);
+      _gaq.push(['_setCustomVar', 3, '[FIELD_NAME3]', formatCV('[DEMANDBASE_VARIABLE_NAME3]'), 1]);
+      _gaq.push(['_setCustomVar', 4, '[FIELD_NAME4]', formatCV('[DEMANDBASE_VARIABLE_NAME4]'), 1]);
+      _gaq.push(['_setCustomVar', 5, '[FIELD_NAME5]', formatCV('[DEMANDBASE_VARIABLE_NAME5]'), 1]);
+  }
+  _gaq.push(['_trackPageview']);
+  (function(){
+    var ga=document.createElement('script');
+    ga.type='text/javascript';
+    ga.async=true;
+    ga.src=('https:'==document.location.protocol?'https://ssl':'http://www')+'.google-analytics.com/ga.js';
+    var s=document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga,s);
+  })();
+  /* End Synchronous Solution */ 
+</script>
