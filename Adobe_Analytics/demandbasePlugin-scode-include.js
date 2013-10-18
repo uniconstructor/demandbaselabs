@@ -12,17 +12,17 @@ for variable names in the Demandbase IP API response and a full list of fields.
 ********* Demandbase Plugin ******** */
 
 var dbs = (window.db_company)||{}, defaultVal='(Non-Company Visitor)';
-s.eVar1 = dbs.audience 			||defaultVal;
+s.eVar1 = dbs.audience 		||defaultVal;
 s.eVar2 = dbs.audience_segment	||defaultVal;
-s.eVar3 = dbs.industry 			||defaultVal;
+s.eVar3 = dbs.industry 		||defaultVal;
 s.eVar4 = dbs.employee_range 	||defaultVal;
 s.eVar5 = dbs.revenue_range 	||defaultVal;
-s.eVar6 = dbs.company_name 		||defaultVal;
+s.eVar6 = dbs.company_name 	||defaultVal;
 
 /* Optional - Assign special eVars for zip and state
 	Note attempts to use public registry info if not available from company profile */
-s.zip 	= dbs.zip 				||dbs.registry_zip_code ||'(No Zip Code)';
-s.state = dbs.state				||dbs.registry_state	||'(No State)';
+s.zip 	= dbs.zip 		||dbs.registry_zip_code ||'(No Zip Code)';
+s.state = dbs.state		||dbs.registry_state	||'(No State)';
 
 /* Account Watch Example */
 if(typeof dbs.watch_list !== 'undefined') {
@@ -48,13 +48,13 @@ if (s.eVar6) { s.prop6 = 'D=v6'; }
 
 
 /* ***** 	Using Context Data    *****
-	Optional, send all Demandbase fields to contextData (instead of eVars)
-	This requires assigining eVars and sprops using Processing Rules.
-	!! Notice: Requires Site Catalyst version 15.3 or higher AND s_code.js version H23 or higher.
-	Requires Adobe approval to write processing rules.  */
+Optional, send all Demandbase fields to contextData (instead of eVars)
+This requires assigining eVars and sprops using Processing Rules.
+!! Notice: Requires Site Catalyst version 15.3 or higher AND s_code.js version H23 or higher.
+Requires Adobe approval to write processing rules.  */
 
-	for(var field in dbs) {
-		s.contextData[field] = dbs[field]||'';
-	}
+for(var field in dbs) {
+	s.contextData[field] = dbs[field]||'';
+}
 
 /******* End Demandbase Plugin *********/
