@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.83
+  File: demandbaseForm.js  v.beta_0.84
   Name: Demandbase Form Module
   Authors:  Matthew Downs (mdowns[at@]demandbase[dot.]com),
             Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com),
@@ -647,15 +647,14 @@ Demandbase.Connectors.WebForm = {
         if (! data) return '';  //Protects against 404 errors or empty objects
         try {
             //Identify data source and priority
-            var priority, source;
-            if (typeof data.person == 'object') {
+            var priority, source, isIdMatch;
+            if (typeof data.person === 'object') {
                 source = 'domain';
                 this._sourceChecker.setSource(source, this._isIdComplete(data), true);
-                if (!data.person) return; //TODO: MD - why here? better way?
+                if (!data.person) return;
                 data = data.person;
                 /* if Domain API returns same SID as existing data set, do not override */
                 if (this._dbDataSet && data.demandbase_sid == this._dbDataSet.demandbase_sid) return;
-
             } else if (data.pick || data.input_match) {
                 source = 'company';        /*Company API returns data*/
                 if (data.pick) {
@@ -687,8 +686,9 @@ Demandbase.Connectors.WebForm = {
             this._log('Parsing response from API: ' + source);
             this._sourceChecker.setSource(source, this._isIdComplete(data), true);  /* Record source and result.*/
 
-            if (this._dbDataSet) isIdMatch = data.demandbase_sid == this._dbDataSet.demandbase_sid;
-
+            if (this._dbDataSet) {
+              isIdMatch = (data.demandbase_sid === this._dbDataSet.demandbase_sid) || (data.demandbase_sid === this._ipDataSet.demandbase_sid);
+            }
             db_hook_before_parse(data, source); /*call hook function before parsing*/
 
             priority = this.priorityMap[source]; /*Check if data source takes precedence*/
@@ -709,8 +709,12 @@ Demandbase.Connectors.WebForm = {
             var fs = document.createElement('fieldset');
             fs.id = 'db_data_container', fs.style.cssText = 'border:none;';
             for (var attr in data) {
-                var val = data[attr] || '';
-                var newEl = this._buildHiddenField(attr, val);
+                var newEl, val = data[attr] || '';
+                if(typeof data[attr] !== 'undefined' && data[attr] === false) {
+                  //for boolean fields, reset to literal when false, this way a value always gets set
+                  val = 'false';
+                } 
+                newEl = this._buildHiddenField(attr, val);
                 if (this.showResult) {
                     var testEl = document.createElement('div');
                     testEl.setAttribute('id', newEl.id + '_container');
@@ -822,30 +826,30 @@ Demandbase.Connectors.WebForm = {
     @uses visibleFieldMap
     **/
     _prepopVisibleFields: function(attr, val) {
-        if (this.visibleFieldMap[attr]) {
-            var valSet = false
-            ,field = this._getElmByIdOrName(this.visibleFieldMap[attr]);
+      if (this.visibleFieldMap[attr]) {
+        var valSet = false
+        ,field = this._getElmByIdOrName(this.visibleFieldMap[attr]);
 
-            if (field) {
-                /*pre-populating a single select or multi select menu*/
-                if (field.type == 'select-one') {
-                    for (var i = 0; i < field.options.length; i++) {
-                        if (field.options[i].value == val) {
-                            valSet = field.options[i].selected = true;
-                            break;
-                        }
-                    }
-                }else {
-                    field.value = val;
-                    valSet = true;
-                }
-                //Trigger change event when value is set
-                if (valSet) {
-                    this.djq(field).change().parents('p');
-                    //.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
-                }
+        if (field) {
+          /*pre-populating a single select or multi select menu*/
+          if (field.type == 'select-one') {
+            for (var i = 0; i < field.options.length; i++) {
+              if (field.options[i].value == val) {
+                valSet = field.options[i].selected = true;
+                break;
+              }
             }
+          } else {
+            field.value = val;
+            valSet = true;
+          }
+          //Trigger change event when value is set
+          if (valSet) {
+            this.djq(field).change().parents('p');
+            //.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
+          }
         }
+      }
     },
     /**
     This method first attempts to retrieve an element by it's ID (supplied as the single argument).
@@ -1159,7 +1163,7 @@ Demandbase.Connectors.WebForm = {
     @protected
     @final
     **/
-    _version: 'beta_0.83',
+    _version: 'beta_0.84',
     /**
     @class _sourceChecker
     @extensionfor formConncector
@@ -1203,9 +1207,8 @@ Demandbase.Connectors.WebForm = {
         @method checkSources
         **/
         'checkSources': function() {
-
-            var id = false,
-                allHit = true;
+            var id = false
+            ,allHit = true;
             for (var source in this.sources) {
                 if (this.sources[source].result) id = true;
                 if (!this.sources[source].hit) {
@@ -1234,7 +1237,7 @@ Demandbase.Connectors.WebForm = {
         @method onAllHit
         **/
         'onAllHit' : function() {
-            isId = Demandbase.Connectors.WebForm._isIdComplete(Demandbase.Connectors.WebForm._dbDataSet);
+            var isId = Demandbase.Connectors.WebForm._isIdComplete(Demandbase.Connectors.WebForm._dbDataSet);
             if (!isId) this.onNoId();
             db_hook_all_hit();
         }
