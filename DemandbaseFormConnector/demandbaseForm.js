@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.82
+  File: demandbaseForm.js  v.beta_0.83
   Name: Demandbase Form Module
   Authors:  Matthew Downs (mdowns[at@]demandbase[dot.]com),
             Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com),
@@ -468,7 +468,6 @@ Demandbase.Connectors.WebForm = {
     Demandbase recommends capturing the IP address
     Store the Demandbase unique ID for use with Eloqua Cloud Connector
     Note Account Watch must be setup to use "watch_list_"+[variableName] for custom Account Watch fields
-    Optional Manual Review flag set when Company API is used
     @property hiddenFieldMap
     @type object
     @static
@@ -788,31 +787,32 @@ Demandbase.Connectors.WebForm = {
     @params    {String} val -  Field value to be set in field
     **/
     _buildHiddenField: function(attr, val) {
-         var elName = this._normalize(attr); //Maps the Demandbase variable name to the form field to populate
+      var elName = this._normalize(attr) //Maps the Demandbase variable name to the form field to populate
+      ,fieldId = elName
+      ,fieldName = elName
+      ,fieldType = 'hidden'; //default to hidden
 
-        var fieldId = elName;
-        var fieldName = elName;
+      /*If MAS renders the form with hidden fields present...
+      ...remove them to avoid multiple values in the POST*/
+      var oldField = this._getElmByIdOrName(elName);
+      //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
+      if (oldField) {
+          fieldId = oldField.id;
+          fieldType = oldField.type;  //grab type from field if it already exists
+          if (oldField.name) fieldName = oldField.name;
+          if (!fieldId) fieldId = elName; /* just in case existing element does not have ID set */
 
-        /*If MAS renders the form with hidden fields present...
-        ...remove them to avoid multiple values in the POST*/
-        var oldField = this._getElmByIdOrName(elName);
-        //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
-        if (oldField) {
-            fieldId = oldField.id;
+          //TODO: MD - possibly popl single select menu here, instead of creating new element
+          oldField.parentNode.removeChild(oldField);
+      }
 
-            if (oldField.name) fieldName = oldField.name;
-            if (!fieldId) fieldId = elName; /* just in case existing element does not have ID set */
-            //TODO: MD - possibly popl single select menu here, instead of creating new element
-            oldField.parentNode.removeChild(oldField);
-        }
+      var newEl = document.createElement('input');
+      newEl.setAttribute('id', fieldId);
+      newEl.setAttribute('name', fieldName);
+      newEl.setAttribute('type', fieldType);
+      newEl.value = val;
 
-        var newEl = document.createElement('input');
-        newEl.setAttribute('id', fieldId);
-        newEl.setAttribute('name', fieldName);
-        newEl.setAttribute('type', 'hidden');
-        newEl.value = val;
-
-        return newEl;
+      return newEl;
     },
     /**
     This method populates visible fields according to the visibleFieldMap, includes setting values in select elements (menus)
@@ -823,8 +823,8 @@ Demandbase.Connectors.WebForm = {
     **/
     _prepopVisibleFields: function(attr, val) {
         if (this.visibleFieldMap[attr]) {
-            var valSet = false,
-            field = this._getElmByIdOrName(this.visibleFieldMap[attr]);
+            var valSet = false
+            ,field = this._getElmByIdOrName(this.visibleFieldMap[attr]);
 
             if (field) {
                 /*pre-populating a single select or multi select menu*/
@@ -872,13 +872,13 @@ Demandbase.Connectors.WebForm = {
     @static
     **/
     _getQueryParam: function(param) {
-        var qs = window.location.search.substring(1); //remove the leading '?'
-        var pairs = qs.split('&');
-        var params = {};
+        var qs = window.location.search.substring(1) //remove the leading '?'
+        ,pairs = qs.split('&')
+        ,params = {};
         for (var i = 0; i < pairs.length; i++) {
-          var nvArray = pairs[i].split('=');
-          var name = nvArray[0];
-          var value = nvArray[1];
+          var nvArray = pairs[i].split('=')
+          ,name = nvArray[0]
+          ,value = nvArray[1];
           params[name] = value;
         }
         return params[param];
@@ -1159,7 +1159,7 @@ Demandbase.Connectors.WebForm = {
     @protected
     @final
     **/
-    _version: 'beta_0.82',
+    _version: 'beta_0.83',
     /**
     @class _sourceChecker
     @extensionfor formConncector
