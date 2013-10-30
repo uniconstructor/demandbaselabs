@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.81
+  File: demandbaseForm.js  v.beta_0.82
   Name: Demandbase Form Module
   Authors:  Matthew Downs (mdowns[at@]demandbase[dot.]com),
             Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com),
@@ -632,7 +632,6 @@ Demandbase.Connectors.WebForm = {
             this._loadAsyncScript(); //still call IP API, even if widget isnt loaded
             this._log('Initializing ' + this.name + ' v.' + this._version + '... \nFAILED - widget.js file not loaded');
         }
-
     },
     /**
     This method is the "engine" that runs the Demandbase.Connectors.WebForm, accepting the data set returned by each API call, determining which API returned data and populating fields on the form.
@@ -674,7 +673,6 @@ Demandbase.Connectors.WebForm = {
                         return;
                     }
                 }
-                data['manual_review'] = true;    /*Add manual review flag when the Company Name API is used (can be captured to flag for potential user input errors)*/
             } else {
                 source = 'ip';            /*IP Address API returns data*/
                 /*store fields returned only by IP API*/
@@ -1161,7 +1159,7 @@ Demandbase.Connectors.WebForm = {
     @protected
     @final
     **/
-    _version: 'beta_0.81',
+    _version: 'beta_0.82',
     /**
     @class _sourceChecker
     @extensionfor formConncector
