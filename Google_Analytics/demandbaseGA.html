@@ -45,10 +45,13 @@
         var dbgac = Demandbase.Connectors.Google_Analytics, dflt = '(Non-company Visitor)';
         data = dbgac._flatA(data);
         dbgac.dbDataSet = data;
-        for (var i = 0; i < dbgac.fields.length; i++) {
-            var num = i + 1, lbl = dbgac.fields[i], val = data[dbgac.fields[i]] || dflt;
-            dbgac._var(num, lbl, val, 1);
-        }
+        for (var i = 0; i < dbgac.fields.length; i++) {	        
+	    	var num = i + 1, lbl = dbgac.fields[i], val = data[dbgac.fields[i]] || dflt, isCompany = (data['company_name']||dflt)!==dflt;
+			//if non-company visitor, then both watch_list and company will populate dflt.
+			//if company is identified, but not in watch_list then watch_list will populate 'non-accountwatch visitor'.
+			if(lbl.indexOf('watch_list_')!==-1 && isCompany){
+	    		val = data[dbgac.fields[i]]||'(Non-AccountWatch Visitor)';	        		
+	    	}
         dbgac._event();
 
         /*  additional event with Demandbase data as category/action/label  */
