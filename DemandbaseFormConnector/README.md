@@ -10,7 +10,7 @@ Technical documentation is available at:
 	http://www.demandbaselabs.com/docs/form_connector
 	
 Getting Started Guide (work-in-progress)
-	http://wiki.demandbaselabs.com/mwiki/index.php?title=Demandbase_Form_Connector
+	http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_Form_Connector
 
 Demonstration page with Eloqua form integration is available at:
 	http://www.demandbaselabs.com/sandbox/form.html
