@@ -337,7 +337,7 @@ Demandbase.utils = {
     File: ip.js
     Name: Demandbase IP API Helper Class
 **/
-Demandbase.IP = window.Demandbase.IP || {
+Demandbase.IP = {
     name: 'Demandbase IP API Wrapper',
     _version: '1.0',
     CompanyProfile: {},
@@ -377,9 +377,9 @@ Demandbase.IP = window.Demandbase.IP || {
 }; //end Demandbase.IP
 
 //TODO: determine when/where _load function should be called --ideally on $.ready()
-Demandbase.IP._load();
+//Demandbase.IP._load();
 
-Demandbase.Domain = window.Demandbase.Domain || {
+Demandbase.Domain = {
     name: 'Demandbase Domain API Wrapper',
     _version: '1.0',
     CompanyProfile: {},
@@ -389,8 +389,9 @@ Demandbase.Domain = window.Demandbase.Domain || {
     _debug: true,
     detectedDomain: '',
     _parser: function(data) {
-        if (!data) return ''; //Protects against 404 errors or empty objects
+        if (!data || !data.person) return ''; //Protects against 404 errors or empty objects
         try {
+        	data = data.person;
             var self = Demandbase.Domain, dbu = Demandbase.utils;
             data = dbu.flattenData(data);
             this.CompanyProfile = data;
@@ -402,22 +403,22 @@ Demandbase.Domain = window.Demandbase.Domain || {
         var s = document.createElement('script');
         s.async = true;
         s.id = 'db_domain_api';
-        s.src = ('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/domain.json?key=' + this._key + '&referrer=' + document.referrer + '&page=' + document.location.href + '&page_title=' + document.title + '&callback=Demandbase.Domain._parser&query';//+this._callback+
+        s.src = ('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v3/email.json?key=' + this._key + '&referrer=' + document.referrer + '&page=' + document.location.href + '&page_title=' + document.title + '&callback=Demandbase.Domain._parser&query';//+this._callback+
         if (this._useTestDomain) {
             //override query parameter with test IP address when bln is set
             if (this._testDomain == '') {
                 this._testDomain = Demandbase._getQueryParam('db_domain');
-                Demandbase.utils._log('Query IP API...overriding query parameter from URL: ' + this._testDomain);
+                Demandbase.utils._log('Query Domain API...overriding query parameter from URL: ' + this._testDomain);
             }
             if (this._testDomain !== '') {
                 s.src = s.src + '=' + this._testDomain;
-                Demandbase.utils._log('Query IP API...overriding query Demandbase.Domain: ' + this._testDomain);
+                Demandbase.utils._log('Query Domain API...overriding query Demandbase.Domain: ' + this._testDomain);
             }
         } else {
             s.src = s.src + '=' + this.getDomain();
         }
         document.getElementsByTagName('head')[0].appendChild(s);
-        Demandbase.utils._log('Calling IP API...');
+        Demandbase.utils._log('Calling Domain API...');
     },
     /**
     This function is defined unqiue for each site
@@ -434,7 +435,7 @@ Demandbase.Domain = window.Demandbase.Domain || {
 }; //end Demandbase.Domain
 
 //TODO: determine when/where _load function should be called --ideally on $.ready()
-Demandbase.Domain._load();
+//Demandbase.Domain._load();
 
 /**
     File: segments.js
@@ -603,7 +604,7 @@ Demandbase.Segments = window.Demandbase.Segments || {
 //TODO: consolidate init calls on IP callback.
 //Wrapping in runConnectors function ensures Segments is not initialized until IP API callback runs
 Demandbase.utils.runConnectors = function(data) {
-	Demandbase.Segments._init();
+	//Demandbase.Segments._init();
 }
 
 /**
@@ -665,7 +666,7 @@ Demandbase.Connectors.Google_Analytics = {
     Demandbase.utils.runConnectors = extRunConnectors;
     function extRunConnectors() {
         runner.apply(Demandbase.utils); // Use #apply in case `init` uses `this`
-        Demandbase.Connectors.Google_Analytics.load();
+        //Demandbase.Connectors.Google_Analytics.load();
         //TODO: initialize other connectors here 
     }
 })();
@@ -688,10 +689,10 @@ var driver = function(args) {
 		//gets field to set from cmdHash and sets each field
 	}
 };
-
+/*
 var cmdHash = {
 	'fieldMap' : WebForm.fieldMap,
 	'forms_key' : WebForm.key,
 
-};
+};*/
 
