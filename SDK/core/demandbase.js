@@ -656,7 +656,33 @@ Demandbase.Connectors.Google_Analytics = {
     _cEvent: function(cat, act, lbl) { this._p('_trackEvent', cat, act, lbl, 0, 1); this._logE('Custom Event Tracked: ' + cat + ' : ' + act + ' : ' + lbl); }
 };
 //Demandbase.Connectors.Google_Analytics.load();
+Demandbase.ContentMod = {
+    set : function (id, segment, html) {
+        //if 2 args
+        Demandbase.jQuery('#' + id).html(html);
+        //if 3 args
+        Demandbase.jQuery('#' + id).html(html);
+        
+        //push info into customizations object
+    }
+    ,setAll : function (mods) {
+        this.Mods = mods;
+    }
+    ,get : function (id) {
+        return Demandbase.jQuery('#' + id).html();
+    }
+    ,getAll : function() {
+        //returns array of customization objects
+        //for each in Customizations
+    }
+    ,Mods : {
+        'id' : { 'segment' : 'content' } //example
+    }
+};
 
+Demandbase.ContentLP = {
+  //Drives a set of ContentMods for a particular page  
+};
 /**
     This extends the 'runConnectors' function, adding additional code from
     what's defined in Demandbase.utils
