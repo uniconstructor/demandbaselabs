@@ -651,8 +651,37 @@ Demandbase.Segments = {
 //Wrapping in runConnectors function ensures Segments is not initialized until IP API callback runs
 //Demandbase.utils.runConnectors = function(data) {
 
-//};
+Demandbase.ContentMod = {
+    set : function (id, segment, html) {
+        //TODO: potentially handle a selector / function instead of an id for the first arg
+        //TODO: conditions
+        //if 2 args
+        Demandbase.jQuery('#' + id).html(html);
+        //if 3 args
+        Demandbase.jQuery('#' + id).html(html);
 
+
+
+        //TODO: push info into customizations object
+    }
+    ,setAll : function (mods) {
+        this.Mods = mods;
+    }
+    ,get : function (id) {
+        return Demandbase.jQuery('#' + id).html();
+    }
+    ,getAll : function() {
+        //returns array of customization objects
+        //for each in Customizations
+    }
+    ,Mods : {
+        'id' : { 'segment' : 'content' } //example
+    }
+};
+
+Demandbase.ContentLP = {
+  //Drives a set of ContentMods for a particular page
+};
 /**
     This extends the 'runConnectors' function, adding additional code from
     what's defined in Demandbase.utils

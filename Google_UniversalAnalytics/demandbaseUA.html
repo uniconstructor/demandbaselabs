@@ -23,7 +23,7 @@
   Demandbase.Connectors = window.Demandbase.Connectors || {};
   Demandbase.Connectors.Google_UniversalAnalytics = {
       name: 'Demandbase Universal Analytics Connector',
-      version: '3.1',
+      version: '3.2',
       key:'YOUR_KEY_HERE',
       logging: true,
       /* Customize which variables are sent to GA. 
@@ -62,7 +62,7 @@
       },
       load:function(){
         try { 
-          if(!window.ga) window.ga = function(){};
+          if(!window.ga) window.ga = function(){(ga.q=ga.q||[]).push(arguments)};
           var db=document.createElement('script'); db.type='text/javascript'; db.async=true; db.id = 'db_ip_api_ua';
           db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=Demandbase.Connectors.Google_UniversalAnalytics.track&page='+document.URL+'&referrer='+document.referrer;
           var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
