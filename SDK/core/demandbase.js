@@ -531,41 +531,28 @@ var DBConditionBuilder = {
     }
 };
 
-//TODO: this should be refactored/encapsulated in a builder class
 //TODO: builder class should be able to handle condition definition so single-condition segments can be defined in Conditions
 var DBSegmentBuilder = {
     build : function(name, segment) {
         //TODO: Validation - check to ensure array is defined properly
         //iterates over segments object and builds DBSegment objects
-        //for (var seg in segments) {
-            //if (segments.hasOwnProperty(seg)) {
-                var segmentObj, condition = segment[0]; //segment, sArr = segments[seg],
+        var segmentObj, condition = segment[0]; //segment, sArr = segments[seg],
 
-                if (condition) {
-                    //create new segment with single condition (first listed)
-                    segmentObj = new DBSegment(name, condition);
-                    //for multi-condition segments
-                    if (segment.length > 1) {
-                        //if multiple conditions are defined for a segment, add all conditions
-                        for (var i = 1; i < segment.length; i = i + 2) {
-                            segmentObj.addCondition(segment[i + 1], segment[i]);
-                        }
-                    }
-                    return segmentObj;
+        if (condition) {
+            //create new segment with single condition (first listed)
+            segmentObj = new DBSegment(name, condition);
+            //for multi-condition segments
+            if (segment.length > 1) {
+                //if multiple conditions are defined for a segment, add all conditions
+                for (var i = 1; i < segment.length; i = i + 2) {
+                    segmentObj.addCondition(segment[i + 1], segment[i]);
                 }
-            //}
-        //}
+            }
+            return segmentObj;
+        }
     }
 };
 
-
-
-/*
-Examples of DBCondition and DBSegment usage
-var t = new DBCondition('test', '=', 'test', 'true cond');
-var f = new DBCondition('nottest', 'equals', 'test', 'false cond');
-var s = new DBSegment('namedSeg', t);
-s.addCondition(f, 'OR');*/
 /**
     Class: DBContent
     Builder Class for DBCondition
@@ -585,6 +572,13 @@ var DBContent = function(options) {
 /**
     Class: Demandbase.Segments
     Defines a visitor's segments as boolean variables using conditions against the Demandbase Company Profile
+    /*
+        Examples of DBCondition and DBSegment usage
+        var t = new DBCondition('test', '=', 'test', 'true cond');
+        var f = new DBCondition('nottest', 'equals', 'test', 'false cond');
+        var s = new DBSegment('namedSeg', t);
+        s.addCondition(f, 'OR');
+    */
 **/
 Demandbase.Segments = {
     name: 'Demandbase Segments',
@@ -598,7 +592,7 @@ Demandbase.Segments = {
         ,'CountryIsJapan' : ['country', '=', 'JP']
         //'TestObjCond' : new DBCondition('audience', 'equals', 'SMB') //Note: this works, but does not evaluate 'audience' on the lhs
     },
-    AllSegments: {
+    _allSegments: {
         //TODO: Docs - first array item must be condition name
         //any number of conditions can be added but must always include an operator
         //array should end with a condition, not an operator
@@ -618,20 +612,20 @@ Demandbase.Segments = {
         }
 
         //iterate through segments object and
-        for (var eachSegment in this.AllSegments) {
+        for (var eachSegment in this._allSegments) {
             var segment;
-            if (this.AllSegments.hasOwnProperty(eachSegment)) {
-                var sArr = this.AllSegments[eachSegment];
+            if (this._allSegments.hasOwnProperty(eachSegment)) {
+                var sArr = this._allSegments[eachSegment];
                 for (var condition in sArr) {
                     if (this.Conditions[sArr[condition]]) {
                         //replace named conditions with actual condition object
-                        this.AllSegments[eachSegment][condition] = this.Conditions[sArr[condition]];
+                        this._allSegments[eachSegment][condition] = this.Conditions[sArr[condition]];
                     }
 
                 }
-                segment = DBSegmentBuilder.build(eachSegment, this.AllSegments[eachSegment]);
+                segment = DBSegmentBuilder.build(eachSegment, this._allSegments[eachSegment]);
                 //replace array with actual segment object
-                this.AllSegments[eachSegment] = segment;
+                this._allSegments[eachSegment] = segment;
                 //dynamically add property to the Demandbase.Segments namespace for each DBSegment object defined in segments
                 Object.defineProperty(this, eachSegment, segment);
             }
@@ -659,8 +653,6 @@ Demandbase.ContentMod = {
         Demandbase.jQuery('#' + id).html(html);
         //if 3 args
         Demandbase.jQuery('#' + id).html(html);
-
-
 
         //TODO: push info into customizations object
     }
