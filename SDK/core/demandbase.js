@@ -453,6 +453,7 @@ Demandbase.Domain = {
     Class: DBCondition
     Determines whether an attribute matches a value
 **/
+
 var DBCondition = function(attr, op, val, name) { //TODO - replace params with single object
     this.attribute = attr;  //this is a demandbase attr value
     this.operator = op;
@@ -572,6 +573,9 @@ var DBContent = function(options) {
 /**
     Class: Demandbase.Segments
     Defines a visitor's segments as boolean variables using conditions against the Demandbase Company Profile
+
+**/
+
     /*
         Examples of DBCondition and DBSegment usage
         var t = new DBCondition('test', '=', 'test', 'true cond');
@@ -579,7 +583,8 @@ var DBContent = function(options) {
         var s = new DBSegment('namedSeg', t);
         s.addCondition(f, 'OR');
     */
-**/
+    
+    
 Demandbase.Segments = {
     name: 'Demandbase Segments',
     _version: 'beta 0.1',
