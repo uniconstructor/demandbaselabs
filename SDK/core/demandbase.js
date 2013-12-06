@@ -572,13 +572,12 @@ var DBContent = function(options) {
 /**
     Class: Demandbase.Segments
     Defines a visitor's segments as boolean variables using conditions against the Demandbase Company Profile
-    /*
-        Examples of DBCondition and DBSegment usage
-        var t = new DBCondition('test', '=', 'test', 'true cond');
-        var f = new DBCondition('nottest', 'equals', 'test', 'false cond');
-        var s = new DBSegment('namedSeg', t);
-        s.addCondition(f, 'OR');
-    */
+
+    Examples of DBCondition and DBSegment usage
+    var t = new DBCondition('test', '=', 'test', 'true cond');
+    var f = new DBCondition('nottest', 'equals', 'test', 'false cond');
+    var s = new DBSegment('namedSeg', t);
+    s.addCondition(f, 'OR');
 **/
 Demandbase.Segments = {
     name: 'Demandbase Segments',
@@ -642,42 +641,51 @@ Demandbase.Segments = {
     //inactiveSegments: null,     //all segments (names) which return false for a visitor
 };
 
-//Wrapping in runConnectors function ensures Segments is not initialized until IP API callback runs
-//Demandbase.utils.runConnectors = function(data) {
-
 Demandbase.ContentMod = {
     set : function (id, segment, html) {
-        //TODO: potentially handle a selector / function instead of an id for the first arg
-        //TODO: conditions
-        //if 2 args
-        Demandbase.jQuery('#' + id).html(html);
-        //if 3 args
-        Demandbase.jQuery('#' + id).html(html);
-
-        //TODO: push info into customizations object
-    }
-    ,setAll : function (mods) {
-        this.Mods = mods;
+        //Example usage:
+        //Demandbase.ContentMod.set("CarouselTitle", Demandbase.Segments.DemandbaseSegment, "<div>TEST</div>")
+        var actualId = defaultId = "demandbaseContent";
+        if(id && arguments.length === 3) {
+            actualId = id;
+        } else if (arguments.length === 2) {
+            actualId = defaultId;
+        }
+        if(segment) {
+            var elm = document.getElementById(actualId);
+            if(elm) {
+                Demandbase.jQuery(elm).html(html);
+            } else {
+                //if arg 1 is not an id, try it as a selector
+                Demandbase.jQuery(id).html(html);
+            }
+        }
     }
     ,get : function (id) {
-        return Demandbase.jQuery('#' + id).html();
+        var elm = document.getElementById(id);
+        if (elm) {
+            return Demandbase.jQuery(elm).html();
+        } else {
+            return Demandbase.jQuery(id).html();
+        }
+    }
+    /*,setAll : function (mods) {
+        this.Mods = mods;
     }
     ,getAll : function() {
-        //returns array of customization objects
+        //returns array of active customization objects
         //for each in Customizations
     }
     ,Mods : {
         'id' : { 'segment' : 'content' } //example
-    }
-};
-
-Demandbase.ContentLP = {
-  //Drives a set of ContentMods for a particular page
+    }*/
 };
 /**
     This extends the 'runConnectors' function, adding additional code from
     what's defined in Demandbase.utils
     All connector calls should be made from here.
+    Wrapping in runConnectors function ensures Segments is not initialized until IP API callback runs
+    Demandbase.utils.runConnectors = function(data) { //connector calls here }
 **/
 (function() {
     var runner = Demandbase.utils.runConnectors;
@@ -685,32 +693,13 @@ Demandbase.ContentLP = {
     function extRunConnectors() {
         runner.apply(Demandbase.utils); // Use #apply in case `init` uses `this`
         Demandbase.Segments._init();
+        Demandbase.utils._log('Running extRunConnectors');
+        Demandbase.utils._log('Null check: ' + Demandbase.IP.CompanyProfile === null);
+        Demandbase.utils._log(Demandbase.IP.CompanyProfile.company_name);
         //Demandbase.Connectors.Google_Analytics.load();
         //TODO: initialize other connectors here
     }
 })();
 
-/***************************************************************************/
-var demandbase = window.demandbase || function(cmd,args) {
-    if (!cmd) return;
-    switch (cmd) {
-        case 'forms_module':
-        case 'analytics':
-        case 'audiences':
-        case 'ads':
-        default:
-    }
-};
 
-var driver = function(args) {
-    for (var arg in args) {
-        //gets field to set from cmdHash and sets each field
-    }
-};
-/*
-var cmdHash = {
-    'fieldMap' : WebForm.fieldMap,
-    'forms_key' : WebForm.key,
-
-};*/
 
