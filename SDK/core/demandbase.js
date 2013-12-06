@@ -453,6 +453,7 @@ Demandbase.Domain = {
     Class: DBCondition
     Determines whether an attribute matches a value
 **/
+
 var DBCondition = function(attr, op, val, name) { //TODO - replace params with single object
     this.attribute = attr;  //this is a demandbase attr value
     this.operator = op;
@@ -579,6 +580,7 @@ var DBContent = function(options) {
     var s = new DBSegment('namedSeg', t);
     s.addCondition(f, 'OR');
 **/
+
 Demandbase.Segments = {
     name: 'Demandbase Segments',
     _version: 'beta 0.1',
