@@ -7,7 +7,7 @@
  */
 
 class demandbase_client {
-  public  $key;
+  public  $dbkey; //JB 12/20/2013 - don't name it $key PHP thinks $this->key is a function
   public  $url;
   public  $result;
   public  $method;
@@ -37,7 +37,7 @@ class demandbase_client {
 
     //set the url and key for demandbase api
     $this->url = trim(variable_get('demandbase_url', 'http://api.demandbase.com/api/v2/ip.json'));
-    $this->key = trim(variable_get('demandbase_key', ''));
+    $this->dbkey = trim(variable_get('demandbase_key', ''));
     $this->method = 'POST';
     // Pick up admin specified ip address.
     if ($this->admin_ip_address != '' && $this->activate_admin_ip_address) {
@@ -69,10 +69,8 @@ class demandbase_client {
     if (!empty($ip_address)) {
       $ip = $ip_address;
     }
-    $options = array();
-    $options['method'] = $this->method;
-    $options['data'] = 'key=' . $this->key . '&query=' . $ip;
-    $result = drupal_http_request($this->url, $options);
+    $options = 'key=' . $this->dbkey . '&query=' . $ip;
+    $result = drupal_http_request($this->url.$options); //JB 12/20/2013 - POST returns 'unauthorized' use GET instead (similar to JS method)
     $this->code = json_decode($result->code);
     $data = array();
     if ($this->code == '200') {
@@ -95,13 +93,23 @@ class demandbase_client {
         }
     $this->processed_data = $data;// save flattened data to this->result 
     }
-    if ($this->code != '200') {
-     $this->data = (isset($result->data)) ? json_decode($result->data) : array();
-     foreach ($this->data as $key => $value) {
-       $this->processed_data[$key] = $value;
-     }
+    if ($this->code != '200') { 
+	 $this->data = $result->data;//JB 12/20/2013 - $result->data is not always an json, sometimes it is a plaintext
+	 if(json_decode($result->data)) {//JB 12/20/2013 - If it is json, decode it and set it to $this->data
+       $this->data = $result->data;
+	 }
+	 if(is_array($this->data) || is_object($this->data)) {
+       foreach ($this->data as $key => $value) {
+         $this->processed_data[$key] = $value;
+       }
+	 } else {//JB 12/20/2013 - If not json/array then just tell me the error message
+	   $this->processed_data['result_data'] = $this->data;
+	 }
      $this->processed_data['ip'] = $ip;
-     $this->error = (isset($result->error)) ? json_decode($result->error) : '';
+	 $this->error = $result->error;//JB 12/20/2013 - Same with $result->error, not always json
+	 if(json_decode($result->error)) {
+       $this->data = $result->error;
+	 }
    }
   }
 
