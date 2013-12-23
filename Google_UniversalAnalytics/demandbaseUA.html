@@ -23,7 +23,7 @@
   Demandbase.Connectors = window.Demandbase.Connectors || {};
   Demandbase.Connectors.Google_UniversalAnalytics = {
       name: 'Demandbase Universal Analytics Connector',
-      version: '3.2',
+      version: '3.3',
       key:'YOUR_KEY_HERE',
       logging: true,
       /* Customize which variables are sent to GA. 
@@ -46,16 +46,15 @@
             if(dbgua.fields.hasOwnProperty(field)) {
               var num = field, lbl = dbgua.fields[field], val = data[dbgua.fields[field]] || dflt, isCompany = (data['company_name']||dflt) !==  dflt;
 		//if non-company visitor, then both watch_list and company will populate dflt.
-		//if company is identified, but not in watch_list then watch_list will populate 'non-accountwatch visitor'.
 		if(lbl.indexOf('watch_list_')!==-1 && isCompany){
+			//if company is identified, but not in watch_list then watch_list will populate 'non-accountwatch visitor'.
 			val = data[dbgua.fields[field]] || awDflt;	        		
 	       	}              
               dbgua._var(num, lbl, val);  
             }
           }
           dbgua._event();
-          dbgua._cEvent(data['audience']||dflt,data['industry']||dflt,data['company_name']||dflt);
-          /* Example of custom Account Watch fields
+          /* Example of custom event sending Account Watch fields
           dbgua._cEvent(data['watch_list_account_type']||awDflt,data['watch_list_buying_stage']||awDflt,data['company_name']||dflt);
           */
         } catch(e){ this._logE('Integration Error: '+e) }; 
