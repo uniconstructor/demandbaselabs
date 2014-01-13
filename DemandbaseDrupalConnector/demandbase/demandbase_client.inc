@@ -70,7 +70,7 @@ class demandbase_client {
       $ip = $ip_address;
     }
     $options = 'key=' . $this->dbkey . '&query=' . $ip;
-    $result = drupal_http_request($this->url.$options); //JB 12/20/2013 - POST returns 'unauthorized' use GET instead (similar to JS method)
+    $result = drupal_http_request($this->url.'?'.$options); //JB 12/20/2013 - POST returns 'unauthorized' use GET instead (similar to JS method)
     $this->code = json_decode($result->code);
     $data = array();
     if ($this->code == '200') {
