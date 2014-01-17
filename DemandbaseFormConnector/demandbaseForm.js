@@ -1,5 +1,5 @@
 /**
-  File: demandbaseForm.js  v.beta_0.84
+  File: demandbaseForm.js  v.beta_0.9
   Name: Demandbase Form Module
   Authors:  Matthew Downs (mdowns[at@]demandbase[dot.]com),
             Ilya Hoffman (Ilya[at@]SynapseAutomation[dot.]com),
@@ -15,9 +15,7 @@ Step 1 - Add this file to your HTML page (or landing page template)
 
 Step 2 - Update this file with required info:
         1.  Fill in Demandbase Key, Company ID, and Email ID (key, emailID, companyID)
-        2a. Update hiddenFieldMap - Add field IDs for hidden fields to be populated by Demandbase data
-            (add additional fields or remove unused fields as needed)
-        2b. Update visibleFieldMap - Add field IDs for visible fields to be populated by Demandbase data
+        2. Update fieldMap - Add field IDs for any fields to be populated by Demandbase data
         3.  (Optional) Add the form name (or use formNameList if using multiple forms with different names)
             Note: first form in DOM is used if no form is specified.
         4. Search for comments with "Required" and "Optional" and fill-in required values and make additional adjustments as-needed
@@ -268,8 +266,7 @@ Demandbase.Connectors namespace - Contains all functions and properties for a De
 @beta
 **/
 'use strict';
-Demandbase.Connectors=window.Demandbase.Connectors||{};
-
+Demandbase.Connectors = window.Demandbase.Connectors || {};
 /**
 Connects three Demandbase APIs to a form using the CompanyAutocomplete Widget and the IP Address API.
 Includes functionality to determine API priority order, populate hidden and visible fields, and show additional fields
@@ -312,7 +309,7 @@ Demandbase.Connectors.WebForm = {
     **/
     companyID: '',
     /**
-    Specify which form has the input fields indicated by companyID and emailID and the fields mapped in the hiddenFieldMap and visibleFieldsMap.
+    Specify which form has the input fields indicated by companyID and emailID and the fields mapped in the fieldMap and visibleFieldsMap.
     This should only be set if all Demandbase-enabled forms always has the same name, otherwise use formNameList.
     Specifying a form is not required if there is only one form on the page. Leaving default value  (null) selects first form found in the DOM.
     This is the Form object to populate with Demandbase data and send to the form processor.
@@ -326,9 +323,10 @@ Demandbase.Connectors.WebForm = {
     @example
         document.forms['form_name']
     **/
-    form: null,                     //Optional
+    form: null,
+    //Optional
     /**
-    Specify which form has the input fields indicated by companyID and emailID and the fields mapped in the hiddenFieldMap and visibleFieldMap.
+    Specify which form has the input fields indicated by companyID and emailID and the fields mapped in fieldMap.
     This array is used when there are multiple form pages that have forms with different names.
     If every form has the same name, use the form propery.
     Specifying a form is not required if there is only one form on the page. Leaving default value  (null) selects first form found in the DOM.
@@ -371,7 +369,7 @@ Demandbase.Connectors.WebForm = {
         false
     **/
     showResult: true,
-    /**
+/**
     Testing mode - set to true to run QUnit tests and display results on the page
     This can be enabled via query string parameter by setting "db_runTests=true".
     Warning: set to false before deploying!
@@ -468,37 +466,52 @@ Demandbase.Connectors.WebForm = {
     Demandbase recommends capturing the IP address
     Store the Demandbase unique ID for use with Eloqua Cloud Connector
     Note Account Watch must be setup to use "watch_list_"+[variableName] for custom Account Watch fields
-    @property hiddenFieldMap
-    @type object
-    @static
-    @default (various)
-    @required
-    @example
-        hiddenFieldMap: {
-            'company_name': 'DBCompanyName',
-            'audience' : 'DBAudience',
-            'industry': 'DBIndustry',
-            'employee_range': 'DBEeRange',
-            'revenue_range': 'DBRevRange',
-        }
-    **/
-    hiddenFieldMap: {},
-    /**
+
     Optional - map visible form fields to pre-populate with Demandbase data.
     This set of name/values pairs has the Demandbase variable name on left, and the ID (or name) of the input field or select element to populate on the right
-    @property visibleFieldMap
+    @property fieldMap
     @type object
     @static
     @default (various)
     @optional
     @example
-        visibleFieldMap: {
+        fieldMap: {
             '[demandbaseVarName]' : '[input_element_id]'
             'industry': 'Industry__c',
             'employee_range': 'EmployeeRange__c'
         }
     **/
-    visibleFieldMap: {},
+    fieldMap: {
+        'company_name': '',
+        'industry': '',
+        'sub_industry': '',
+        'primary_sic': '',
+        'revenue_range': '',
+        'annual_sales': '',
+        'employee_range': '',
+        'employee_count': '',
+        'street_address': '',
+        'city': '',
+        'state': '',
+        'zip': '',
+        'country': '',
+        'country_name': '',
+        'latitude': '',
+        'longitude': '',
+        'phone': '',
+        'web_site': '',
+        'stock_ticker': '',
+        'traffic': '',
+        'b2b': '',
+        'b2c': '',
+        'fortune_1000': '',
+        'forbes_2000': '',
+        'duns_num': '',
+        'demandbase_sid': '',
+        'data_source': '',
+        'audience': '',
+        'audience_segment': ''
+    },
     /**
     Defines the order of precedence to use when more than one API returns a result by mapping "Email", "IP", and "Company" to numeric values
     Highest number is top priority, lowest number is only used when other APIs do not identify the company.
@@ -531,7 +544,8 @@ Demandbase.Connectors.WebForm = {
     @example
         requiredAttrsList : ['company_name','country','state']
     **/
-    requiredAttrsList: ['company_name'],        //Array of Demandbase variable names to determine if an API call has ID'd the visitor (if a field is blank, this counts as not ID'd)
+    requiredAttrsList: ['company_name'],
+    //Array of Demandbase variable names to determine if an API call has ID'd the visitor (if a field is blank, this counts as not ID'd)
     /**
     Defines a list of DOM IDs of elements to hide initially and show if Demandbase does not populate them with data.
     Note, this is not typically the input field itself, rather it is usually a wrapper div that also contains the field label.
@@ -543,7 +557,8 @@ Demandbase.Connectors.WebForm = {
     @example
         toggleFieldList : ['formFieldContainer1', 'formFieldContainer2']
     **/
-    toggleFieldList: [],                     //Array of the DOM IDs of fields to show when company is not ID'd
+    toggleFieldList: [],
+    //Array of the DOM IDs of fields to show when company is not ID'd
     /**
     Indicates whether the form fields in toggleFieldList are shown by default.
     The default value, true, indicates fields will be hidden when the page loads.
@@ -567,7 +582,7 @@ Demandbase.Connectors.WebForm = {
             emailID : "email_input_id",
             companyID : "company_input_id",
             form: document.forms['simpleFormTest'],
-            hiddenFieldMap: {
+            fieldMap: {
                 'company_name': 'DBCompanyName',
                 'industry': 'DBIndustry',
                 'employee_range': 'DBEeRange',
@@ -583,12 +598,10 @@ Demandbase.Connectors.WebForm = {
         if (options.formNameList) this.formNameList = options.formNameList;
         if (options.testIpAddress) this.testIpAddress = options.testIpAddress;
         if (options.cacLabel) this.cacLabel = options.cacLabel;
-        if (options.hiddenFieldMap) this.hiddenFieldMap = options.hiddenFieldMap;
-        if (options.visibleFieldMap) this.visibleFieldMap = options.visibleFieldMap;
+        if (options.fieldMap) this.fieldMap = options.fieldMap;
         if (options.priorityMap) this.priorityMap = options.priorityMap;
         if (options.requiredAttrsList) this.requiredAttrsList = options.requiredAttrsList;
         if (options.toggleFieldList) this.toggleFieldList = options.toggleFieldList;
-
         if (typeof options.debug !== 'undefined' && !this._isNullEmpty(options.debug)) this.debug = options.debug;
         if (typeof options.showResult !== 'undefined' && !this._isNullEmpty(options.showResult)) this.showResult = options.showResult;
         if (typeof options.logging !== 'undefined' && !this._isNullEmpty(options.logging)) this.logging = options.logging;
@@ -612,18 +625,17 @@ Demandbase.Connectors.WebForm = {
                 dbf.djq = Demandbase.jQuery;
                 dbf._loadAsyncScript(); //TODO: MD - test running this function outside of doc ready so IP API is called regardless of CAC
                 dbf._attachCompanyAPI();
-
                 //Assign form to use Select the first form that matches a value in formNameList...
                 for (var formName in dbf.formNameList) {
                     dbf.form = document.forms[dbf.formNameList[formName]];
-                    if (dbf.form != null) { break; }
+                    if (dbf.form != null) {
+                        break;
+                    }
                 }
                 //...use the first form in the DOM, if otherwise not specified
-                if (! dbf.form) dbf.form = document.forms[0];
-
+                if (!dbf.form) dbf.form = document.forms[0];
                 if (dbf.djq('#' + dbf.emailID).val() !== '') Demandbase.CompanyAutocomplete.getPerson(Demandbase.CompanyAutocomplete.callback);
                 if (dbf.toggleFieldList.length > 0 && dbf.areToggleFieldsVisible) dbf.toggleFields();
-
                 db_hook_init();
             });
             this._log('Initializing ' + this.name + ' v.' + this._version);
@@ -634,7 +646,7 @@ Demandbase.Connectors.WebForm = {
     },
     /**
     This method is the "engine" that runs the Demandbase.Connectors.WebForm, accepting the data set returned by each API call, determining which API returned data and populating fields on the form.
-    The parser uses the priorityMap to determine when a returned dataset should override the existing one, and it creates a field set for the fields in the hiddenFieldMap.
+    The parser uses the priorityMap to determine when a returned dataset should override the existing one, and it creates a field set for the fields in the fieldMap.
     When showResult is set to true, this method outputs a table of the returned attributes.  When debug is true, this method will display alerts if there is a JS error.
     This parser function is called 3X during a form interaction
             1st call - User lands on the form page, triggering a call to the Demandbase IP Address API
@@ -644,7 +656,7 @@ Demandbase.Connectors.WebForm = {
     @param {Object} [data] - The JSON data set returned from any of the three Demandbase APIs
     **/
     parser: function(data) {
-        if (! data) return '';  //Protects against 404 errors or empty objects
+        if (!data) return ''; //Protects against 404 errors or empty objects
         try {
             //Identify data source and priority
             var priority, source, isIdMatch;
@@ -652,27 +664,25 @@ Demandbase.Connectors.WebForm = {
                 source = 'domain';
                 this._sourceChecker.setSource(source, this._isIdComplete(data), true);
                 if (!data.person) return;
-                data = data.person;
-                /* if Domain API returns same SID as existing data set, do not override */
+                data = data.person; /* if Domain API returns same SID as existing data set, do not override */
                 if (this._dbDataSet && data.demandbase_sid == this._dbDataSet.demandbase_sid) return;
             } else if (data.pick || data.input_match) {
-                source = 'company';        /*Company API returns data*/
+                source = 'company'; /*Company API returns data*/
                 if (data.pick) {
-                    data = data.pick;
-                    /*set dbDataSet early when no other dataset has been popld yet - reqd for checkSources/onNoId*/
+                    data = data.pick; /*set dbDataSet early when no other dataset has been popld yet - reqd for checkSources/onNoId*/
                     if (this._dbDataSet == null) this._dbDataSet = data;
                 } else if (data.input_match) {
                     data = data.input_match;
                     if (this.useCompanyInputMatch) {
                         this._log('Using input_match object from Company Name API...');
                     } else {
-                        this._sourceChecker.setSource(source, false, true);  // Record source and result.
+                        this._sourceChecker.setSource(source, false, true); // Record source and result.
                         this._log('input_match object detected from Company Name API...exiting because useCompanyInputMatch=false');
                         return;
                     }
                 }
             } else {
-                source = 'ip';            /*IP Address API returns data*/
+                source = 'ip'; /*IP Address API returns data*/
                 /*store fields returned only by IP API*/
                 this._detectedIP = data['ip'] || '';
                 this._detectedAudience = data['audience'] || '';
@@ -684,57 +694,56 @@ Demandbase.Connectors.WebForm = {
                 //this._lastDataSource = this.priorityMap[source];     //initialize lastDataSource when IP API is called
             }
             this._log('Parsing response from API: ' + source);
-            this._sourceChecker.setSource(source, this._isIdComplete(data), true);  /* Record source and result.*/
-
+            this._sourceChecker.setSource(source, this._isIdComplete(data), true); /* Record source and result.*/
             if (this._dbDataSet) {
-              isIdMatch = (data.demandbase_sid === this._dbDataSet.demandbase_sid) || (data.demandbase_sid === this._ipDataSet.demandbase_sid);
+                //TODO: null check on _ipDataSet.demandbase_sid
+                isIdMatch = (data.demandbase_sid === this._dbDataSet.demandbase_sid) || (data.demandbase_sid === this._ipDataSet.demandbase_sid);
             }
             db_hook_before_parse(data, source); /*call hook function before parsing*/
-
             priority = this.priorityMap[source]; /*Check if data source takes precedence*/
             if (this._lastDataSource !== null && priority < this._lastDataSource) {
                 //by pass API priority if current result from Domain API matches SID from subsequent result
-                if (!isIdMatch /*&& this._dbDataSrc !== 'domain'*/) return;
+                if (!isIdMatch /*&& this._dbDataSrc !== 'domain'*/ ) return;
             }
-            this._dbDataSet = data;  //Update the data object used
+            this._dbDataSet = data; //Update the data object used
             this._dbDataSrc = source;
             data['data_source'] = source;
-            this._removeDataset(data);    //Remove previously used data set
+            this._removeDataset(data); //Remove previously used data set
             this._log('Parsing data response from: ' + this._dbDataSrc);
             this._log('New Data Set:');
             this._log(this._dbDataSet);
             data = this._flattenData(data);
             this._restoreIpFields(data);
-
             var fs = document.createElement('fieldset');
             fs.id = 'db_data_container', fs.style.cssText = 'border:none;';
             for (var attr in data) {
-                var newEl, val = data[attr] || '';
-                if(typeof data[attr] !== 'undefined' && data[attr] === false) {
-                  //for boolean fields, reset to literal when false, this way a value always gets set
-                  val = 'false';
-                } 
-                newEl = this._buildHiddenField(attr, val);
-                if (this.showResult) {
-                    var testEl = document.createElement('div');
-                    testEl.setAttribute('id', newEl.id + '_container');
-                    testEl.innerHTML = '<strong>' + newEl.id + '</strong>: ' + newEl.value + '<br/>';
-                    fs.appendChild(testEl);
+                var newEl, val = data[attr] || ''; //TODO: consider attr for default value
+                if (typeof data[attr] !== 'undefined' && data[attr] === false) {
+                    //for boolean fields, reset to literal when false, this way a value always gets set
+                    val = 'false';
                 }
-                this._prepopVisibleFields(attr, val);
-                fs.appendChild(newEl);
+                newEl = this._buildField(attr, val);
+                if (newEl) {
+                    fs.appendChild(newEl);
+                    if (this.showResult) {
+                        var testEl = document.createElement('div');
+                        testEl.setAttribute('id', newEl.id + '_container');
+                        testEl.innerHTML = '<strong>' + newEl.id + '</strong>: ' + newEl.value + '<br/>';
+                        fs.appendChild(testEl);
+                    }
+                }
                 db_hook_attr(source, attr, val);
-            }
+            } //end for attr in data
             if (this.form) {
                 this.form.appendChild(fs);
                 this._lastDataSource = priority;
             }
             db_hook_after_parse(data, source);
-          }catch (e) {
-              if (this.debug || this._getQueryParam('db_debug') === 'true') alert('Error: ' + e + ' \n ' + e.stack);
-          }
+        } catch (e) {
+            if (this.debug || this._getQueryParam('db_debug') === 'true') alert('Error: ' + e + ' \n ' + e.stack);
+        }
     },
-     /**
+    /**
     Some demandbase fields are returned as objects (hq hierarchy and Account Watch)
      This function breaks out each individual field in those objects andnormalizes the name, making
       it possible to iterate through the entire data set without checking for objects
@@ -773,83 +782,83 @@ Demandbase.Connectors.WebForm = {
         }
     },
     /**
-    This function swaps the Demandbase variable name for the value listed in hiddenFieldMap.
-    If a field is not listed in hiddenFieldMap, then a prefix is applied to the variable name.
+    This function swaps the Demandbase variable name for the value listed in fieldMap.
+    If a field is not listed in fieldMap, then a prefix is applied to the variable name.
     Note, this function alters the in-memory JSON object returned from Demandbase.
     @method _normalize
-    @params {String} name - A Demandbase varialbe name to lookup in hiddenFieldMap
+    @params {String} name - A Demandbase varialbe name to lookup in fieldMap
     **/
     _normalize: function(name) {
-        var prefix = 'db_';
-        return this.hiddenFieldMap[name] ? this.hiddenFieldMap[name] : prefix + name;
+        var prefix = 'db_',
+            suffix = '';
+        return this.fieldMap[name] ? this.fieldMap[name] : prefix + name + suffix;
     },
     /**
     Creates a new hidden field and sets its value according to the returned data set.  If a field with the same name already exists, it will be deleted and re-created.
-    Note: this does not support the population of hidden drop down lists.  Single select menus can only be populated if they're visible.
-    @method _buildHiddenField
+    Note: Supports the population of hidden drop down lists.  Both visible and hidden single select menus can be populated.
+    Returns null if the element in fieldMap already exists
+    @method _buildField
     @params {String} attr - Field name of field to be created
-    @params    {String} val -  Field value to be set in field
+    @params {String} val -  Field value to be set in field
+    @return <HTML Element> or null
     **/
-    _buildHiddenField: function(attr, val) {
-      var elName = this._normalize(attr) //Maps the Demandbase variable name to the form field to populate
-      ,fieldId = elName
-      ,fieldName = elName
-      ,fieldType = 'hidden'; //default to hidden
+    _buildField: function(attr, val) {
+        var elName = this._normalize(attr) //Maps the Demandbase variable name to the form field to populate
+        ,fieldId = elName
+        ,fieldName = elName
+        ,fieldType = 'hidden'
+        ,oldField = this._getElmByIdOrName(elName);
 
-      /*If MAS renders the form with hidden fields present...
-      ...remove them to avoid multiple values in the POST*/
-      var oldField = this._getElmByIdOrName(elName);
-      //if (typeof oldField !== 'undefined' && oldField == null) oldField = document.getElementsByName(elName)[0];
-      if (oldField) {
-          fieldId = oldField.id;
-          fieldType = oldField.type;  //grab type from field if it already exists
-          if (oldField.name) fieldName = oldField.name;
-          if (!fieldId) fieldId = elName; /* just in case existing element does not have ID set */
-
-          //TODO: MD - possibly popl single select menu here, instead of creating new element
-          oldField.parentNode.removeChild(oldField);
-      }
-
-      var newEl = document.createElement('input');
-      newEl.setAttribute('id', fieldId);
-      newEl.setAttribute('name', fieldName);
-      newEl.setAttribute('type', fieldType);
-      newEl.value = val;
-
-      return newEl;
+        if (oldField) {
+            //grab type from existing field
+            fieldType = oldField.type;
+            if (fieldType === 'hidden') {
+                fieldId = oldField.id || elName;
+                if (oldField.name) fieldName = oldField.name;
+                //remove them to avoid multiple values in the POST
+                //this does not remove single select menus, only hidden input elements
+                oldField.parentNode.removeChild(oldField);
+            } else {
+                //if field is not hidden, or it's a menu, set the value and do not return a new element
+                oldField = this._setFieldValue(oldField, val);
+                return null;
+            }
+        }
+        var newEl = document.createElement('input');
+        newEl.setAttribute('id', fieldId);
+        newEl.setAttribute('name', fieldName);
+        newEl.setAttribute('type', fieldType);
+        newEl = this._setFieldValue(newEl, val);
+        return newEl;
     },
     /**
-    This method populates visible fields according to the visibleFieldMap, includes setting values in select elements (menus)
-    @method _prepopVisibleFields
-    @params  {String} attr - Name of field to populate
-    @params     {String} val - Value to set in field
-    @uses visibleFieldMap
+    This method sets the 'val' as the value of 'field' (the passed-in HTML element), includes setting values in single-select menus
+    @method _setFieldValue
+    @params {HTML Element} field - input field to populate
+    @params {String} val - Value to set in field
+    @returns {HTML Element}
     **/
-    _prepopVisibleFields: function(attr, val) {
-      if (this.visibleFieldMap[attr]) {
-        var valSet = false
-        ,field = this._getElmByIdOrName(this.visibleFieldMap[attr]);
-
+    _setFieldValue: function(field, val) {
+        var valSet = false;
         if (field) {
-          /*pre-populating a single select or multi select menu*/
-          if (field.type == 'select-one') {
-            for (var i = 0; i < field.options.length; i++) {
-              if (field.options[i].value == val) {
-                valSet = field.options[i].selected = true;
-                break;
-              }
+            //populating a single select menu
+            if (field.type === 'select-one') {
+                for (var i = 0; i < field.options.length; i++) {
+                    if (field.options[i].value == val) {
+                        valSet = field.options[i].selected = true;
+                        break;
+                    }
+                }
+            } else {
+                field.value = val;
+                valSet = true;
             }
-          } else {
-            field.value = val;
-            valSet = true;
-          }
-          //Trigger change event when value is set
-          if (valSet) {
-            this.djq(field).change().parents('p');
-            //.addClass('db_hidden').hide();  //optional - hide fields after pre-populating
-          }
+            if (valSet) {
+                //Trigger change event when value is set
+                this.djq(field).change().parents('p');
+            }
         }
-      }
+        return field;
     },
     /**
     This method first attempts to retrieve an element by it's ID (supplied as the single argument).
@@ -858,6 +867,7 @@ Demandbase.Connectors.WebForm = {
     This is used by any function that retrieves a DOM element within this class.
     @method _getElmByIdOrName
     @params {String} field - the ID or name of the element to retrieve
+    @return {HTML Element} (if an element with the name or ID matching the arg exists), or {null} if no element exists
     @static
     **/
     _getElmByIdOrName: function(field) {
@@ -866,7 +876,6 @@ Demandbase.Connectors.WebForm = {
             elm = this.form.elements.namedItem(field);
             if (elm && elm instanceof NodeList) elm = elm[0];
         }
-        //TODO: what if elm is still undefined?
         return elm;
     },
     /**
@@ -880,10 +889,10 @@ Demandbase.Connectors.WebForm = {
         ,pairs = qs.split('&')
         ,params = {};
         for (var i = 0; i < pairs.length; i++) {
-          var nvArray = pairs[i].split('=')
-          ,name = nvArray[0]
-          ,value = nvArray[1];
-          params[name] = value;
+            var nvArray = pairs[i].split('=')
+            ,name = nvArray[0]
+            ,value = nvArray[1];
+            params[name] = value;
         }
         return params[param];
     },
@@ -897,17 +906,18 @@ Demandbase.Connectors.WebForm = {
         //Instantiating the Company Autocomplete Widget - this automatically calls the Domain and Company Name APIs
         //when the user enters an email or company name
         //Be sure to include widget.js on the page
-        if(this.companyID && this.emailID) {
+        if (this.companyID && this.emailID) {
             if (Demandbase.CompanyAutocomplete) {
                 Demandbase.CompanyAutocomplete.widget({
                     company: this.companyID,
                     email: this.emailID,
                     key: this.key,
                     label: this.cacLabel,
-                    callback: function(data) {Demandbase.Connectors.WebForm.parser(data)}
+                    callback: function(data) {
+                        Demandbase.Connectors.WebForm.parser(data)
+                    }
                 });
-                var self;
-                self = Demandbase.Connectors.WebForm;
+                var self = Demandbase.Connectors.WebForm;
                 /*Since the callback is not called when there is no match on company name
                 we explictly check sources after an 'autocompletechange' event.*/
                 self.djq('#' + self.companyID).bind('autocompletecreate', function() {
@@ -917,7 +927,9 @@ Demandbase.Connectors.WebForm = {
                 });
             }
             this._log('Attached CompanyAutocomplete Widget to email/company fields: ' + this.emailID + ' / ' + this.companyID);
-         } else{ this._log("ERROR: CompanyID has no value or has the wrong ID. Autocomplete has not attached to any element."); }
+        } else {
+            this._log('ERROR: companyID: '+ companyID +', or emailID: '+ emailID +' matches no element wrong ID. Autocomplete has not attached to any element.');
+        }
     },
     /**
     Effectively calls the IP address API by adding a script tag at the end of the head.
@@ -944,7 +956,7 @@ Demandbase.Connectors.WebForm = {
         }
         document.getElementsByTagName('head')[0].appendChild(s);
         this._log('Loaded IP Address API');
-        this._sourceChecker.setSource('ip');  //Register HIT with source checker
+        this._sourceChecker.setSource('ip'); //Register HIT with source checker
         this._attachUnitTests();
     },
     /**
@@ -961,7 +973,9 @@ Demandbase.Connectors.WebForm = {
                     return false;
                 }
             }
-        } else { return false; } /* return false if arg is null*/
+        } else {
+            return false;
+        } /* return false if arg is null*/
         return true;
     },
     /**
@@ -976,18 +990,17 @@ Demandbase.Connectors.WebForm = {
             fieldId = this.toggleFieldList[field];
             if (fieldId !== '') {
                 var elmToToggle = this._getToggleElm(fieldId);
-                if(elmToToggle) {
-                  if (this.areToggleFieldsVisible) {
-                      this.djq(elmToToggle).hide();
-                      toggled = true;
-                  } else {
-                      this.djq(elmToToggle).show();
-                      toggled = true;
-                  }                  
+                if (elmToToggle) {
+                    if (this.areToggleFieldsVisible) {
+                        this.djq(elmToToggle).hide();
+                        toggled = true;
+                    } else {
+                        this.djq(elmToToggle).show();
+                        toggled = true;
+                    }
                 } else {
-                  this._log('Failed attempt to toggle element with ID ' + fieldId + '. _getToggleElm could not find this element.')
+                    this._log('Failed attempt to toggle element with ID ' + fieldId + '. _getToggleElm could not find this element.')
                 }
-
             }
         }
         if (toggled) this.areToggleFieldsVisible = !this.areToggleFieldsVisible;
@@ -996,9 +1009,9 @@ Demandbase.Connectors.WebForm = {
     @method _getToggleElm
     @param String id - the DOM id of HTML element
     **/
-    _getToggleElm : function(id) {
-      //For Marketo, override to "return this.djq('#' + fieldId).parents('li');""
-      return this.djq('#' + id);
+    _getToggleElm: function(id) {
+        //For Marketo, override to "return this.djq('#' + fieldId).parents('li');""
+        return this.djq('#' + id);
     },
     /**
     If an already-set field is not returned by an overriding dataset, this function will reset the field value to the empty string.
@@ -1007,21 +1020,15 @@ Demandbase.Connectors.WebForm = {
     **/
     _resetFields: function(data) {
         if (data) {
-            for (var field in this.visibleFieldMap) {
+            for (var field in this.fieldMap) {
                 if (typeof data[field] == 'undefined' || this._isNullEmpty(data[field])) {
-                    var id = this.visibleFieldMap[field];
-                    this.djq('[id="' + id + '"]').val('');
-                }
-            }
-            for (var field in this.hiddenFieldMap) {
-                if (typeof data[field] == 'undefined' || this._isNullEmpty(data[field])) {
-                    var id = this.hiddenFieldMap[field];
+                    var id = this.fieldMap[field];
                     this.djq('[id="' + id + '"]').val('');
                 }
             }
         }
     },
-    /**
+/**
     Deletes the data container added by the parser function.  This runs whenever a dataset overrides the exisiting data to ensure there are no duplicate fields.
     @method _removeDataset
     @param {Object} data
@@ -1056,32 +1063,29 @@ Demandbase.Connectors.WebForm = {
     **/
     _attachUnitTests: function() {
         if (this.runTests || (this._getQueryParam('db_runTests') == 'true')) {
-            var qu = document.getElementById('qunit'), quf = document.getElementById('qunit-fixture');
-            if (!qu || !quf) {
-                /* append divs for qunit fixture */
+            var qu = document.getElementById('qunit'),
+                quf = document.getElementById('qunit-fixture');
+            if (!qu || !quf) { /* append divs for qunit fixture */
                 var b = document.getElementsByTagName('body');
-                if(b && b instanceof NodeList) {
+                if (b && b instanceof NodeList) {
                     b = b[0];
-                    var qud = document.createElement('div'), quf = document.createElement('div');
+                    var qud = document.createElement('div'),
+                        quf = document.createElement('div');
                     qud.setAttribute('id', 'qunit');
                     quf.setAttribute('id', 'qunit-fixture');
-                    qud.appendChild(quf); 
-                    b.appendChild(qud);                    
+                    qud.appendChild(quf);
+                    b.appendChild(qud);
                 }
             }
-
             this.djq('<link>').appendTo('head').attr({
                 rel: 'stylesheet',
-                type:'text/css',
-                id:  'qunit_style',  
+                type: 'text/css',
+                id: 'qunit_style',
                 href: 'http://www.demandbaselabs.com/css/qunit.css'
             });
-
             this.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/qunit.js', function(data, textStatus, jqxhr) {
-            
                 Demandbase.Connectors.WebForm.djq.getScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'www.demandbaselabs.com/scripts/unitTest_WebForm.js');
             });
-
         }
     },
     /**
@@ -1154,7 +1158,7 @@ Demandbase.Connectors.WebForm = {
     @type function
     @final
     **/
-    djq : null,
+    djq: null,
     /**
     Version for Demandbase.Connectors.WebForm file
     @property _version
@@ -1163,7 +1167,7 @@ Demandbase.Connectors.WebForm = {
     @protected
     @final
     **/
-    _version: 'beta_0.84',
+    _version: 'beta_0.9',
     /**
     @class _sourceChecker
     @extensionfor formConncector
@@ -1207,8 +1211,8 @@ Demandbase.Connectors.WebForm = {
         @method checkSources
         **/
         'checkSources': function() {
-            var id = false
-            ,allHit = true;
+            var id = false,
+                allHit = true;
             for (var source in this.sources) {
                 if (this.sources[source].result) id = true;
                 if (!this.sources[source].hit) {
@@ -1216,8 +1220,7 @@ Demandbase.Connectors.WebForm = {
                     break;
                 }
             }
-            if (allHit) this.onAllHit();
-            /*if (allHit && !id)     this.onNoId();*/
+            if (allHit) this.onAllHit(); /*if (allHit && !id)     this.onNoId();*/
         },
         /**
         This function is called when all APIs have been hit but none have provided the required fields.  The primary use is to show additional form fields to the visitor.
@@ -1228,6 +1231,7 @@ Demandbase.Connectors.WebForm = {
             Demandbase.Connectors.WebForm._log('All APIs hit with no identification. Running onNoId function...');
             //Calling function to show elements defined in toggleFieldList
             Demandbase.Connectors.WebForm.toggleFields();
+            //TODO: this is where we could popl fields with registry/audience data
             db_hook_no_id();
         },
         /**
@@ -1236,39 +1240,29 @@ Demandbase.Connectors.WebForm = {
         Note: this may be run more than once, if the user goes back and corrects the email address or company name they entered
         @method onAllHit
         **/
-        'onAllHit' : function() {
+        'onAllHit': function() {
             var isId = Demandbase.Connectors.WebForm._isIdComplete(Demandbase.Connectors.WebForm._dbDataSet);
             if (!isId) this.onNoId();
             db_hook_all_hit();
         }
     }
-};
-
-/** ensure console.log and console.debug exist **/
-if (typeof window.console === 'undefined') window.console = {log: function() {}, debug: function() {}};
-
-/** Safety: define hook functions, in case they're not defined elsewhere **/
+}; /** ensure console.log and console.debug exist **/
+if (typeof window.console === 'undefined') window.console = {
+    log: function() {},
+    debug: function() {}
+}; /** Safety: define hook functions, in case they're not defined elsewhere **/
 /** These hooks provide extensibility.  They are global functions that can be defined any where are called by the init and parser functions.**/
 /**This fcn is called at the end of Demandbase.Connectors.WebForm.init**/
-if (typeof db_hook_init === 'undefined') db_hook_init = function() {};
-
-/** this function is called after all APIs have been queried **/
-if (typeof db_hook_all_hit === 'undefined') db_hook_all_hit = function() {};
-
-/** this function is called after all APIs have been queried but non have returned the values for the fields in requiredFieldList**/
-if (typeof db_hook_no_id === 'undefined') db_hook_no_id = function() {};
-
-/**This fcn is called by Demandbase.Connectors.WebForm.parser for each field when a returned data set is parsed**/
+if (typeof db_hook_init === 'undefined') db_hook_init = function() {}; /** this function is called after all APIs have been queried **/
+if (typeof db_hook_all_hit === 'undefined') db_hook_all_hit = function() {}; /** this function is called after all APIs have been queried but non have returned the values for the fields in requiredFieldList**/
+if (typeof db_hook_no_id === 'undefined') db_hook_no_id = function() {}; /**This fcn is called by Demandbase.Connectors.WebForm.parser for each field when a returned data set is parsed**/
 if (typeof db_hook_attr === 'undefined') db_hook_attr = function() {};
-
 /**This fcn is called by Demandbase.Connectors.WebForm.parser before a data set is processed.
 This function runs regardless of whether the returned data set overrides the current data set.**/
 if (typeof db_hook_before_parse === 'undefined') db_hook_before_parse = function() {};
-
 /**This fcn is called at the end of Demandbase.Connectors.WebForm.parser, after a data set is processed.
 This function runs only when the returned data set overrides the current data set.**/
 if (typeof db_hook_after_parse === 'undefined') db_hook_after_parse = function() {};
-
 Demandbase.Connectors.WebForm.init();
 /********* CREDITS *****************/
 /*
