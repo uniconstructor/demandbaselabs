@@ -368,7 +368,7 @@ Demandbase.Connectors.WebForm = {
     @example
         false
     **/
-    showResult: true,
+    showResult: false,
 /**
     Testing mode - set to true to run QUnit tests and display results on the page
     This can be enabled via query string parameter by setting "db_runTests=true".
