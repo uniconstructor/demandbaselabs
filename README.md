@@ -3,7 +3,7 @@ wordpress_plugin
 
 The Demandbase Connector / Plugin for WordPress
 
-V 1.03 RC
+V 1.10
 
 Written by Anthony Palazzetti
 for Demandbase, Inc
