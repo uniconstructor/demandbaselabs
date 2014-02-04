@@ -14,11 +14,11 @@
     }
 </style>
 
-<?php $entitlements = demandbase_get_response(TRUE, FALSE); ?>
+<?php $entitlements = demandbase_get_response(TRUE, TRUE); ?>
 
 <div class="db_helper_wrapper">
     
-    <p><strong>Instructions:</strong> To insert Demandbase content into your pages and posts, please select the type of shortcode you want to insert. After you have selected this, click on the attributes you want to specify (hold CTRL and click (on PC) or CMD + click (on Mac) to select multiple). The &quot;How To&quot; to page in the Demandbase menu for more information on how these work.</p>
+    <p><strong>Instructions:</strong> To insert Demandbase content into your pages and posts, please select the type of shortcode you want to insert. After you have selected this, click on the attributes you want to specify (hold CTRL and click (on PC) or CMD + click (on Mac) to select multiple). Please visit the &quot;How To&quot; to page in the Demandbase menu for more information on how these work.</p>
     
     <div class="db_sc_box">
         <label for="db_shortcode_type_list">Shortcode Type: </label>

@@ -8,7 +8,7 @@
 	<h3>Your Entitlements</h3>
 	
 	<?php
-		$entitlements = demandbase_get_response(TRUE, FALSE);
+		$entitlements = demandbase_get_response(TRUE, TRUE);
 		
 		foreach ($entitlements as $entitlement_k => $entitlement_v) {
 			echo '<code>'.$entitlement_k.'</code><br />';
