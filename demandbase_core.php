@@ -4,7 +4,7 @@
     Plugin URI: http://demandbaselabs.com/docs/wiki/index.php?title=Wordpress_Connector
     Description: Plugin for managing Demandbase content on a WordPress site 
     Author: Anthony Palazzetti
-    Version: 1.03 RC
+    Version: 1.10
     Author URI: http://www.demandbaselabs.com 
     */
         
