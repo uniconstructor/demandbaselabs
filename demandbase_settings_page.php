@@ -93,6 +93,12 @@
                 <div id="demandbase_sim_active_wrapper">
                     
                     <p>
+                        <label for="demandbase_custom_ip_active"><?php _e('Use my own test IP address: ', 'demandbase_translation'); ?></label>
+                        <input type="checkbox" name="demandbase_custom_ip_active" id="demandbase_custom_ip_active" value="1" <?php echo ($db_settings['custom_ip_active']) ? 'checked="checked"' : '' ?> />
+                        <label for="demandbase_custom_ip_active"><?php echo ($db_settings['custom_ip_active']) ? 'Custom IP mode is <strong>ACTIVE</strong>' : 'Custom IP mode is <strong>NOT ACTIVE</strong>' ?></label>
+                    </p>
+                    
+                    <p id="db_company_ip_toggle">
                         <label for="demandbase_company_ip"><?php _e('Select company to simulate: ', 'demandbase_translation'); ?></label>
                         
                         <select id="demandbase_company_ip" name="demandbase_company_ip">
@@ -117,12 +123,6 @@
                         
                         Please select a company to simulate or enter your own IP below
                     </p> 
-                    
-                    <p>
-                        <label for="demandbase_custom_ip_active"><?php _e('Use my own test IP address: ', 'demandbase_translation'); ?></label>
-                        <input type="checkbox" name="demandbase_custom_ip_active" id="demandbase_custom_ip_active" value="1" <?php echo ($db_settings['custom_ip_active']) ? 'checked="checked"' : '' ?> />
-                        <label for="demandbase_custom_ip_active"><?php echo ($db_settings['custom_ip_active']) ? 'Custom IP mode is <strong>ACTIVE</strong>' : 'Custom IP mode is <strong>NOT ACTIVE</strong>' ?></label>
-                    </p>
                     
                     <div id="demandbase_custom_ip_wrapper">
                     
