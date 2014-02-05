@@ -30,7 +30,7 @@ Instructions are available via the interface after install on the "Demandbase->H
 Changelog Post V 1.0
 
 V 1.10
-Feb 3, 2014
+Feb 4, 2014
 - Added shortcode builder to all post/page editing
 
 V 1.03
