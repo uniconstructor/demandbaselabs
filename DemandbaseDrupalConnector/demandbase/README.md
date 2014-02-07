@@ -1,4 +1,9 @@
-The Demandbase Drupal module provides integration with the Demandbase IP API.
+#About
+The Demandbase Drupal module provides integration with the Demandbase IP API, exposing the Demandbase Company Profile to the application layer of Drupal.  The module also integrates with the Context Module to provide an easy way to create rules and drive content personalization and targeting on your site.
+
+**Important:** *This repo is home to the public **development version** of the module.*
+
+For the latest public **production** build, visit: https://drupal.org/project/demandbase
 
 #Prerequisities
 * Drupal version 6.x or 7.x
