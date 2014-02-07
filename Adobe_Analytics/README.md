@@ -10,9 +10,11 @@ If more company profile attributes are desired, a JavaScript solution is availab
 
 #Resources
 A detailed walk-through of the Data Connector setup:
+
 http://demandbaselabs.com/docs/wiki/index.php?title=Site_Catalyst_Connector
 
 Adobe Analytics in-product documentation for the Demandbase Data Connector:
+
 http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/
 
 
