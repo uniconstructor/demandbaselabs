@@ -23,14 +23,18 @@ http://wiki.demandbaselabs.com/mwiki/index.php?title=Demandbase_Drupal_Connector
 #Usage
 IMPORTANT: Set the demandbase key at admin/config/services/demandbase
 
-Using Context
-- Create a Context using the Demandbase Context conditions.
+##Using with Context Module
+Create a Context using the Demandbase Context conditions, then assign a response to a block.
 
-Using API
+For further instructions, see [Using Demandbase and the Context Module](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_Drupal_Connector#Using_Demandbase_in_the_Context_Module)
+
+##Using Company Profile Attributes in PHP
 - You can use the following snippet of code to get the visitor's information:
-
+```
   // Get an object of demandbase data for the visiting user.
-  $data = demandbase_get_data();
+  $demandbase_client_obj = new demandbase_client();
+  $db_company_name = $demandbase_client_obj->fetch_data('company_name');
+```
 
 ##Cache Configuration
 The Demandbase Drupal Module provides two types of cachine:
@@ -52,4 +56,7 @@ $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 //$conf['session_inc'] =  'sites/all/modules/demandbase/demandbase_memcache/demandbase_memcache-session.inc';
 $conf['memcache_servers'] =  array('localhost:11211' => 'default');
 ```
-
+##Testing
+* Obtain a IP addresses for your test scenarios.  (Your Demandbase Customer Success Manager can assist you with this.)
+* From the module Administration setup page, check the Activate IP address to override the visiting IP address using the Test IP Address. This will allow an IP address to be entered and tested.
+* See also: [Using IP Simulation Widget](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_Drupal_Connector#Configuring_And_Using_IP_Simulation_Widget)
