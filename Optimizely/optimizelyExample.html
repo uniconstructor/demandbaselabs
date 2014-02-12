@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+    <head>
+        <!-- jQuery includes -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+        <script>
+            var __db = {};
+            __db.key = '1901cb4f7ec72ec082f52b8f68c2930e8a206849';
+            __db.conditions = [
+                 { name: 'IndustryIsSoftware', attribute: 'industry', operator: '=', value: 'Software & Technology' }
+                ,{ name: 'AudienceIsSMB', attribute: 'audience', operator: 'equals', value: 'SMB' }
+                ,{ name: 'AudienceIsEnterprise', attribute: 'audience', operator: 'equals', value: 'Enterprise' }
+            ];
+            __db.segments = [
+                 { name: 'SMB_Software', rules: ['IndustryIsSoftware', 'AudienceIsSMB'], operator: 'and' }
+                ,{ name: 'Enterprise_Software', rules: ['AudienceIsEnterprise', 'IndustryIsSoftware'], operator: 'any' }
+            ];
+            __db.callback = function(company) {
+                //Note: args is Demandbase.Segments.CompanyProfile, and 'this' is the Demandbase namespace in this context
+                //Add any function calls or other code here to be run after the Demandbase Company Profile is available
+                //Content customization code goes here!
+                Demandbase.utils.log('Running page-level callback extender');
+                try {
+
+                } catch(e) {
+                    alert(e + ' : ' + e.message);
+                }
+                window.optimizely = window.optimizely || [];
+                window.optimizely.push(["activate", 460250064]);
+            };
+            (function() {
+                db = function (){(db.q=db.q||[]).push(arguments)};
+                var dbt = document.createElement('script'); dbt.type = 'text/javascript'; dbt.async = true; dbt.id = 'demandbase-sdk';
+                dbt.src = 'http://scripts.demandbase.com/demandbase-sdk-debug.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(dbt, s);
+            })();
+        </script>
+        <script src="//cdn.optimizely.com/js/540710567.js"></script>
+
+        <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+        <meta name="keywords" content="demandbase, real-time identification, IP address identification, conversion optimization, reverse ip, lead generation software, demand generation, web analytics, lead generation, web form optimization, b2b web analytics, account-based content personalizat" />
+        <meta name="description" content="Demandbase is the first real-time targeting and personalization platform for B2B, transforming the effectiveness of marketing programs and Marketing’s ability to impact revenue. While personalization tools have long existed for B2C, until now, none were geared specifically to enable B2B marketers to make online interactions more effective, delivering the right message at the right time." />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="index, follow" />
+
+        <title>Optimizely / Demandbase Example Implementation</title>
+        <link rel="shortcut icon" href="http://www.demandbase.com/favicon.ico" />
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+    </head>
+    <body>
+        <header></header>
+        <nav></nav>
+        <main></main>
+    </body>
+</html>
