@@ -8,6 +8,11 @@ The **current best approach** is to use the native "Data Connector" available fr
 The Data Connector is a simple 5-step wizard that enables the integration of up-to 16 Demandbase company profile attributes using only 2 Conversion Variables.
 If more company profile attributes are desired, a JavaScript solution is available to add a 8 more attributes via a 3rd Conversion variable.
 
+##Deployment
+A complete deployment guide is available within the Adobe Analytics in-product documentation:
+
+http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/#Deploying_the_Integration
+
 #Resources
 A detailed walk-through of the Data Connector setup:
 
