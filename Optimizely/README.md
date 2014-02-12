@@ -18,8 +18,8 @@ Multiple experiments can be setup and triggered according to various Demandbase 
 2. Under the Options menu, select **Targeting**, then select *Satisfy this custom JavaScript condition*.
   * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.AudienceIsSMB`.
   * See your Demandbase code for your configured Demandbase Segments.
-3. Set the activation mode to 'Manual'
-4. Place the experiment activation code within the Demandbase callback function
+3. Set the *Activation Mode* to *Manual*
+4. Place the experiment activation code within the Demandbase `callback` function
   * Example:
   ```
   __db.callback = function(company) {
@@ -33,7 +33,7 @@ Multiple experiments can be setup and triggered according to various Demandbase 
 Optimizely Visitor Segments allow you to dissect the results of an experiment based on visitor attributes.  This feature is only available in [Optimizely Platinum](https://www.optimizely.com/pricing).
 
 1. Create a new Visitor Segment.
-2. Select *Satisfy this custom Javascript condition**
+2. Select *Satisfy this custom Javascript condition*
 3. Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.AudienceIsSMB`.
   * See your Demandbase code for your configured Demandbase Segments.
 4. To use your Visitor Segment, view the results of an experiment, then select your Custom Segment from the menu on the left.
