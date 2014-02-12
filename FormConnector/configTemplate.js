@@ -41,6 +41,7 @@ window.dbAsyncInit = function() {
         }
     });
 };
+/* 'db_hook_' function implementations go here */
 
 (function() {
     //Retrieve Form Connector core file from the cloud
