@@ -10,7 +10,7 @@
         <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
         <script>
             var __db = {};
-            __db.key = '1901cb4f7ec72ec082f52b8f68c2930e8a206849';
+            __db.key = 'YOUR_KEY_HERE';
             __db.conditions = [
                  { name: 'IndustryIsSoftware', attribute: 'industry', operator: '=', value: 'Software & Technology' }
                 ,{ name: 'AudienceIsSMB', attribute: 'audience', operator: 'equals', value: 'SMB' }
@@ -31,7 +31,7 @@
                     alert(e + ' : ' + e.message);
                 }
                 window.optimizely = window.optimizely || [];
-                window.optimizely.push(["activate", 460250064]);
+                window.optimizely.push(['activate', 'EXPT_ID_HERE']);
             };
             (function() {
                 db = function (){(db.q=db.q||[]).push(arguments)};
@@ -40,7 +40,7 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(dbt, s);
             })();
         </script>
-        <script src="//cdn.optimizely.com/js/540710567.js"></script>
+        <script src="//cdn.optimizely.com/js/YOUR_LINK_HERE.js"></script>
 
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
         <meta name="keywords" content="demandbase, real-time identification, IP address identification, conversion optimization, reverse ip, lead generation software, demand generation, web analytics, lead generation, web form optimization, b2b web analytics, account-based content personalizat" />
@@ -54,8 +54,8 @@
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
     </head>
     <body>
-        <header></header>
+        <header><h1>Non-Experimental Header</h1></header>
         <nav></nav>
-        <main></main>
+        <main>Untargeted Main Content</main>
     </body>
 </html>
