@@ -5,9 +5,7 @@
 <!--[if gt IE 8]><!-->
 <html class="no-js"> <!--<![endif]-->
     <head>
-        <!-- jQuery includes -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+        <script src="//cdn.optimizely.com/js/YOUR_LINK_HERE.js"></script>
         <script>
             var __db = {};
             __db.key = 'YOUR_KEY_HERE';
@@ -24,14 +22,12 @@
                 //Note: args is Demandbase.Segments.CompanyProfile, and 'this' is the Demandbase namespace in this context
                 //Add any function calls or other code here to be run after the Demandbase Company Profile is available
                 //Content customization code goes here!
-                Demandbase.utils.log('Running page-level callback extender');
                 try {
-
+                    window.optimizely = window.optimizely || [];
+                    window.optimizely.push(['activate', 'EXPT_ID_HERE']);
                 } catch(e) {
                     alert(e + ' : ' + e.message);
                 }
-                window.optimizely = window.optimizely || [];
-                window.optimizely.push(['activate', 'EXPT_ID_HERE']);
             };
             (function() {
                 db = function (){(db.q=db.q||[]).push(arguments)};
@@ -40,7 +36,7 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(dbt, s);
             })();
         </script>
-        <script src="//cdn.optimizely.com/js/YOUR_LINK_HERE.js"></script>
+
 
         <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
         <meta name="keywords" content="demandbase, real-time identification, IP address identification, conversion optimization, reverse ip, lead generation software, demand generation, web analytics, lead generation, web form optimization, b2b web analytics, account-based content personalizat" />
