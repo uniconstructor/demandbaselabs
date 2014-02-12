@@ -26,9 +26,12 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
   ```
   __db.callback = function(company) {
     window.optimizely = window.optimizely || [];
-    window.optimizely.push(['activate', 'EXPT_ID_HERE']);
+    window.optimizely.push(['activate', 'EXPT1_ID_HERE']);
+    window.optimizely.push(['activate', 'EXPT2_ID_HERE']);
+    window.optimizely.push(['activate', 'EXPTn_ID_HERE']);
   };
   ```
+  *Note: the experiment ID is typically an integer, not a string.*
 5. *Optional:* Adjust the Traffic Allocation in Optimizely to use the variation more frequently.
 
 #Create Optimizely Visitor Segments
@@ -44,7 +47,7 @@ See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/h
   * Visit [Visitor Segments](https://help.optimizely.com/hc/en-us/articles/200040315-Visitor-Segments) for more on using Visitor Segments to analyze results.
 
 #Optimizely Resources
-* [Creating Experiments]()
+* [Creating Experiments](https://help.optimizely.com/hc/en-us/articles/200136330-The-Five-Steps-In-Every-Test)
 * [Targeting Experiments](https://help.optimizely.com/hc/en-us/sections/200008115-Targeting)
 * [Segmentation](https://help.optimizely.com/hc/en-us/sections/200008125-Segmentation)
 * [Optimizely Learning Center](https://help.optimizely.com/hc/en-us)
