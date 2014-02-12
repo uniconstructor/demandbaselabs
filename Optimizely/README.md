@@ -36,4 +36,4 @@ Optimizely Visitor Segments allow you to dissect the results of an experiment ba
 2. Select *Satisfy this custom Javascript condition**
 3. Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.AudienceIsSMB`.
   * See your Demandbase code for your configured Demandbase Segments.
-4. To use your Vsiitor Segment, view the results of an experiment, then select your Custom Segment from the menu on the left.
+4. To use your Visitor Segment, view the results of an experiment, then select your Custom Segment from the menu on the left.
