@@ -14,15 +14,15 @@ The sample implementation provided here is just a starting point.  This solution
 Talk to your Demandbase Solutions Consultant for details on configuring the SDK.
 
 ##Table of Contents
-* [Overview](https://gist.github.com/demandbaselabs/8365109#overview)
-* [Installation](https://gist.github.com/demandbaselabs/8365109#installation)
-* [Configuration](https://gist.github.com/demandbaselabs/8365109#configuration)
-* [How to Use Segments](https://gist.github.com/demandbaselabs/8365109#how-to-use-segments)
-* [How to Use Demandbase Attribute Values](https://gist.github.com/demandbaselabs/8365109#how-to-user-demandbase-attribute-values)
-* [Basic Definitions](https://gist.github.com/demandbaselabs/8365109#basic-definitions)
-* [Demandbase.Segments Class](https://gist.github.com/demandbaselabs/8365109#demandbasesegments-class)
-* [Helper Classes](https://gist.github.com/demandbaselabs/8365109#additional-helper-classes)
-* [Resources](https://gist.github.com/demandbaselabs/8365109#additional-resources)
+* [Overview](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#overview)
+* [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#installation)
+* [Configuration](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#configuration)
+* [How to Use Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#how-to-use-segments)
+* [How to Use Demandbase Attribute Values](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#how-to-user-demandbase-attribute-values)
+* [Basic Definitions](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#basic-definitions)
+* [Demandbase.Segments Class](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#demandbasesegments-class)
+* [Helper Classes](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#additional-helper-classes)
+* [Resources](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK#additional-resources)
 
 ##Overview
 The Demandbase JavaScript SDK doesn't have any standalone files that need to be downloaded or installed, instead you simply need to include a short piece of JavaScript in your HTML that will asynchronously load the JavaScript library. By asynchronously loading, the library and API calls do not block loading other elements of your page.
@@ -114,13 +114,13 @@ var visitor_company = Demandbase.Segments.CompanyProfile.company_name||‘your c
 ##Basic Definitions
 ###Conditions
 A "Condition" is a comparison of a Demandbase attribute and a specific value or an list of values.  Think of Conditions as the building blocks for Segments.
-A 'Condition' that does not have the `standalone` attribute set to `false` will also be a "Segment". Any number of Conditions can be used to define a Segment.  
+A 'Condition' that does not have the `standalone` attribute set to `false` will also be a "Segment". Any number of Conditions can be used to define a Segment.
 
 ###Segments
-A "Segment" is a business rule, a Boolean combinations of Conditions (or the evaluation of a single Condition) surrounding a visitor's company profile.   
+A "Segment" is a business rule, a Boolean combinations of Conditions (or the evaluation of a single Condition) surrounding a visitor's company profile.
 
 ##Configuring Conditions and Segments
-The Demandbase.Segments class houses an array of `DBCondition` objects and an array of `DBSegment` objects.  
+The Demandbase.Segments class houses an array of `DBCondition` objects and an array of `DBSegment` objects.
 These are initially defined using a configuration snippet before the library is loaded, using the `__db.conditions` `__db.segments` arrays as shown in the sample above.
 
 ###Defining Conditions
@@ -130,10 +130,10 @@ A condition has a `name`, a single `attribute` (a Demandbase Company Profile fie
 
 Here is an example of a JSON representation of a condition:
 ```
-{ 
-  name : 'condition_name', 
-  attribute : 'demandbase_variable', 
-  operator : '=|equals|!=|not equals|contains', 
+{
+  name : 'condition_name',
+  attribute : 'demandbase_variable',
+  operator : '=|equals|!=|not equals|contains',
   value : 'attribute value',
   standalone : true|false //optional
 }
@@ -161,7 +161,7 @@ Continuing the previous example, this Condition is now available as a Segment (a
 Set the `standalone` attribute to `false`, if you do not want a Condition to also be added as it's own segment.  You can still programmatically check the value of the Condition, but it will not be added as a property of the class.
 
 ###Defining Segments
-Once you've defined Conditions against particular attributes, then you can combine them to build Segments.  
+Once you've defined Conditions against particular attributes, then you can combine them to build Segments.
 
 **If each of your conditions is standalone, then you do not need to define Segments separately.**  For example, if you want to whether a visitor belongs to one of 5 industries, you can define a standalone Condition for each industry, or you can define a single Condition with an array of industries.
 
@@ -172,13 +172,13 @@ Segments are represented as JSON objects consisting of a name, an operator and a
 
 Here is an example of a JSON representation of a condition:
 ```
-{ 
-  name : 'segment_name', 
-  rules : ['ConditionName1', 'ConditionName2', 'ConditionNameN'], 
-  operator : 'any/or/all/and', 
+{
+  name : 'segment_name',
+  rules : ['ConditionName1', 'ConditionName2', 'ConditionNameN'],
+  operator : 'any/or/all/and',
 }
 ```
-Supported operators are `any` (effectively `or`) and `all` (effectively `and`).  
+Supported operators are `any` (effectively `or`) and `all` (effectively `and`).
 This is programmatically available using `DBSegment.prototype.supportedOperators`.
 
 | Supported Operator  | Equivalent Shorthand |
@@ -187,7 +187,7 @@ This is programmatically available using `DBSegment.prototype.supportedOperators
 | all  | and, &&  |
 
 ####Build Complex Segments using Multiple Conditions
-**For Segments that use a single Condition, there is no need to use the `__db.segments` array or the `add` function to create a Segment.  The Segment will be created when the Condition is added, provided the `standalone` attribute was not set to `false`.**  
+**For Segments that use a single Condition, there is no need to use the `__db.segments` array or the `add` function to create a Segment.  The Segment will be created when the Condition is added, provided the `standalone` attribute was not set to `false`.**
 
 For Segments that use multiple Conditions, it is necessary to define them in the `__segments` array as shown in the implementation sample above.
 
@@ -318,7 +318,7 @@ Queries the Domain API using the key defined in __db.key.
 
 ##Testing
 To simulate a visit from a particular IP address, add `db_ip` as a query string parameter to the URL of a page using the library.
-For example to simulate General Electric visiting `http://mysite.com/index.html`, use `http://www.mysite.com/index.html?db_ip=3.0.0.1`. 
+For example to simulate General Electric visiting `http://mysite.com/index.html`, use `http://www.mysite.com/index.html?db_ip=3.0.0.1`.
 
 ###Debug Version
 A debug version of the library is available as well.  Change the source URL to `scripts.demandbase.com/demandbase-sdk-debug.js`.  This will enable console logging, debugging alerts, and load an un-compiled version of the library.
