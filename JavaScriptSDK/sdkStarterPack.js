@@ -28,7 +28,7 @@
         } else if(Demandbase.Segments.Audience_Govt) {
             //Government
         } else {
-            // Default
+            //Default
             //Demandbase Recommends - Always define default experience here...
         }
 
