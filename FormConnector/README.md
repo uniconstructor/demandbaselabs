@@ -1,14 +1,14 @@
 #Demandbase Form Connector
 ##Table of Contents
-* [Functionality Overview](https://gist.github.com/demandbaselabs/8677440#functionality-overview)
-* [Getting Started](https://gist.github.com/demandbaselabs/8677440#getting-started)
-* [Installation](https://gist.github.com/demandbaselabs/8677440#installation)
-* [Configuration Options](https://gist.github.com/demandbaselabs/8677440#configuration-options)
-  * [Growing Form Options](https://gist.github.com/demandbaselabs/8677440#growing-form-options)
-  * [Testing](https://gist.github.com/demandbaselabs/8677440#testing-options)
-  * [Hook Functions](https://gist.github.com/demandbaselabs/8677440#hook-functions)
-* [Support](https://gist.github.com/demandbaselabs/8677440#support)
-* [Release Notes](https://gist.github.com/demandbaselabs/8677440#release-notes)
+* [Functionality Overview](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#functionality-overview)
+* [Getting Started](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#getting-started)
+* [Installation](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#installation)
+* [Configuration Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#configuration-options)
+  * [Growing Form Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#growing-form-options)
+  * [Testing](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#testing-options)
+  * [Hook Functions](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#hook-functions)
+* [Support](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#support)
+* [Release Notes](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#release-notes)
 
 #Functionality Overview
 The Demandbase Form Connector provides any easy-to-deploy, light-weight solution for adding the Demandbase Form Module to your web forms.  
@@ -47,7 +47,7 @@ To add the Demandbase Form Connector to your web forms:
   * Map to existing hidden or visible fields using the `fieldMap`
 4. Place the entire snippet to the `head` or top of the `body` of your HTML.
 5. Optionally, define additional functionality by sending additional parameters to the `connect` function.  
-  * See [Configuration Options](https://gist.github.com/demandbaselabs/8677440#configuration-options) for a full list of options and associated functionality.
+  * See [Configuration Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#configuration-options) for a full list of options and associated functionality.
 
 ```
 <script>
