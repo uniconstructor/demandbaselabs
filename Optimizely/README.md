@@ -1,5 +1,5 @@
 #Demandbase / Optimizely Integration
-This basic HTML file demonstrates how to use the [Demandbase JavaScript SDK](https://gist.github.com/demandbaselabs/8365109) with Optimizely.
+This basic HTML file demonstrates how to use the [Demandbase JavaScript SDK](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK) with Optimizely.
 
 There are two ways to use Demandbase within Optimizely.
 1. Trigger an Optimizely Experiment based on a Demandbase Segment
@@ -7,7 +7,7 @@ There are two ways to use Demandbase within Optimizely.
 
 #Prerequisites
 1. Install the Optimizely tracking code as instructed in the 'Implementation' tab in Optimizely
-2. Configure and install the [Demandbase JS SDK](https://gist.github.com/demandbaselabs/8365109)
+2. Configure and install the [Demandbase JS SDK](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK)
   * Your Demandbase Solutions Consultant will assist you with this step.
 
 #Trigger an Optimizely Experiment
