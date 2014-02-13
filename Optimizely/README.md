@@ -20,7 +20,7 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
 2. Under the Options menu, select **Targeting**, then select *Satisfy this custom JavaScript condition*.
   * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`.
   * See your Demandbase code for your configured Demandbase Segments.
-3. Set the *Activation Mode* to *Manual*
+3. Set the [Activation Mode](https://help.optimizely.com/hc/en-us/articles/200039765-Activation-Mode) to *Manual*
 4. Place the experiment activation code within the Demandbase `callback` function
   * Example:
   ```
@@ -32,7 +32,7 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
   };
   ```
   *Note: the experiment ID is typically an integer, not a string.*
-5. *Optional:* Adjust the Traffic Allocation in Optimizely to use the variation more frequently.
+5. *Optional:* Adjust the [Traffic Allocation](https://help.optimizely.com/hc/en-us/articles/200040115-Traffic-Allocation) in Optimizely to use the variation more frequently.
 
 #Create Optimizely Visitor Segments
 Optimizely Visitor Segments allow you to dissect the results of an experiment based on visitor attributes.  This feature is only available in [Optimizely Platinum](https://www.optimizely.com/pricing).
@@ -51,3 +51,5 @@ See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/h
 * [Targeting Experiments](https://help.optimizely.com/hc/en-us/sections/200008115-Targeting)
 * [Segmentation](https://help.optimizely.com/hc/en-us/sections/200008125-Segmentation)
 * [Optimizely Learning Center](https://help.optimizely.com/hc/en-us)
+* [Optimizely 3rd Party Integrations](https://help.optimizely.com/hc/en-us/sections/200008075-3rd-Party-Integration)
+* [Optimizely API Documentation](http://www.optimizely.com/docs/api)
