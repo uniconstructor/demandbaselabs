@@ -2,6 +2,7 @@
 This basic HTML file demonstrates how to use the [Demandbase JavaScript SDK](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK) with Optimizely.
 
 There are two ways to use Demandbase within Optimizely.
+
 1. Trigger an Optimizely Experiment based on a Demandbase Segment
 2. Place a visitor in an Optimizely Visitor Segment based on a Demandbase Segment
 
