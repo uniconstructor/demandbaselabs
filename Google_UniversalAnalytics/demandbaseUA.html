@@ -25,7 +25,7 @@
     Demandbase.Connectors = window.Demandbase.Connectors || {};
     Demandbase.Connectors.Google_UniversalAnalytics = {
         name: 'Demandbase Universal Analytics Connector',
-        version: '3.5',
+        version: '3.6',
         key:'YOUR_KEY_HERE',
         logging: true,
         /* Customize which variables are sent to GA.
@@ -38,12 +38,12 @@
             ,'5' : 'revenue_range'
             ,'6' : 'company_name'
         },
-        dbDataSet: null,
+        CompanyProfile: null,
         track:function(data) {
         try {
             var dbgua = Demandbase.Connectors.Google_UniversalAnalytics, dflt='(Non-company Visitor)', awDflt = '(Non-AccountWatch Visitor)';
             data = dbgua._flatA(data);
-            dbgua.dbDataSet = data;
+            dbgua.CompanyProfile = data;
             for(var field in dbgua.fields) {
                 if(dbgua.fields.hasOwnProperty(field)) {
                     var num = field,
