@@ -25,8 +25,8 @@
     Demandbase.Connectors = window.Demandbase.Connectors || {};
     Demandbase.Connectors.Google_UniversalAnalytics = {
         name: 'Demandbase Universal Analytics Connector',
-        version: '3.6',
-        key:'YOUR_KEY_HERE',
+        version: '4.0',
+        key:'1901cb4f7ec72ec082f52b8f68c2930e8a206849',
         logging: true,
         /* Customize which variables are sent to GA.
          'fields' must be a Demandbase variable name */
@@ -44,6 +44,7 @@
             var dbgua = Demandbase.Connectors.Google_UniversalAnalytics, dflt='(Non-company Visitor)', awDflt = '(Non-AccountWatch Visitor)';
             data = dbgua._flatA(data);
             dbgua.CompanyProfile = data;
+            dbgua._toGtmDl(data);
             for(var field in dbgua.fields) {
                 if(dbgua.fields.hasOwnProperty(field)) {
                     var num = field,
@@ -77,7 +78,8 @@
         _logE:function(m){ if(this.logging && typeof(console) !== 'undefined' && window['console'] !== 'undefined') { console.log('DB UA: ' + m); } },
         _var:function(i,k,v){ ga('set','dimension'+i,v); this._logE(i + ' ' + k +' : ' + v); },
         _event:function(){ ga("send", "event", { eventCategory: "Demandbase", eventAction: "API Resolution", eventLabel: "IP Address API", nonInteraction: true }); this._logE('Sent Custom Event: Demandbase/API Resolution/IP Address API'); },
-        _cEvent:function(c,a,l){ ga("send", "event", { eventCategory: c, eventAction: a, eventLabel: l, nonInteraction: true }); this._logE('Sent Custom Event:'+c+'/'+a+'/'+l); }
+        _cEvent:function(c,a,l){ ga("send", "event", { eventCategory: c, eventAction: a, eventLabel: l, nonInteraction: true }); this._logE('Sent Custom Event:'+c+'/'+a+'/'+l); },
+        _toGtmDl: function(data) { if (window.google_tag_manager && window.dataLayer) { dataLayer.push(data); dataLayer.push({ event:"Demandbase_Loaded" }); this._logE('Pushed to dataLayer'); } }
     };
     Demandbase.Connectors.Google_UniversalAnalytics.load();
     /* End Demandbase integration */
