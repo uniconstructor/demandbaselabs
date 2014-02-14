@@ -40,39 +40,39 @@
         },
         CompanyProfile: null,
         track:function(data) {
-        try {
-            var dbgua = Demandbase.Connectors.Google_UniversalAnalytics, dflt='(Non-company Visitor)', awDflt = '(Non-AccountWatch Visitor)';
-            data = dbgua._flatA(data);
-            dbgua.CompanyProfile = data;
-            dbgua._toGtmDl(data);
-            for(var field in dbgua.fields) {
-                if(dbgua.fields.hasOwnProperty(field)) {
-                    var num = field,
-                        lbl = dbgua.fields[field],
-                        val = data[dbgua.fields[field]] || dflt,
-                        isCompany = (data['company_name']||dflt) !==  dflt;
+            try {
+                var dbgua = Demandbase.Connectors.Google_UniversalAnalytics, dflt='(Non-company Visitor)', awDflt = '(Non-AccountWatch Visitor)';
+                data = dbgua._flatA(data);
+                dbgua.CompanyProfile = data;
+                dbgua._toGtmDl(data);
+                for(var field in dbgua.fields) {
+                    if(dbgua.fields.hasOwnProperty(field)) {
+                        var num = field,
+                            lbl = dbgua.fields[field],
+                            val = data[dbgua.fields[field]] || dflt,
+                            isCompany = (data['company_name']||dflt) !==  dflt;
 
-                    if(data[dbgua.fields[field]] === false) val = 'false';
+                        if(data[dbgua.fields[field]] === false) val = 'false';
 
-                    if(lbl.indexOf('watch_list_')!==-1 && isCompany){
-                        //if company is identified, but not in watch_list then watch_list
-                        //fields will have 'non-accountwatch visitor'.
-                        val = data[dbgua.fields[field]] || awDflt;
+                        if(lbl.indexOf('watch_list_')!==-1 && isCompany){
+                            //if company is identified, but not in watch_list then watch_list
+                            //fields will have 'non-accountwatch visitor'.
+                            val = data[dbgua.fields[field]] || awDflt;
+                        }
+                        dbgua._var(num, lbl, val);
                     }
-                    dbgua._var(num, lbl, val);
                 }
-            }
-            dbgua._event();
+                dbgua._event();
             } catch(e){ this._logE('Integration Error: '+e) };
         },
         load:function(){
-        try {
-            if(!window.ga) window.ga = function(){(ga.q=ga.q||[]).push(arguments)};
-            var db=document.createElement('script'); db.type='text/javascript'; db.async=true; db.id = 'db_ip_api_ua';
-            db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=Demandbase.Connectors.Google_UniversalAnalytics.track&page='+document.URL+'&referrer='+document.referrer;
-            var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
-            this._logE('Loaded Script ' + db.src);
-        } catch(e){ this._logE('Script Error: '+e)};
+            try {
+                if(!window.ga) window.ga = function(){(ga.q=ga.q||[]).push(arguments)};
+                var db=document.createElement('script'); db.type='text/javascript'; db.async=true; db.id = 'db_ip_api_ua';
+                db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=Demandbase.Connectors.Google_UniversalAnalytics.track&page='+document.URL+'&referrer='+document.referrer;
+                var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
+                this._logE('Loaded Script ' + db.src);
+            } catch(e){ this._logE('Script Error: '+e)};
         },
         _flatA:function(a){ for(var d in a){ if(typeof a[d]=='object'&&a[d]!==null){ for(var cd in a[d]){a[d+'_'+cd]=a[d][cd]}; delete a[d]; } }; return a; },
         _logE:function(m){ if(this.logging && typeof(console) !== 'undefined' && window['console'] !== 'undefined') { console.log('DB UA: ' + m); } },
