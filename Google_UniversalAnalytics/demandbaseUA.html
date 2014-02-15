@@ -1,12 +1,14 @@
 <!--
-  Name: Demandbase / Google Universal Analytics Integration Sample
+  Name: Demandbase / Google Universal Analytics Connector
   Authors: Matthew Downs (mdowns[at]demandbase[dot]com)
   License: Copyright 2013. This code may not be reused without explicit permission by its owners. All rights reserved.
 
   Contact Demandbase Consulting Services with questions about using this code.
   For further details, visit: demandbaselabs.com/docs
 
-  The contents of this file can be delivered to pages via Google Tag Manager, or it can be referenced on any page. -->
+  This script supports both GA Classic and Universal Analytics
+  It can be delivered via Google Tag Manager as well.
+-->
 <script>
     /**
     Standard Google UA code
@@ -25,7 +27,7 @@
     Demandbase.Connectors = window.Demandbase.Connectors || {};
     Demandbase.Connectors.Google_UniversalAnalytics = {
         name: 'Demandbase Universal Analytics Connector',
-        version: '4.0',
+        version: '5.0',
         key:'YOUR_KEY_HERE',
         logging: true,
         /* Customize which variables are sent to GA.
@@ -39,12 +41,16 @@
             ,'6' : 'company_name'
         },
         CompanyProfile: null,
+        gType: null,
         track:function(data) {
             try {
-                var dbgua = Demandbase.Connectors.Google_UniversalAnalytics, dflt='(Non-company Visitor)', awDflt = '(Non-AccountWatch Visitor)';
+                var dbgua = Demandbase.Connectors.Google_UniversalAnalytics,
+                dflt='(Non-company Visitor)',
+                awDflt = '(Non-AccountWatch Visitor)';
                 data = dbgua._flatA(data);
-                dbgua.CompanyProfile = data;
                 dbgua._toGtmDl(data);
+                dbgua.CompanyProfile = data;
+                dbgua._detectG();
                 for(var field in dbgua.fields) {
                     if(dbgua.fields.hasOwnProperty(field)) {
                         var num = field,
@@ -55,9 +61,7 @@
                         if(data[dbgua.fields[field]] === false) val = 'false';
 
                         if(lbl.indexOf('watch_list_')!==-1 && isCompany){
-                            //if company is identified, but not in watch_list then watch_list
-                            //fields will have 'non-accountwatch visitor'.
-                            val = data[dbgua.fields[field]] || awDflt;
+                            val = data[dbgua.fields[field]] || awDflt; //swap dflt if AW
                         }
                         dbgua._var(num, lbl, val);
                     }
@@ -67,7 +71,6 @@
         },
         load:function(){
             try {
-                if(!window.ga) window.ga = function(){(ga.q=ga.q||[]).push(arguments)};
                 var db=document.createElement('script'); db.type='text/javascript'; db.async=true; db.id = 'db_ip_api_ua';
                 db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=Demandbase.Connectors.Google_UniversalAnalytics.track&page='+document.URL+'&referrer='+document.referrer;
                 var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
@@ -76,10 +79,12 @@
         },
         _flatA:function(a){ for(var d in a){ if(typeof a[d]=='object'&&a[d]!==null){ for(var cd in a[d]){a[d+'_'+cd]=a[d][cd]}; delete a[d]; } }; return a; },
         _logE:function(m){ if(this.logging && typeof(console) !== 'undefined' && window['console'] !== 'undefined') { console.log('DB UA: ' + m); } },
-        _var:function(i,k,v){ ga('set','dimension'+i,v); this._logE(i + ' ' + k +' : ' + v); },
-        _event:function(){ ga("send", "event", { eventCategory: "Demandbase", eventAction: "API Resolution", eventLabel: "IP Address API", nonInteraction: true }); this._logE('Sent Custom Event: Demandbase/API Resolution/IP Address API'); },
-        _cEvent:function(c,a,l){ ga("send", "event", { eventCategory: c, eventAction: a, eventLabel: l, nonInteraction: true }); this._logE('Sent Custom Event:'+c+'/'+a+'/'+l); },
-        _toGtmDl: function(data) { if (window.google_tag_manager && window.dataLayer) { dataLayer.push(data); dataLayer.push({ event:"Demandbase_Loaded" }); this._logE('Pushed to dataLayer'); } }
+        _var:function(i,k,v){ if(this.gType === 'ga') { this._p('_setCustomVar', i, k, v, 1); } else { ga('set','dimension'+i,v); } this._logE(i + ' ' + k +' : ' + v); },
+        _event:function(){ if(this.gType === 'ga') { this._p('_trackEvent', 'Demandbase', 'API Resolution', 'IP API', 0, 1); } else { ga("send", "event", { eventCategory: "Demandbase", eventAction: "API Resolution", eventLabel: "IP Address API", nonInteraction: true }); } this._logE('Sent Custom Event: Demandbase/API Resolution/IP Address API'); },
+        _cEvent:function(c,a,l){ if(this.gType === 'ga') { this._p('_trackEvent', c, a, l, 0, 1); } else { ga("send", "event", { eventCategory: c, eventAction: a, eventLabel: l, nonInteraction: true }); } this._logE('Sent Custom Event:'+c+'/'+a+'/'+l); },
+        _p: function(t, v1, v2, v3, v4, v5) { window._gaq.push([t, v1, v2, v3, v4, v5]); },
+        _toGtmDl: function(data) { if (window.google_tag_manager && window.dataLayer) { dataLayer.push(data); dataLayer.push({ event:"Demandbase_Loaded" }); this._logE('Pushed to GTM dataLayer'); } },
+        _detectG: function() { if(typeof window.ga === 'function') { this.gType = 'ua'; } else if(window._gaq) { this.gType = 'ga'; _gaq.push(['_addDevId', 'NE7T9']); } else { if(!window.ga) window.ga = function(){(ga.q=ga.q||[]).push(arguments)}; this.gType = 'ua'; } this._logE('Detected Google version: ' + this.gType); }
     };
     Demandbase.Connectors.Google_UniversalAnalytics.load();
     /* End Demandbase integration */
