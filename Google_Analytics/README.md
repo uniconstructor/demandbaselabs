@@ -21,12 +21,14 @@ Deploy via *Google Tag Manager* for optimal flexibility.
   * Classic users skip this step.
 
 ##Configuration Wizard
-* *Coming Soon!* - Visit the [Connector Setup Wizard](#) to configure and generate your connector.
+* Visit the [Connector Setup Wizard](http://demandbaselabs.com/ga/) to configure and generate your connector.
+* Enter your key, select the attributes you wish to integrate.  (Make sure they're in the same order you created them in Universal Analytics)
+* Click *Generate*, then follow the [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation) steps.
 
 ##Manual Configuration
 * Add your Demandbase Analytics key to the connector code.
 * Configure the `fields` object according to the Custom Dimensions you've created.
-  * Use `watch_list_` as a prefix for any [Account Watch]() attributes.
+  * Use `watch_list_` as a prefix for any [Account Watch](http://demandbaselabs.com/docs/wiki/index.php?title=Account_Watch) attributes.
 
 #Installation
 1. After receiving your configured script, test the code in a sandbox environment, if available.
