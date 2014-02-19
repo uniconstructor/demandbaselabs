@@ -7,6 +7,8 @@
         ,{ name: 'Audience_Ent', attribute: 'audience', operator: '=', value: 'Enterprise Business' }
         ,{ name: 'Audience_Edu', attribute: 'audience', operator: '=', value: 'Education' }
         ,{ name: 'Audience_Govt', attribute: 'audience', operator: '=', value: 'Government' }
+        ,{ name: 'Fortune1000', attribute: 'fortune_1000', operator: '=', value: true }
+        ,{ name: 'Forbes2000', attribute: 'forbes_2000', operator: '=', value: true }
     ];
     __db.segments = [];
     __db.callback = function(company) {
