@@ -16,10 +16,11 @@ Deploy via *Google Tag Manager* for optimal flexibility.
 * Locate your Demandbase Key - provided by [Demandbase Support](mailto:support@demandbase.com)
 * Assess which Demandbase attributes to send to Analytics.
   * Your Demandbase Customer Success Manager or Solutions Consultant can help you decide.
+* In the GA Admin console, [setup Custom Dimensions](https://support.google.com/analytics/answer/2709829?hl=en&ref_topic=2709827) (for *Universal Analytics only*).
+  * Set the 'Scope' to 'User' for any Custom Dimensions receiving Demandbase attributes.
+  * Classic users skip this step.
 
 ##Configuration Wizard
-* In the GA Admin console, [setup Custom Dimensions](https://support.google.com/analytics/answer/2709829?hl=en&ref_topic=2709827) (for *Universal Analytics only*).
-  * Classic users skip this step.
 * *Coming Soon!* - Visit the [Connector Setup Wizard](#) to configure and generate your connector.
 
 ##Manual Configuration
