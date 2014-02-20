@@ -12,8 +12,12 @@ There are two ways to use Demandbase within Optimizely.
   * Your Demandbase Solutions Consultant will assist you with this step.
 
 #Create Optimizely Visitor Segments
-Optimizely Visitor Segments allow you to dissect the results of an experiment based on visitor attributes.  This feature is only available in [Optimizely Platinum](https://www.optimizely.com/pricing).
-The two methods described here are not mutually exclusive.  It is possible to add a single visitor to both dynamic segments and pre-defined segments during the same visit.
+Optimizely Visitor Segments allow you to dissect the results of an experiment based on visitor attributes.
+To get started, first create Visitor Segments in the Optimizely dashboard.  See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/hc/en-us/articles/200040865-Managing-Visitor-Segments-from-the-Dashboard) for detailed instructions on how to setup Visitor Segments.
+
+*Note: Custom visitor segments are only available in [Optimizely Platinum](https://www.optimizely.com/pricing).*
+
+The two methods described here are not mutually exclusive.  It is possible to add a single visitor to both dynamic segments and pre-defined segments during the same visit.  Additionally,
 
 ##Creating Dynamic Segments
 Sending Demandbase company profile attributes to the [Optimizely API](https://www.optimizely.com/docs/api#visitor-segments) you can dynamically add a visitor to a segment.
@@ -29,16 +33,16 @@ For example:
     window['optimizely'].push(['addToSegment', 'Industry', Demandbase.Segments.CompanyProfile.industry]);
 
     //add a visitor to multiple segments
-    window['optimizely'].push(['addToSegment', 'Revenue Range', Demandbase.Segments.CompanyProfile.revenue_range]);
+    window['optimizely'].push(['addToSegment', 'RevenueRange', Demandbase.Segments.CompanyProfile.revenue_range]);
 
     //trigger experiment
     window.optimizely.push(['activate', 'EXPT1_ID_HERE']);
   };
 ```
+In this example, the API identifier for each segment ('Industry' and 'RevenueRange') is found in the Optimizely dashboard.
 
 ##Add a Visitor to a Pre-Defined Segment
 Match your Demandbase Content Module Segments to your Optimizely Visitor Segments by creating custom segments in the Optmizely dashboard.  This method is useful for analyzing broad-based, well-defined target segments.
-See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/hc/en-us/articles/200040865-Managing-Visitor-Segments-from-the-Dashboard) for detailed instructions on how to setup Visitor Segments.
 
 1. Create a new Visitor Segment.
 2. Select *Satisfy this custom Javascript condition*
@@ -46,6 +50,8 @@ See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/h
   * See your Demandbase code for your configured Demandbase Segments.
 4. To use your Visitor Segment, view the results of an experiment, then select your Custom Segment from the menu on the left.
   * Visit [Visitor Segments](https://help.optimizely.com/hc/en-us/articles/200040315-Visitor-Segments) for more on using Visitor Segments to analyze results.
+
+Whether using dynamic segments or pre-defined segments, a returning visitor will maintain segments across visits (assuming they do not clear their cookies).  Once created, segments are available to all experiements.
 
 #Trigger an Optimizely Experiment
 Triggering an Optimizely Experiment using Demandbase allows you to personalize and target website content based on a visitor's company profile.
@@ -56,8 +62,9 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
 1. Create a new experiment with at least one variation
 2. Under the Options menu, select *Targeting*
   * **Option 1:** Select *Are in any of these segments*
-    * A visitor must already be part of a segment when using this option.  See [Create Optimizely Visitor Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/Optimizely#create-optimizely-visitor-segments) below for instructions.
+    * A visitor must already be part of a segment when using this option.  See [Create Optimizely Visitor Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/Optimizely#create-optimizely-visitor-segments) for instructions.
     * This is the best approach for targeting visitors *after the first page view*, and it will not impact the visitor experience.
+    * When Targeting in this manner, you do not need to specify the experiment ID to activate the experiement.   For example: `window.optimizely.push(['activate']);`
   * **Option 2:**  Select *Satisfy this custom JavaScript condition*.
     * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`
     * See your Demandbase code for your configured Demandbase Segments.
