@@ -74,7 +74,7 @@ In this basic implementation, `Email` is the `id` of the the user-facing email f
 
 ###Marketo Integration
 
-This section is form Marketo Forms 2.0 which introduced changes to the way Demandbase must integrate.
+This section is for Marketo Forms 2.0 which introduced changes to the way Demandbase must integrate.
 
 #####Using Landing Page Templates
 1. Create or Open a landing page template
