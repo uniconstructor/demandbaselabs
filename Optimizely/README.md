@@ -20,7 +20,7 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
 1. Create a new experiment with at least one variation
 2. Under the Options menu, select *Targeting*
   * **Option 1:** Select *Are in any of these segments*
-    * *A visitor must already be part of a segment when using this option.  See [Create Optimizely Visitor Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/Optimizely#create-optimizely-visitor-segments) below for instructions.
+    * A visitor must already be part of a segment when using this option.  See [Create Optimizely Visitor Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/Optimizely#create-optimizely-visitor-segments) below for instructions.
     * This is the best approach for targeting visitors *after the first page view*, and it will not impact the visitor experience.
   * **Option 2:**  Select *Satisfy this custom JavaScript condition*.
     * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`
