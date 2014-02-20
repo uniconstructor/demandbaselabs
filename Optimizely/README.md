@@ -18,11 +18,16 @@ Multiple experiments can be setup and triggered according to various Demandbase 
 See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/200039685-Visitor-Condition-Targeting) for further detail on using Optimizely.
 
 1. Create a new experiment with at least one variation
-2. Under the Options menu, select **Targeting**, then select *Satisfy this custom JavaScript condition*.
-  * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`.
-  * See your Demandbase code for your configured Demandbase Segments.
-3. Set the [Activation Mode](https://help.optimizely.com/hc/en-us/articles/200039765-Activation-Mode) to *Manual*
-4. Place the experiment activation code within the Demandbase `callback` function
+2. Under the Options menu, select *Targeting*
+  * **Option 1:**Select *Are in any of these segments*
+    * *A visitor must already be part of a segment when using this option.  See [Create Optimizely Visitor Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/Optimizely#create-optimizely-visitor-segments) below for instructions.
+    * This is the best approach for targeting visitors *after the first page view*, and it will not impact the visitor experience.
+  * **Option 2:**Select *Satisfy this custom JavaScript condition*.
+    * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`.
+    * See your Demandbase code for your configured Demandbase Segments.
+    * **Note:** This approach enables targeting visitors on their first page view, however visitors may see content "change" or "flash" when the experiment is triggered.
+3. Set the [Activation Mode](https://help.optimizely.com/hc/en-us/articles/200039765-Activation-Mode) to *Manual*.
+4. Place the experiment activation code within the Demandbase `callback` function.
   * Example:
   ```
   __db.callback = function(company) {
