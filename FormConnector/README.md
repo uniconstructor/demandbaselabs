@@ -80,7 +80,7 @@ This section is form Marketo Forms 2.0 which introduced changes to the way Deman
 1. Create or Open a landing page template
 2. Click "Edit Draft"
 3. (If editing existing) Remove ALL existing Demandbase code and links to files
-4. At the end of the page, just before the closing </body> tag, copy and paste in your Demandbase script that you are learning to make on this page
+4. At the end of the page, just before the closing body tag, copy and paste in your Demandbase script that you are learning to make on this page
 5. Preview and Approve the template
 
 #####Editing a Single Landing Page
