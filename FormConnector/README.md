@@ -3,6 +3,7 @@
 * [Functionality Overview](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#functionality-overview)
 * [Getting Started](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#getting-started)
 * [Installation](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#installation)
+  * [Marketo Integration](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#marketo-integration)
 * [Configuration Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#configuration-options)
   * [Growing Form Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#growing-form-options)
   * [Testing](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#testing-options)
@@ -70,6 +71,25 @@ To add the Demandbase Form Connector to your web forms:
 ```
 
 In this basic implementation, `Email` is the `id` of the the user-facing email field, and `Company` is the `id` of the user-facing company field.  This simplified example assumes that any hidden fields captured uses the standard `db_[api_name]` naming convention.  See **Configuration Options** for `fieldMap` for more on mapping to your existing fields.  See also `fieldPrefix` and `fieldSuffix` to establish your own naming convention.
+
+###Marketo Integration
+
+This section is form Marketo Forms 2.0 which introduced changes to the way Demandbase must integrate.
+
+#####Using Landing Page Templates
+1. Create or Open a landing page template
+2. Click "Edit Draft"
+3. (If editing existing) Remove ALL existing Demandbase code and links to files
+4. At the end of the page, just before the closing </body> tag, copy and paste in your Demandbase script that you are learning to make on this page
+5. Preview and Approve the template
+
+#####Editing a Single Landing Page
+1. Create or Open a landing page
+2. Click "Edit Draft"
+3. (If editing existing) Remove ALL existing Demandbase code including in the "Page Meta Tags" settings
+4. Drag and Drop an HMTL element from the right hand side of the page into the editing pane
+5. In the popup window, copy and paste in your Demandbase script that you are learning to make on this page
+6. Preview and Approve the landing page
 
 #Configuration Options
 <!--##Connect Function-->
