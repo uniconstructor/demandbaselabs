@@ -74,22 +74,9 @@ In this basic implementation, `Email` is the `id` of the the user-facing email f
 
 ###Marketo Integration
 
-This section is for Marketo Forms 2.0 which introduced changes to the way Demandbase must integrate.
-
-#####Using Landing Page Templates
 1. Create or Open a landing page template
-2. Click "Edit Draft"
-3. (If editing existing) Remove ALL existing Demandbase code and links to files
-4. At the end of the page, just before the closing body tag, copy and paste in your Demandbase script that you are learning to make on this page
-5. Preview and Approve the template
-
-#####Editing a Single Landing Page
-1. Create or Open a landing page
-2. Click "Edit Draft"
-3. (If editing existing) Remove ALL existing Demandbase code including in the "Page Meta Tags" settings
-4. Drag and Drop an HMTL element from the right hand side of the page into the editing pane
-5. In the popup window, copy and paste in your Demandbase script that you are learning to make on this page
-6. Preview and Approve the landing page
+2. Remove ALL existing Demandbase code and links to files
+3. At the end of the page, just before the closing body tag, copy and paste in your Demandbase script that you are learning to make on this page
 
 #Configuration Options
 <!--##Connect Function-->
