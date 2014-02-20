@@ -17,7 +17,7 @@ To get started, first create Visitor Segments in the Optimizely dashboard.  See 
 
 *Note: Custom visitor segments are only available in [Optimizely Platinum](https://www.optimizely.com/pricing).*
 
-The two methods described here are not mutually exclusive.  It is possible to add a single visitor to both dynamic segments and pre-defined segments during the same visit.  Additionally,
+The two methods described here are not mutually exclusive.  It is possible to add a single visitor to both dynamic segments and pre-defined segments during the same visit.
 
 ##Creating Dynamic Segments
 Sending Demandbase company profile attributes to the [Optimizely API](https://www.optimizely.com/docs/api#visitor-segments) you can dynamically add a visitor to a segment.
