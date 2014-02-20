@@ -19,13 +19,13 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
 
 1. Create a new experiment with at least one variation
 2. Under the Options menu, select *Targeting*
-  * **Option 1:**Select *Are in any of these segments*
+  * **Option 1:** Select *Are in any of these segments*
     * *A visitor must already be part of a segment when using this option.  See [Create Optimizely Visitor Segments](https://github.com/demandbaselabs/demandbaselabs/tree/master/Optimizely#create-optimizely-visitor-segments) below for instructions.
     * This is the best approach for targeting visitors *after the first page view*, and it will not impact the visitor experience.
-  * **Option 2:**Select *Satisfy this custom JavaScript condition*.
-    * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`.
+  * **Option 2:**  Select *Satisfy this custom JavaScript condition*.
+    * Place a reference to a Demandbase Segment in the text box.  For example: `Demandbase.Segments.YourSegmentName`
     * See your Demandbase code for your configured Demandbase Segments.
-    * **Note:** This approach enables targeting visitors on their first page view, however visitors may see content "change" or "flash" when the experiment is triggered.
+    * **Note:** This approach enables targeting visitors on their *first page view*, however visitors may see content "change" or "flash" when the experiment is triggered.
 3. Set the [Activation Mode](https://help.optimizely.com/hc/en-us/articles/200039765-Activation-Mode) to *Manual*.
 4. Place the experiment activation code within the Demandbase `callback` function.
   * Example:
@@ -42,6 +42,7 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
 
 #Create Optimizely Visitor Segments
 Optimizely Visitor Segments allow you to dissect the results of an experiment based on visitor attributes.  This feature is only available in [Optimizely Platinum](https://www.optimizely.com/pricing).
+The two methods described here are not mutually exclusive.  It is possible to add a single visitor to both dynamic segments and pre-defined segments during the same visit.
 
 ##Creating Dynamic Segments
 Sending Demandbase company profile attributes to the [Optimizely API](https://www.optimizely.com/docs/api#visitor-segments) you can dynamically add a visitor to a segment.
@@ -64,8 +65,8 @@ For example:
   };
 ```
 
-##Add a Visitor Pre-Defined Segments
-Have your Optimizely Visitor Segments You can add a visitor to
+##Add a Visitor to a Pre-Defined Segment
+Match your Demandbase Content Module Segments to your Optimizely Visitor Segments by creating custom segments in the Optmizely dashboard.  This method is useful for analyzing broad-based, well-defined target segments.
 See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/hc/en-us/articles/200040865-Managing-Visitor-Segments-from-the-Dashboard) for detailed instructions on how to setup Visitor Segments.
 
 1. Create a new Visitor Segment.
