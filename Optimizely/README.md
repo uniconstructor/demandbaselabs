@@ -38,6 +38,29 @@ See [Visitor Condition Targeting](https://help.optimizely.com/hc/en-us/articles/
 #Create Optimizely Visitor Segments
 Optimizely Visitor Segments allow you to dissect the results of an experiment based on visitor attributes.  This feature is only available in [Optimizely Platinum](https://www.optimizely.com/pricing).
 
+##Creating Dynamic Segments
+Sending Demandbase company profile attributes to the [Optimizely API](https://www.optimizely.com/docs/api#visitor-segments) you can dynamically add a visitor to a segment.
+This provides additional granularity in reporting on experiment results by providing detailed information about the visitor's company profile.
+
+Dynamically add a visitor to a segment in the `__db.callback` function.
+
+For example:
+```
+  __db.callback = function(company) {
+    window.optimizely = window.optimizely || [];
+    //dynamically add visitor to a segment
+    window['optimizely'].push(['addToSegment', 'Industry', Demandbase.Segments.CompanyProfile.industry]);
+
+    //add a visitor to multiple segments
+    window['optimizely'].push(['addToSegment', 'Revenue Range', Demandbase.Segments.CompanyProfile.revenue_range]);
+
+    //trigger experiment
+    window.optimizely.push(['activate', 'EXPT1_ID_HERE']);
+  };
+```
+
+##Add a Visitor Pre-Defined Segments
+Have your Optimizely Visitor Segments You can add a visitor to
 See [Managing Visitor Segments from the Dashboard](https://help.optimizely.com/hc/en-us/articles/200040865-Managing-Visitor-Segments-from-the-Dashboard) for detailed instructions on how to setup Visitor Segments.
 
 1. Create a new Visitor Segment.
