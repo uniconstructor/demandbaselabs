@@ -18,7 +18,7 @@ window.dbAsyncInit = function() {
             'employee_range': '',
             'employee_count': '',
             'street_address': '',
-            'city': 'city',
+            'city': '',
             'state': '',
             'zip': '',
             'country': '',
