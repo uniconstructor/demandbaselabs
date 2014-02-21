@@ -218,7 +218,7 @@ The style of the list can also be customized using CSS.  For more details, see: 
 *Optional (Required in some cases)* (*Default:*`[]`)
 This is only required if there is more than one `form` element on the page.  By default the Form Connector will use the first form found in the DOM.  
 
-If there are additional forms on the page, then define this `Array` of `String` values, listing the `name` of each form to use.  **Note: using `formNameList` does not mean that every form that uses the Connector needs to be listed by name. ** When `formNameList` is defined, the Connector will attempt to attach to the `form` elements whose names are in the list.  If no `form` matches the names in the list, then the first form in the DOM will still be used by default.  So, 
+If there are additional forms on the page, then define this `Array` of `String` values, listing the `name` of each form to use.  **Note: using `formNameList` does not mean that every form that uses the Connector needs to be listed by name. ** When `formNameList` is defined, the Connector will attempt to attach to the `form` elements whose names are in the list.  If no `form` matches the names in the list, then the first form in the DOM will still be used by default.  
 ####priorityMap
 *Optional*
 
