@@ -38,8 +38,10 @@ For further instructions, see [Using Demandbase and the Context Module](http://d
 
 ##Cache Configuration
 The Demandbase Drupal Module provides two types of cachine:
+
 1. `demandbase_cache`
   * demandbase_cache override drupal default caching for anonymous user and store page cache in cache_page table for all pages or for specified paths if specified under admin/config/services/demandbase/cache path.
+
 2. `demandbasee_memcache`
   * demandbase_memcache override drupal default caching for anonymous user and store page cache under memcached service which store cache on RAM for all pages or for specified paths if specified under admin/config/services/demandbase/cache path.
 
