@@ -284,6 +284,7 @@ For feature requests, bug fixes, or questions on configuration, email: [support@
 ##v1.0 (February 2014)
 * Introduced hosted Form Connector solution with simplified deployment and completely asynchronous integration.
 * Provides complete backwards-compatibility with implementation using legacy `demandbaseFormStd.js` and beta `demandbaseForm.js`.  **Talk to your Demandbase Consultant or Customer Success Manager for information about upgrades.**
+
 ##v1.1 (February 2014)
 * Marketo Forms 2.0 Support
   * Existing form attributes have value set rather than being re-built
