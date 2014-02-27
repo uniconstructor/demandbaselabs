@@ -48,7 +48,7 @@ Upgrading to v5.0+ from another version is quick and easy.
   * **Important:** When switching from *GA Classic* to *Universal Analytics* you have an opportunity to add more Demandbase attributes.  Talk to your Customer Success Manager about which attributes you may want to add.
 4. Functionality changes:
   * **Custom Events:** If your existing connector sends Demandbase attributes as Custom Events, you will need to provision new Custom Dimensions for these when switching to *Universal Analytics*.
-  * **Concatenating attributes: ** If your *GA Classic* connector concatenates two attributes together, these should be setup as separate Custom Dimensions in *Universal Analytics* (for example `industry` and `sub_industry` or `audience` and `audience_segment`).
+  * **Concatenating attributes:** If your *GA Classic* connector concatenates two attributes together, these should be setup as separate Custom Dimensions in *Universal Analytics* (for example `industry` and `sub_industry` or `audience` and `audience_segment`).
 5. Follow the [Installation Steps](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation).
 
 #Release Notes
