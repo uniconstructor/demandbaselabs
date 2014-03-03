@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>Demandbase Adobe Target Integration Example</title>
+
+<!-- Option 1: Asynchronous Method - Define callback function
+     Note: this must be defined before the IP API call  -->
+<script type="text/javascript">
+    function demandbase_parse(data) {
+        /**
+            This function is called when Demandbase returns data.
+            Iteratively add each Demandbase Company Profile to
+            the visitor's Adobe Target Profile
+        **/
+        if(data) db_company = data;
+        try {
+            var profileAttrStr = "", delim = ',', builder;
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    var attr = 'profile.' + key + '=' + data[key] + delim;
+                    profileAttrStr += attr;
+                }
+            }
+            profileAttrStr = profileAttrStr.split(delim);
+            builder = mboxFactoryDefault.getUrlBuilder();
+            builder.addParameters(profileAttrStr)
+        } catch (e) {}
+    }
+</script>
+
+<!-- Option 1: Asynchronous Method - Call IP API,
+     This triggers callback function when data is returned -->
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=demandbase_parse"></script>
+
+<!-- Option 2: Synchronously call Demandbase IP API
+     This assigns global JS variable directly, rather than using a callback function  -->
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.js?key=YOUR_KEY_HERE&var=db_company"></script>
+
+<script type="text/javascript" src="Your/Mbox/Path/mbox.js"></script>
+
+</head>
+<body>
+    <p>Demandbase / Adobe Target Integration Example</p>
+    <p>See also <a href="https://github.com/demandbaselabs/demandbaselabs/blob/master/Adobe_Target/" target="_blank">Adobe Target Connector</a></p>
+    <hr />
+</body>
+</html>
