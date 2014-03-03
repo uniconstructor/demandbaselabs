@@ -8,8 +8,8 @@ To automatically integrate with Adobe Target, simply select "yes" from the dropd
 ###Resources
 Complete instructions on the Adobe Analytics Data Connector are available within Adobe Analytics and in this repo.
 
-*[Adobe Analytics in-product documentation - Completing the Adobe Integration Wizard](http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/#Completing_the_Adobe_Integration_Wizard)
-*[Demandbase Adobe Analytics Setup Guide on GitHub](https://github.com/demandbaselabs/demandbaselabs/tree/master/Adobe_Analytics#data-connector)
+* [Adobe Analytics in-product documentation - Completing the Adobe Integration Wizard](http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/#Completing_the_Adobe_Integration_Wizard)
+* [Demandbase Adobe Analytics Setup Guide on GitHub](https://github.com/demandbaselabs/demandbaselabs/tree/master/Adobe_Analytics#data-connector)
 
 ##JavaScript Connector
 
