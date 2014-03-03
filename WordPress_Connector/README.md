@@ -1,7 +1,6 @@
 #Demandbase Plugin for Wordpress
-This WordPress plugin is designed to allow access to the Demandbase API through the standard token/IP method.
-If you do not know which API you are using, you can find out by looking at the URL you are using.
-If it's of the form: api.demandbase.com/api/v2/ip.json?query=XX.XX.XX.XX&key=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX then you are using the CORRECT API for use with this plugin.
+
+Demandbase Content Module for creating and targeting content based on visitor attributes and segments.
 
 #Installation
 
