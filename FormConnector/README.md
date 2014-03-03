@@ -148,7 +148,7 @@ This property defines the HTML elements which receive the "growing" form behavio
 
 Ideally, the HTML markup will have an element with an `id` that wraps both the `input` element and it's label.  If there is no wrapper element, it may be required to also specify the ID of the label element.  Alternatively, the `getToggleElement` function can be passed to the `connect` function to define the relationship between `toggleFieldList` and the HTML elements to show and hide.
 
-*Fields in this list are hidden by the Form Connector when the page loads, provided that `areToggleFieldsVisible` is set to `true`.
+Fields in this list are hidden by the Form Connector when the page loads, and **must be created as visible fields on your form**.  The `_areToggleFieldsVisible` function handles hiding fields when the page loads.
 
 ####getToggleElement 
 *Optional (Required in some cases)*
@@ -193,12 +193,14 @@ return this.djq('#'+id).val();
 ```
 
 ####areToggleFieldsVisible
-*Optional* (*Default:* `true`)
-This Boolean flag tells the Form Connector whether or not the toggling fields are currently shown.  This should be `true` to start, which triggers hiding of the fields when the page loads.
+**Deprecated** (*Default:* `true`)
+*This was replaced by the `_areToggleFieldsVisible` function which automatically detects if the elements specified by `toggleFieldList` / `getToggleElement` are visible.
+
+~~This Boolean flag tells the Form Connector whether or not the toggling fields are currently shown.  This should be `true` to start, which triggers hiding of the fields when the page loads.
 
 Only set to `false` if the fields in `toggleFieldList` are created as hidden fields in your form system.  
 
-**Note:** Additional CSS/layout/styling may be required when showing fields that are setup as hidden fields in your form processor.
+**Note:** Additional CSS/layout/styling may be required when showing fields that are setup as hidden fields in your form processor.~~
 
 ###Advanced Options
 ####fieldPrefix
@@ -255,7 +257,7 @@ This will show a table below the form with all fields in the company profile eac
 
 ##Hook Functions
 Extend the functionality of the Form Connector (or have it trigger additional operations) by defining these functions in your implementation snippet.  These functions are never required and should be defined globally.  None of the functions return a value, but they do have parameters, and they can modify static members of the `Demandbase.Connectors.WebForm` class.
-
+a
 In each function the `data` parameter represents the JSON object of the Company Profile being parsed.  The `source` parameter will be the lowercase String representation of the API providing `data` ('ip', 'domain' or 'company').
 
 When implementing hook functions, you may need to familiarize yourself with the `Demandbase.Connectors.WebForm` class.  For a complete technical reference, see [http://www.demandbaselabs.com/docs/form_connector](http://www.demandbaselabs.com/docs/form_connector).
@@ -282,3 +284,14 @@ For feature requests, bug fixes, or questions on configuration, email: [support@
 ##v1.0 (February 2014)
 * Introduced hosted Form Connector solution with simplified deployment and completely asynchronous integration.
 * Provides complete backwards-compatibility with implementation using legacy `demandbaseFormStd.js` and beta `demandbaseForm.js`.  **Talk to your Demandbase Consultant or Customer Success Manager for information about upgrades.**
+
+##v1.1 (February 2014)
+* Marketo Forms 2.0 Support
+  * Existing form attributes have value set rather than being re-built
+  * `setAttribute` added for setting field values
+* Growing form behavior enhancements
+  * Retired `areToggleFieldsVisible` Boolean option.  This is now automatically detected by `_areToggleFieldsVisible` function
+  * Removed from `connect` function
+  * `toggleFields` checks visibility of each element, rather than using `areToggleFieldsVisible` property.
+* Added `hasOwnProperty` checks in all `for...each` loops to support prototypal inheritance by other libraries.
+

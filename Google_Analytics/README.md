@@ -38,6 +38,19 @@ Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/)
 3. Place your script in the appropriate space on each analytics-enabled page.  In most cases, this will be added to a template page within your CMS or in your Tag Management System.
 4. If using [Google Tag Manager](https://www.google.com/tagmanager/), talk to your Demandbase Solutions Consultant about additional setup options.
 
+#Migrating from Previous Versions
+Upgrading to v5.0+ from another version is quick and easy.
+
+1. Download [demandbaseGA.html](https://github.com/demandbaselabs/demandbaselabs/blob/master/Google_Analytics/demandbaseGA.html)
+2. Add you Demandbase Analytics key.
+3. Update the `fields` object.  For UA connectors, you can generally copy and paste the object.  
+  * **Note:** If you are using *GA Classic*, `fields` may be an array, rather than an object.
+  * **Important:** When switching from *GA Classic* to *Universal Analytics* you have an opportunity to add more Demandbase attributes.  Talk to your Customer Success Manager about which attributes you may want to add.
+4. Functionality changes:
+  * **Custom Events:** If your existing connector sends Demandbase attributes as Custom Events, you will need to provision new Custom Dimensions for these when switching to *Universal Analytics*.
+  * **Concatenating attributes:** If your *GA Classic* connector concatenates two attributes together, these should be setup as separate Custom Dimensions in *Universal Analytics* (for example `industry` and `sub_industry` or `audience` and `audience_segment`).
+5. Follow the [Installation Steps](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation).
+
 #Release Notes
 ##v5.0 - Febrauary 2014
 * Added [`dataLayer`](https://developers.google.com/tag-manager/android/reference/com/google/tagmanager/DataLayer) support for use with Google Tag Manager
