@@ -18,6 +18,7 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
   * Click *Save* and download new `mbox.js.`
   * Note: You do not have to include all of the fields in this plugin. You can capture any attribute returned by Demandbase.
   * It is highly recommended to wrap the variable declarations and callback function in a namespace to avoid conflicts with other JavaScript on the site.
+
     ```
     <!-- Demandbase Integration Plugin -->
     <script>
@@ -44,12 +45,14 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
     ```
 
 2. In the Head section of the page, **after** the `mbox.js` script tag, add a call the Demandbase API with the client API Key leveraging the variables from the plugin from Step 1:
+
     ```
     <!-- Demandbase API reference tag -->
     <script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
     ```
 
 3. Create in-mbox profile parameters that can be leveraged for personalization by appending the applicable profiles to the mbox:
+
     ```
     <div class="mboxDefault"></div>
     <script type="text/javascript">
@@ -65,6 +68,7 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
     ```
 
 4. Validate with a Web Debugger like Firebug or Charles to see the API response:
+
     ```
     set_mbox_variables({"registry_company_name":"Adobe Systems","registry_city":"Menlo Park","registry_state":"CA","registry_zip_code":null,"registry_country":"United States","company_name":"Adobe Systems","demandbase_sid":581971,"marketing_alias":"Adobe","industry":"Software & Technology","sub_industry":"Software Applications","employee_count":8660,"isp":false,"primary_sic":"7372","street_address":"345 Park Ave","city":"San Jose","state":"CA","zip":"95110","country":"US","phone":"4085366000","stock_ticker":"ADBE","web_site":"adobe.co m","annual_sales":2946000000,"revenue_range":"$2.5B - $5B","employee_range":"Enterprise","latitude":37.3303,"longitude":- 121.894,"fortune_1000":true,"forbes_2000":true,"information_level":"Detailed","audience":"Enterprise Business","audience_segment":"Software & Technology","ip":"192.150.10.200"})
     ```
