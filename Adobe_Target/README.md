@@ -22,58 +22,56 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
   * Click *Save* and download new `mbox.js.`
   * Note: You do not have to include all of the fields in this plugin. You can capture any attribute returned by Demandbase.
   * It is highly recommended to wrap the variable declarations and callback function in a namespace to avoid conflicts with other JavaScript on the site.
-```
-<!-- Demandbase Integration Plugin -->
-<script>
-var company_name =''
-,industry =''
-,sub_industry =''
-,employee_range =''
-,revenue_range =''
-,account_status ='';
-function set_mbox_variables (data) {
-  if(!data) return '';
-  try{
-    company_name = escape(data['company_name'] || '');
-    industry = escape(data['industry'] || '');
-    sub_industry = escape(data['sub_industry'] || '');
-    employee_range = escape(data['employee_range'] || '');
-    revenue_range = escape(data['revenue_range'] || '');
-    if(typeof data.watch_list !== 'undefined') {
-        account_status = escape(data.watch_list['account_status'] || '')
+    ```
+    <!-- Demandbase Integration Plugin -->
+    <script>
+    var company_name =''
+    ,industry =''
+    ,sub_industry =''
+    ,employee_range =''
+    ,revenue_range =''
+    ,account_status ='';
+    function set_mbox_variables (data) {
+      if(!data) return '';
+      try{
+        company_name = escape(data['company_name'] || '');
+        industry = escape(data['industry'] || '');
+        sub_industry = escape(data['sub_industry'] || '');
+        employee_range = escape(data['employee_range'] || '');
+        revenue_range = escape(data['revenue_range'] || '');
+        if(typeof data.watch_list !== 'undefined') {
+            account_status = escape(data.watch_list['account_status'] || '')
+        }
+      } catch(e) {}
     }
-  } catch(e) {}
-}
-</script>
-```
+    </script>
+    ```
 
-2. In the Head section of the page, **after** the `mbox.js` include, add a call the Demandbase API with the client API Key calling back the variables from the plugin from Step 1:
-```
-<!-- Demandbase API reference tag -->
-<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
-```
+2. In the Head section of the page, **after** the `mbox.js` script tag, add a call the Demandbase API with the client API Key leveraging the variables from the plugin from Step 1:
+    ```
+    <!-- Demandbase API reference tag -->
+    <script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
+    ```
 3. Create in-mbox profile parameters that can be leveraged for personalization by appending the applicable profiles to the mbox:
-```
-<div class="mboxDefault"></div>
-<script type="text/javascript">
-   mboxCreate('mbox-name',
-        'profile.company='+unescape(company_name),
-        'profile.industry='+unescape(industry),
-        'profile.subindustry='+unescape(sub_industry),
-        'profile.accountstatus='+unescape(account_status),
-        'profile.employeerange='+unescape(employee_range),
-        'profile.revenuerange='+unescape(revenue_range)
-    );
-</script>
-```
+    ```
+    <div class="mboxDefault"></div>
+    <script type="text/javascript">
+       mboxCreate('mbox-name',
+            'profile.company='+unescape(company_name),
+            'profile.industry='+unescape(industry),
+            'profile.subindustry='+unescape(sub_industry),
+            'profile.accountstatus='+unescape(account_status),
+            'profile.employeerange='+unescape(employee_range),
+            'profile.revenuerange='+unescape(revenue_range)
+        );
+    </script>
+    ```
 4. Validate with a Web Debugger like Firebug or Charles to see the API response:
-```
-set_mbox_variables({"registry_company_name":"Adobe Systems","registry_city":"Menlo Park","registry_state":"CA","registry_zip_code":null,"registry_country":"United States","company_name":"Adobe Systems","demandbase_sid":581971,"marketing_alias":"Adobe","industry":"Software & Technology","sub_industry":"Software Applications","employee_count":8660,"isp":false,"primary_sic":"7372","street_address":"345 Park Ave","city":"San Jose","state":"CA","zip":"95110","country":"US","phone":"4085366000","stock_ticker":"ADBE","web_site":"adobe.co m","annual_sales":2946000000,"revenue_range":"$2.5B - $5B","employee_range":"Enterprise","latitude":37.3303,"longitude":- 121.894,"fortune_1000":true,"forbes_2000":true,"information_level":"Detailed","audience":"Enterprise Business","audience_segment":"Software & Technology","ip":"192.150.10.200"})
-```
+    ```
+    set_mbox_variables({"registry_company_name":"Adobe Systems","registry_city":"Menlo Park","registry_state":"CA","registry_zip_code":null,"registry_country":"United States","company_name":"Adobe Systems","demandbase_sid":581971,"marketing_alias":"Adobe","industry":"Software & Technology","sub_industry":"Software Applications","employee_count":8660,"isp":false,"primary_sic":"7372","street_address":"345 Park Ave","city":"San Jose","state":"CA","zip":"95110","country":"US","phone":"4085366000","stock_ticker":"ADBE","web_site":"adobe.co m","annual_sales":2946000000,"revenue_range":"$2.5B - $5B","employee_range":"Enterprise","latitude":37.3303,"longitude":- 121.894,"fortune_1000":true,"forbes_2000":true,"information_level":"Detailed","audience":"Enterprise Business","audience_segment":"Software & Technology","ip":"192.150.10.200"})
+    ```
 
 5. Validate with Digital Pulse Debugger to View Mbox Profile Parameters:
-
-<img src="https://www.evernote.com/shard/s100/sh/96538b23-5215-4789-acd5-2e4f9d334947/1dd704e9c99ebeb759aa50f2af221a49/deep/0/Screenshot%206/20/13%2011:53%20AM.jpg" />
-
-Profile variables available in Adobe Target:
-<img src="https://www.evernote.com/shard/s100/sh/5fd377c8-8932-4262-b839-56355215c7b3/6afbe7310f930e4ad64dd758676e3560/deep/0/Screenshot6/20/1312:01PM.jpg" />
+  <img src="https://www.evernote.com/shard/s100/sh/96538b23-5215-4789-acd5-2e4f9d334947/1dd704e9c99ebeb759aa50f2af221a49/deep/0/Screenshot%206/20/13%2011:53%20AM.jpg" />
+  Profile variables available in Adobe Target:
+  <img src="https://www.evernote.com/shard/s100/sh/5fd377c8-8932-4262-b839-56355215c7b3/6afbe7310f930e4ad64dd758676e3560/deep/0/Screenshot6/20/1312:01PM.jpg" />

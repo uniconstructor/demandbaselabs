@@ -5,13 +5,13 @@
 <!-- Option 1: Asynchronous Method - Define callback function
      Note: this must be defined before the IP API call  -->
 <script type="text/javascript">
-    function demandbase_parse(data) {
+    function set_mbox_variables(data) {
         /**
             This function is called when Demandbase returns data.
             Iteratively add each Demandbase Company Profile to
             the visitor's Adobe Target Profile
         **/
-        if(data) db_company = data;
+        if(!data) return;
         try {
             var profileAttrStr = "", delim = ',', builder;
             for (var key in data) {
@@ -29,7 +29,7 @@
 
 <!-- Option 1: Asynchronous Method - Call IP API,
      This triggers callback function when data is returned -->
-<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=demandbase_parse"></script>
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
 
 <!-- Option 2: Synchronously call Demandbase IP API
      This assigns global JS variable directly, rather than using a callback function  -->
