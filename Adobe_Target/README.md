@@ -1,18 +1,14 @@
 #Demandbase Adobe Target Connector
-Demandbase can be leveraged in Adobe Target for targeting content to a particular audience and segmenting the results of content tests. By identifying the company that is visiting the website in real-time, Demandbase provides B2B marketers the ability to customize page content according to defined segments.
+Demandbase can be leveraged in Adobe Target for delivering a specific content experience to a particular audience and for segmenting the results of content tests.  By identifying the company that is visiting the website in real-time, Demandbase provides B2B marketers the ability to customize page content according to defined segments.
 
 ##Adobe Analytics Data Connector
-The fastest and easiest way to integrate with Adobe Target is to also integrate with Adobe Analytics.  It's best to use use the Demandbase Analytics Module inconjunction with the Demandbase Content Module for website optimization, so you can fully measure the results of content targeting and personalization efforts.
+The fastest and easiest way to integrate with Adobe Target is to also integrate with Adobe Analytics.  It's best to use use the Demandbase Analytics Module in conjunction with the Demandbase Content Module for website optimization, so you can fully measure the results of content targeting and personalization efforts.
 
-To automatically integrate with Adobe Target, simply select "yes" from the dropdown menu in *Step 1* of the Adobe Data Connector wizard within Adobe Analytics.
+To automatically integrate with Adobe Target, simply select "yes" from the dropdown menu in *Step 1* of the Adobe Data Connector wizard within Adobe Analytics.  For step-by-step instructions, see [Adobe Analytics in-product documentation - Completing the Adobe Integration Wizard](http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/#Completing_the_Adobe_Integration_Wizard).
 
 **Important: **  *Use of this soltion requires a license for both the Demandbase Content Module as well as the Demandbase Analytics Module.*
 
-###Resources
-Complete instructions on the Adobe Analytics Data Connector are available within Adobe Analytics and in this repo.
-
-* [Adobe Analytics in-product documentation - Completing the Adobe Integration Wizard](http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/#Completing_the_Adobe_Integration_Wizard)
-* [Demandbase Adobe Analytics Setup Guide on GitHub](https://github.com/demandbaselabs/demandbaselabs/tree/master/Adobe_Analytics#data-connector)
+Complete instructions on the Adobe Analytics Data Connector are available within Adobe Analytics and in this repo.  Visit the [Demandbase Adobe Analytics Setup Guide on GitHub](https://github.com/demandbaselabs/demandbaselabs/tree/master/Adobe_Analytics#data-connector).
 
 ##JavaScript Connector
 This solution is only recommended ff you do not have Adobe Analytics or you have not licensed the Demandbase Analytics Module.
@@ -52,6 +48,7 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
     <!-- Demandbase API reference tag -->
     <script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
     ```
+
 3. Create in-mbox profile parameters that can be leveraged for personalization by appending the applicable profiles to the mbox:
     ```
     <div class="mboxDefault"></div>
@@ -66,6 +63,7 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
         );
     </script>
     ```
+
 4. Validate with a Web Debugger like Firebug or Charles to see the API response:
     ```
     set_mbox_variables({"registry_company_name":"Adobe Systems","registry_city":"Menlo Park","registry_state":"CA","registry_zip_code":null,"registry_country":"United States","company_name":"Adobe Systems","demandbase_sid":581971,"marketing_alias":"Adobe","industry":"Software & Technology","sub_industry":"Software Applications","employee_count":8660,"isp":false,"primary_sic":"7372","street_address":"345 Park Ave","city":"San Jose","state":"CA","zip":"95110","country":"US","phone":"4085366000","stock_ticker":"ADBE","web_site":"adobe.co m","annual_sales":2946000000,"revenue_range":"$2.5B - $5B","employee_range":"Enterprise","latitude":37.3303,"longitude":- 121.894,"fortune_1000":true,"forbes_2000":true,"information_level":"Detailed","audience":"Enterprise Business","audience_segment":"Software & Technology","ip":"192.150.10.200"})
