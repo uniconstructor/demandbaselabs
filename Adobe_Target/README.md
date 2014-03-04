@@ -74,7 +74,7 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
 
     ```
     <!-- Demandbase API reference tag -->
-    <script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
+    <script type="text/javascript" src="//api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
     ```
 
 3. Create in-mbox profile parameters that can be leveraged for personalization by appending the applicable profiles to the mbox:
