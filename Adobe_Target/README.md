@@ -6,7 +6,7 @@ The fastest and easiest way to integrate with Adobe Target is to also integrate 
 
 To automatically integrate with Adobe Target, simply select "yes" from the dropdown menu in *Step 1* of the Adobe Data Connector wizard within Adobe Analytics.  For step-by-step instructions, see [Adobe Analytics in-product documentation - Completing the Adobe Integration Wizard](http://microsite.omniture.com/t2/help/en_US/connectors/demandbase/#Completing_the_Adobe_Integration_Wizard).
 
-**Important: **  *Use of this soltion requires a license for both the Demandbase Content Module as well as the Demandbase Analytics Module.*
+**Important**:  *Use of this solution requires a license for both the Demandbase Content Module as well as the Demandbase Analytics Module.*
 
 Complete instructions on the Adobe Analytics Data Connector are available within Adobe Analytics and in this repo.  Visit the [Demandbase Adobe Analytics Setup Guide on GitHub](https://github.com/demandbaselabs/demandbaselabs/tree/master/Adobe_Analytics#data-connector).
 
