@@ -4,6 +4,7 @@
 * [Getting Started](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#getting-started)
 * [Installation](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#installation)
   * [Marketo Integration](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#marketo-integration)
+  * [Eloqua Integration](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#eloqua-integration)
 * [Configuration Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#configuration-options)
   * [Growing Form Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#growing-form-options)
   * [Testing](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#testing-options)
@@ -72,14 +73,22 @@ To add the Demandbase Form Connector to your web forms:
 
 In this basic implementation, `Email` is the `id` of the the user-facing email field, and `Company` is the `id` of the user-facing company field.  This simplified example assumes that any hidden fields captured uses the standard `db_[api_name]` naming convention.  See **Configuration Options** for `fieldMap` for more on mapping to your existing fields.  See also `fieldPrefix` and `fieldSuffix` to establish your own naming convention.
 
-###Marketo Integration
+##Marketo Integration
 
-1. Create or Open a landing page or landing page template
+1. Open or create a landing page or landing page template.
 2. If you have an existing Demandbase deployment, remove ALL existing Demandbase code and links to files
-3. At the end of the page, just before the closing body tag, copy and paste your configured Form Connector tag as provided by Demandbase.
+3. At the end of the page, just before the closing `body` tag, copy and paste your configured Form Connector tag as provided by Demandbase.
+
+##Eloqua Integration
+
+1. Open or create a landing page or landing page template.
+2. Click the red toolbox labeled *Tools* on the left, then in the layout tools dialog, click the orange code icon (`</>`).
+4. Click *Open JS Editor*.
+5. Copy and paste your configured Form Connector tag as provided by Demandbase into the script editor, then click *Save*.
+
 
 #Configuration Options
-<!--##Connect Function-->
+
 Configuration options are provided to the Form Connector using the `connect` function, which takes a single JSON object as it's only argument.  Properties can also be manually overridden using hook functions, but using the `connect` function is the best way to initialize.  The available properties and the functionality they provide are described in detail here.
 
 For a further details see our [detailed technical specification](http://www.demandbaselabs.com/docs/form_connector) of the `Demandbase.Connectors.WebForm` class.
