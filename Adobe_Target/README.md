@@ -70,7 +70,7 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
     }
     ```
 
-2. In the Head section of the page, **after** the `mbox.js` script tag, add a call the Demandbase API with the client API Key leveraging the variables from the plugin from Step 1:
+2. In the `<head>` section of the page, **after** the `mbox.js` script tag, add a call the Demandbase API with the client API Key leveraging the variables from the plugin from Step 1:
 
     ```
     <!-- Demandbase API reference tag -->
@@ -94,15 +94,20 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
     ```
 
 ###Testing
-1. Validate with a Web Debugger like Firebug or Charles to see the API response:
+1. Validate with a Web Debugger like *Firebug*, *Chrome Developer Tools*, or *Charles* to see the API response:
 
     ```
     set_mbox_variables({"registry_company_name":"Adobe Systems","registry_city":"Menlo Park","registry_state":"CA","registry_zip_code":null,"registry_country":"United States","company_name":"Adobe Systems","demandbase_sid":581971,"marketing_alias":"Adobe","industry":"Software & Technology","sub_industry":"Software Applications","employee_count":8660,"isp":false,"primary_sic":"7372","street_address":"345 Park Ave","city":"San Jose","state":"CA","zip":"95110","country":"US","phone":"4085366000","stock_ticker":"ADBE","web_site":"adobe.co m","annual_sales":2946000000,"revenue_range":"$2.5B - $5B","employee_range":"Enterprise","latitude":37.3303,"longitude":- 121.894,"fortune_1000":true,"forbes_2000":true,"information_level":"Detailed","audience":"Enterprise Business","audience_segment":"Software & Technology","ip":"192.150.10.200"})
     ```
 
 2. Validate with Digital Pulse Debugger to View Mbox Profile Parameters:
+
+  *(Be sure to clear your cookies in between tests when using the [Adobe Digital Pulse Debugger](http://helpx.adobe.com/analytics/using/digitalpulse-debugger.html).)*
+
   <img src="https://www.evernote.com/shard/s100/sh/96538b23-5215-4789-acd5-2e4f9d334947/1dd704e9c99ebeb759aa50f2af221a49/deep/0/Screenshot%206/20/13%2011:53%20AM.jpg" />
-  Profile variables available in Adobe Target:
+
+3. Verify Profile variables are available in Adobe Target:
+
   <img src="https://www.evernote.com/shard/s100/sh/5fd377c8-8932-4262-b839-56355215c7b3/6afbe7310f930e4ad64dd758676e3560/deep/0/Screenshot6/20/1312:01PM.jpg" />
 
 

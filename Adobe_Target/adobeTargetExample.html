@@ -3,7 +3,10 @@
     <title>Demandbase Adobe Target Integration Example</title>
 
     <!-- Asynchronous Method - Define callback function
-         Note: this must be defined before the IP API call  -->
+         Notes:
+         * This must be defined before the IP API call
+         * This can be placed inside of mbox.js
+     -->
     <script type="text/javascript">
         function set_mbox_variables(data) {
             /**
@@ -26,14 +29,16 @@
             } catch (e) {}
         }
     </script>
+    <!-- mbox.js include must come before the Demandbase API call and after the callback function -->
+    <script type="text/javascript" src="Your/Mbox/Path/mbox.js"></script>
 
     <!-- Asynchronous Method - Call IP API,
-         This triggers callback function when data is returned -->
+         This triggers callback function when data is returned
+         Place after the mbox.js include and callback function to ensure they're loaded when the API responds.
+     -->
     <script type="text/javascript" src="//api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
 </head>
 <body>
-    <!-- mbox.js include must come after the Demandbase API and callback function to ensure they fire before the mbox is created -->
-    <script type="text/javascript" src="Your/Mbox/Path/mbox.js"></script>
     <p>Demandbase / Adobe Target Integration Example</p>
     <p>See also <a href="https://github.com/demandbaselabs/demandbaselabs/blob/master/Adobe_Target/" target="_blank">Adobe Target Connector</a></p>
     <hr />
