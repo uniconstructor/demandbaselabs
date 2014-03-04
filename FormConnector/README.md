@@ -144,7 +144,7 @@ Growing or "expanding" form functionality can be implemented on any form.  The d
 
 ####toggleFieldList
 *Optional* (*Default:* `[]`)
-This property defines the HTML elements which receive the "growing" form behavior.  This `Array` of `String` values holds the IDs of the HTML elements that hide initially and are shown if they do not have a value after the visitor has provided an email address and company name. 
+This property defines the HTML elements which receive the "growing" form behavior.  This `Array` of `String` values holds the IDs of the HTML elements that hide initially and are shown if they do not have a value after the visitor has provided an email address and company name. *Do not put the empty string (`''`) in this array.*
 
 Ideally, the HTML markup will have an element with an `id` that wraps both the `input` element and it's label.  If there is no wrapper element, it may be required to also specify the ID of the label element.  Alternatively, the `getToggleElement` function can be passed to the `connect` function to define the relationship between `toggleFieldList` and the HTML elements to show and hide.
 
