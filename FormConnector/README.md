@@ -8,6 +8,7 @@
 * [Configuration Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#configuration-options)
   * [Growing Form Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#growing-form-options)
   * [Testing](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#testing-options)
+  * [Styling the Company Autocomplete Menu](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#styling-the-company-autocomplete-menu)
   * [Hook Functions](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#hook-functions)
 * [Support](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#support)
 * [Release Notes](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#release-notes)
@@ -211,11 +212,7 @@ return this.djq('#'+id).val();
 **Deprecated** (*Default:* `true`)
 *This was replaced by the `_areToggleFieldsVisible` function which automatically detects if the elements specified by `toggleFieldList` / `getToggleElement` are visible.
 
-~~This Boolean flag tells the Form Connector whether or not the toggling fields are currently shown.  This should be `true` to start, which triggers hiding of the fields when the page loads.
-
-Only set to `false` if the fields in `toggleFieldList` are created as hidden fields in your form system.
-
-**Note:** Additional CSS/layout/styling may be required when showing fields that are setup as hidden fields in your form processor.~~
+~~This Boolean flag tells the Form Connector whether or not the toggling fields are currently shown.  This should be `true` to start, which triggers hiding of the fields when the page loads. Only set to `false` if the fields in `toggleFieldList` are created as hidden fields in your form system.~~
 
 ##Advanced Options
 ####fieldPrefix
@@ -229,7 +226,7 @@ Example: you may want to set `fieldSuffix:'__c'` if your form process fields are
 ####autocompleteLabel
 *Optional* (*Default:* `'{marketing_alias} ({city}, {state})'`)
 Allows you to changes the fields, format, and layout that appear in the Company Autocomplete Widget's list of suggested companies.
-The style of the list can also be customized using CSS.  For more details, see: [Company Autocomplete Widget Documentation](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_Company_Autocomplete_Widget).
+The style of the list can also be customized using CSS.  For details, see: [Styling the Company Autocomplete Menu](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#styling-the-company-autocomplete-menu).
 
 This can also be a function passed to the `connect` function.
 In this example, the autocomplete list shows the zip code when available and the country name for countries without postal codes.
@@ -310,7 +307,7 @@ This rule places a thin black border around the entire menu:
 
 ```
 <style type='text/css'>
-     #demandbase-autocomplete #demandbase-company-autocomplete-widget .ui-widget   {
+     #demandbase-autocomplete #demandbase-company-autocomplete-widget .ui-widget {
         border-color: black;
         border-style: solid;
         border-width: 1px;
@@ -334,14 +331,16 @@ This is shown to provide an example of IDs and classes available for use in CSS 
 </div>
 ```
 
-**Do not place this HTML in your page.** *It's automatically rendered when the visitor enters 2 or more characters in the company field.*
+**Do not place this HTML in your page.**  *It's automatically rendered when the visitor enters 2 or more characters in the company field.*
 
 ##Hook Functions
 Extend the functionality of the Form Connector (or have it trigger additional operations) by defining these functions in your implementation snippet.  These functions are never required and should be defined globally.  None of the functions return a value, but they do have parameters, and they can modify static members of the `Demandbase.Connectors.WebForm` class.
-a
+
 In each function the `data` parameter represents the JSON object of the Company Profile being parsed.  The `source` parameter will be the lowercase String representation of the API providing `data` ('ip', 'domain' or 'company').
 
 When implementing hook functions, you may need to familiarize yourself with the `Demandbase.Connectors.WebForm` class.  For a complete technical reference, see [http://www.demandbaselabs.com/docs/form_connector](http://www.demandbaselabs.com/docs/form_connector).
+
+Hook functions are implemented within the configuration snippet, and are placed within the `dbAsyncInit` function.
 
 ###db_hook_init()
 Runs at the end of the `init` function, which is called on DOM ready.  Accepts no parameters.
