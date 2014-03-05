@@ -3,13 +3,12 @@ window.dbAsyncInit = function() {
     /*Form Connector Configuration*/
     var dbf = Demandbase.Connectors.WebForm;
     dbf.connect({
-        emailID: "ID_OF_EMAIL_FIELD",   /*must be ID*/
+        emailID: "ID_OF_EMAIL_FIELD",     /*must be ID*/
         companyID: "ID_OF_COMPANY_FIELD", /*must be ID*/
         key: 'YOUR_KEY_HERE',
         toggleFieldList: ['fieldIDsGoHere'],
-        /* These can be name or ID */
         fieldMap: {
-            'company_name': '',
+            'company_name': '', /* These can be name or ID */
             'industry': '',
             'sub_industry': '',
             'primary_sic': '',
@@ -40,8 +39,13 @@ window.dbAsyncInit = function() {
             'audience_segment': ''
         }
     });
+    /**
+        'db_hook_' function implementations go here
+        Optional - define further functionality here, if needed
+    **/
 };
-/* 'db_hook_' function implementations go here */
+
+
 
 (function() {
     /*Retrieve Form Connector core file from the cloud*/

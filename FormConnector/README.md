@@ -13,7 +13,7 @@
 * [Release Notes](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#release-notes)
 
 #Functionality Overview
-The Demandbase Form Connector provides any easy-to-deploy, light-weight solution for adding the Demandbase Form Module to your web forms.  
+The Demandbase Form Connector provides any easy-to-deploy, light-weight solution for adding the Demandbase Form Module to your web forms.
 
 ##Key Features
 * Demandbae Real-Time Identification capabilities using 3-tier company idenification (by IP address, email domain, and company autocomplete, includes automatic ISP filtering)
@@ -43,12 +43,13 @@ The Demandbase Form Connector provides any easy-to-deploy, light-weight solution
 To add the Demandbase Form Connector to your web forms:
 
 1. Replace "Email" and "Company" in the snippet below with the actual IDs from the email and company fields on your form.
-2. Add your Demandbase key 
-3. Create hidden fields on your form for the attributes you wish to capture.  
+2. Add your Demandbase key
+3. Create hidden fields on your form for the attributes you wish to capture.
   * Use our default `db_[api_name]` naming convention to automatically map fields, or
   * Map to existing hidden or visible fields using the `fieldMap`
-4. Place the entire snippet to the `head` or top of the `body` of your HTML.
-5. Optionally, define additional functionality by sending additional parameters to the `connect` function.  
+4. Place the entire snippet in the `head` or top of the `body` of your HTML.
+  * *Tag placement may vary based on your Marketing Automation System or form processor.*
+5. Optionally, define additional functionality by sending additional parameters to the `connect` function or adding hook functions.
   * See [Configuration Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#configuration-options) for a full list of options and associated functionality.
 
 ```
@@ -56,22 +57,27 @@ To add the Demandbase Form Connector to your web forms:
     window.dbAsyncInit = function() {
         var dbf = Demandbase.Connectors.WebForm;
         dbf.connect({
-            emailID: "Email",     
+            emailID: "Email",
             companyID: "Company",
             key: 'YOUR_KEY_HERE'
         });
     };
 
     (function() {
-        var dbt = document.createElement('script'); dbt.type = 'text/javascript'; 
+        var dbt = document.createElement('script'); dbt.type = 'text/javascript';
         dbt.async = true; dbt.id = 'demandbase-form';
-        dbt.src = ('https:'==document.location.protocol?'https://':'http://')+'scripts.demandbase.com/formWidget.js'; 
+        dbt.src = ('https:'==document.location.protocol?'https://':'http://')+'scripts.demandbase.com/formWidget.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(dbt, s);
     })();
 </script>
 ```
 
-In this basic implementation, `Email` is the `id` of the the user-facing email field, and `Company` is the `id` of the user-facing company field.  This simplified example assumes that any hidden fields captured uses the standard `db_[api_name]` naming convention.  See **Configuration Options** for `fieldMap` for more on mapping to your existing fields.  See also `fieldPrefix` and `fieldSuffix` to establish your own naming convention.
+In this basic implementation, `Email` is the `id` of the the user-facing email field, and `Company` is the `id` of the user-facing company field.
+This simplified example assumes that any hidden fields captured uses the standard `db_[api_name]` naming convention.  See **Configuration Options** for `fieldMap` for more on mapping to your existing fields.  See also `fieldPrefix` and `fieldSuffix` to establish your own naming convention.
+
+**The Form Connector is compatible with all form processors and marketing automation systems that allow adding JavaScript to form pages.**
+
+Specific instructions for the most commonly used systems are provided here.
 
 ##Marketo Integration
 
@@ -93,7 +99,7 @@ Configuration options are provided to the Form Connector using the `connect` fun
 
 For a further details see our [detailed technical specification](http://www.demandbaselabs.com/docs/form_connector) of the `Demandbase.Connectors.WebForm` class.
 
-###Common/Required Parameters
+##Common/Required Parameters
 ####key
 *Required* - This is your Demandbase authentication token.
 ####companyID
@@ -105,7 +111,7 @@ For a further details see our [detailed technical specification](http://www.dema
 
 Hidden fields are automatically created for each attribute using the default naming convention `db_[api_name]` if nothing is specified in `fieldMap`.
 
-To establish (or match-to) your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  This tells the Connector to build/populate hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.  
+To establish (or match-to) your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  This tells the Connector to build/populate hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.
 
 This example of using the `connect` function with `fieldMap` uses field names typically seen in Marketo:
 ```
@@ -113,7 +119,7 @@ This example of using the `connect` function with `fieldMap` uses field names ty
     window.dbAsyncInit = function() {
         var dbf = Demandbase.Connectors.WebForm;
         dbf.connect({
-            emailID: "Email",     
+            emailID: "Email",
             companyID: "Company",
             key: 'YOUR_KEY_HERE',
             fieldMap: {
@@ -137,9 +143,9 @@ This example of using the `connect` function with `fieldMap` uses field names ty
     };
 
     (function() {
-        var dbt = document.createElement('script'); dbt.type = 'text/javascript'; 
+        var dbt = document.createElement('script'); dbt.type = 'text/javascript';
         dbt.async = true; dbt.id = 'demandbase-form';
-        dbt.src = ('https:'==document.location.protocol?'https://':'http://')+'scripts.demandbase.com/formWidget.js'; 
+        dbt.src = ('https:'==document.location.protocol?'https://':'http://')+'scripts.demandbase.com/formWidget.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(dbt, s);
     })();
 </script>
@@ -148,7 +154,7 @@ For a full list of available attributes, please visit the [Demandbase API Docume
 
 **Tip**: Do not use `fieldMap` to map to the user-facing company field.  This will cause the company field to be pre-filled and discourage the user from using the Company Autocomplete Widget, hence forgoing a valuable chance for company identification/verification.  Instead, **always have a second (hidden) field** for the company name provided by Demandbase.  *This way you will always have the company name that matches the company profile provided by Demandbase*, regardless of what the user types in the company name field.
 
-###Growing Form Options
+##Growing Form Options
 Growing or "expanding" form functionality can be implemented on any form.  The default `getToggleElement` and `getToggleFieldValue` functions work best with Eloqua-generated markup, and they can easily be set to work with Marketo form markup or any other system.
 
 ####toggleFieldList
@@ -159,20 +165,20 @@ Ideally, the HTML markup will have an element with an `id` that wraps both the `
 
 Fields in this list are hidden by the Form Connector when the page loads, and **must be created as visible fields on your form**.  The `_areToggleFieldsVisible` function handles hiding fields when the page loads.
 
-####getToggleElement 
+####getToggleElement
 *Optional (Required in some cases)*
 
-*Default:* 
+*Default:*
 ```
 function(id) {
     return this.djq('#' + id);
 }
 ```
-This function defines the relationship between the IDs listed in `toggleFieldList` and the actual HTML elements that need to be hidden.  In some cases the HTML markup will have an ID on an element that wraps both the input field and it's label.  
+This function defines the relationship between the IDs listed in `toggleFieldList` and the actual HTML elements that need to be hidden.  In some cases the HTML markup will have an ID on an element that wraps both the input field and it's label.
 
 For Eloqua forms list the IDs such as `["formElement1", "formElement2"]`, which are the IDs of the wrapper `div` elements, not the `input` elements themselves.  In this case it is not necessary to set `getToggleElement`.
 
-For Marketo forms, the parent list element that wraps the field and it's label does not have an `id`, so the `getToggleElement` function must be overridden to: 
+For Marketo forms, the parent list element that wraps the field and it's label does not have an `id`, so the `getToggleElement` function must be overridden to:
 ```
 function(id) {
     return this.djq('#' + id).parents('li');
@@ -182,7 +188,7 @@ Your Demandbase Consultant can assist you with properly defining this function.
 
 ####getToggleFieldValue
 *Optional (Required in some cases)*
-This function returns the value of a toggling field.  The function defines the relationship between the string values (typicaclly IDs) in the `toggleFieldList` and the HTML element that holds the field value (usually an `input` or `select` element).   
+This function returns the value of a toggling field.  The function defines the relationship between the string values (typicaclly IDs) in the `toggleFieldList` and the HTML element that holds the field value (usually an `input` or `select` element).
 
 By default, this will use a descending selector to look for the value of a child `input` or `select` element.
 ```
@@ -207,14 +213,14 @@ return this.djq('#'+id).val();
 
 ~~This Boolean flag tells the Form Connector whether or not the toggling fields are currently shown.  This should be `true` to start, which triggers hiding of the fields when the page loads.
 
-Only set to `false` if the fields in `toggleFieldList` are created as hidden fields in your form system.  
+Only set to `false` if the fields in `toggleFieldList` are created as hidden fields in your form system.
 
 **Note:** Additional CSS/layout/styling may be required when showing fields that are setup as hidden fields in your form processor.~~
 
-###Advanced Options
+##Advanced Options
 ####fieldPrefix
 *Optional* (*Default:* `'db_'`)
-To establish or match-to your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  The Connector will  build hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.  
+To establish or match-to your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  The Connector will  build hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.
 ####fieldSuffix
 *Optional* (*Default:* `''`)
 To establish or match-to your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  The Connector will  build hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.
@@ -222,14 +228,28 @@ To establish or match-to your own naming convention, use the `fieldPrefix` *and/
 Example: you may want to set `fieldSuffix:'__c'` if your form process fields are also mapped to Salesforce fields.
 ####autocompleteLabel
 *Optional* (*Default:* `'{marketing_alias} ({city}, {state})'`)
-Allows you to changes the fields, format, and layout that appear in the Company Autocomplete Widget's list of suggested companies.  
+Allows you to changes the fields, format, and layout that appear in the Company Autocomplete Widget's list of suggested companies.
 The style of the list can also be customized using CSS.  For more details, see: [Company Autocomplete Widget Documentation](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_Company_Autocomplete_Widget).
+
+This can also be a function passed to the `connect` function.
+In this example, the autocomplete list shows the zip code when available and the country name for countries without postal codes.
+
+```
+autocompleteLabel : function($, pick) {
+    var zip = pick.zip || ''
+    if(zip !== '') {
+        return '{marketing_alias} ({city}, ' + zip + ')';
+    } else {
+        return '{marketing_alias} ({city}, {country_name})';
+    }
+}
+```
 
 ####formNameList
 *Optional (Required in some cases)* (*Default:*`[]`)
-This is only required if there is more than one `form` element on the page.  By default the Form Connector will use the first form found in the DOM.  
+This is only required if there is more than one `form` element on the page.  By default the Form Connector will use the first form found in the DOM.
 
-If there are additional forms on the page, then define this `Array` of `String` values, listing the `name` of each form to use.  **Note: using `formNameList` does not mean that every form that uses the Connector needs to be listed by name. ** When `formNameList` is defined, the Connector will attempt to attach to the `form` elements whose names are in the list.  If no `form` matches the names in the list, then the first form in the DOM will still be used by default.  
+If there are additional forms on the page, then define this `Array` of `String` values, listing the `name` of each form to use.  **Note: using `formNameList` does not mean that every form that uses the Connector needs to be listed by name. ** When `formNameList` is defined, the Connector will attempt to attach to the `form` elements whose names are in the list.  If no `form` matches the names in the list, then the first form in the DOM will still be used by default.
 ####priorityMap
 *Optional*
 
@@ -241,16 +261,16 @@ priorityMap: {
     'company': 1
 }
 ```
-Defines which API's data set will contribute the Company Profile that gets submitted with the form when more than one API identifies the visitor's company.  **The highest number is the highest priority**.  
+Defines which API's data set will contribute the Company Profile that gets submitted with the form when more than one API identifies the visitor's company.  **The highest number is the highest priority**.
 
 Keeping the default priority is *strongly* recommended.
 
 **Note:** If two or more API's return the same company (as defined by `demandbase_sid`), then this will override the `priorityMap`.
 
-###Testing Options
+##Testing Options
 These options are for *testing only*, and they all are set to `false` by default.  These should only be set to true in development and QA environments.
 ####debug
-Show alert messages when errors occur.  
+Show alert messages when errors occur.
 **Note:** This can also be *temporarily overridden* on page load by adding `db_debug=true` to the page's URL query string string.
 ####logging
 Turns on verbose messaging in the browser console.
@@ -264,6 +284,58 @@ A `String` of the IP address to use to override the IP API's `query` parameter.
 ####showResult
 This will show a table below the form with all fields in the company profile each time a new data set is parsed.
 
+##Styling the Company Autocomplete Menu
+You can customize the look and feel of the Company Autocomplete menu using CSS rules. The Company Autocomplete menu has custom IDs and follows the styling instructions found in the official jQuery UI Theming documentation.
+
+###Sample CSS Rules
+Some form systems will have CSS rules that override the styles of the autocomplete menu.  The most common example is the alignment of items in an unordered list.
+
+This rule ensures the menu items are left-aligned:
+
+```
+<style type='text/css'>
+   #demandbase-autocomplete { text-align: left; }
+</style>
+```
+
+This example sets the default font size of the widget drop-down menu results:
+
+```
+<style type='text/css'>
+   #demandbase-autocomplete { font-size: small; }
+</style>
+```
+
+This rule places a thin black border around the entire menu:
+
+```
+<style type='text/css'>
+     #demandbase-autocomplete #demandbase-company-autocomplete-widget .ui-widget   {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+     }
+</style>
+```
+
+###Sample HTML Markup
+This is the markup rendered when the autocomplete menu shows.
+This is shown to provide an example of IDs and classes available for use in CSS selectors.
+
+```
+<div id="demandbase-autocomplete">
+   <div id="demandbase-company-autocomplete-widget" class="demandbase-company-autocomplete ui-widget">
+      <ul class="demandbase-company-autocomplete ui-autocomplete ui-menu ui-widget ui-widget-content ui-corner-all role="listbox” aria-activedescendant="ui-active-menuitem">
+         <li class="ui-menu-item" role="menuitem">
+            <a class="ui-corner-all" tabindex="-1">Demandbase (San Francisco, CA)</a>
+         </li>
+      </ul>
+   </div>
+</div>
+```
+
+**Do not place this HTML in your page.** *It's automatically rendered when the visitor enters 2 or more characters in the company field.*
+
 ##Hook Functions
 Extend the functionality of the Form Connector (or have it trigger additional operations) by defining these functions in your implementation snippet.  These functions are never required and should be defined globally.  None of the functions return a value, but they do have parameters, and they can modify static members of the `Demandbase.Connectors.WebForm` class.
 a
@@ -276,7 +348,7 @@ Runs at the end of the `init` function, which is called on DOM ready.  Accepts n
 ###db_hook_before_parse(data, source)
 Runs whenever an API returns data, but is subject to the ISP filter (see `filterISP`).  This function runs before a data set can be filtered by the `priorityMap`.
 ###db_hook_after_parse(data, source)
-Runs after a new API response has been parsed.  This can be used to trigger extended functionality each time a new overriding data set is detected. 
+Runs after a new API response has been parsed.  This can be used to trigger extended functionality each time a new overriding data set is detected.
 ###db_hook_attr(source, attr, val)
 Runs for each attribute while iterating through each attribute in a new overriding data set.  `attr` is the Demandbase API name of the attribute; `val` is the value of that attribute.
 ###db_hook_no_id()
