@@ -18,7 +18,7 @@ For the latest public **production** build, visit: https://drupal.org/project/de
 
 #Resources
 For a full walkthrough of setup and usage, visit:
-http://wiki.demandbaselabs.com/mwiki/index.php?title=Demandbase_Drupal_Connector
+http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_Drupal_Connector
 
 #Usage
 IMPORTANT: Set the demandbase key at admin/config/services/demandbase
