@@ -123,7 +123,7 @@ add_action('admin_menu', 'demandbase_admin_actions');
  * 
  * @return $result		A PHP flattened array of the values returned by the Demandbase servers
  */
-function flatten($array, $prefix = '') {
+function flatten($array = [], $prefix = '') {
     $result = array();
     foreach($array as $key=>$value) {
         if(is_array($value)) {
