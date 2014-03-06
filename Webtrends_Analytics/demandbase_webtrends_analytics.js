@@ -10,7 +10,7 @@ Demandbase.Connectors.Webtrends_Analytics = {
     fields:["audience","audience_segment","company_name","industry","sub_industry","revenue_range","employee_range","demandbase_sid","ip","fortune_1000","forbes_2000","b2b","b2c","city","state","zip","country"],
     /* Done customizing!  Don't touch the stuff below.  */
     tags:[], /* Array of variables (custom measures) to send */
-    version:'2.0',
+    version:'2.1',
     CompanyProfile: null,
     logging: true, /* logs activity to browser console */
     track:function(data) {
