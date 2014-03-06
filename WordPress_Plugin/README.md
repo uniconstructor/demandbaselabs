@@ -32,27 +32,16 @@ From the left admin navigation, see *Demandbase > How To*.
 
 #Release Notes
 
-##v1.10
-Feb 4, 2014
-* Added shortcode builder to all post/page editing
+##v1.0
+**March 2014** - First public release available on [WordPress.org](http://wordpress.org/plugins/demandbase-content-module)
 
-##v1.03
-Feb 3, 2014
+* Added shortcode builder to all post/page editing
 * Added jQuery support in plugin
 * Added db_main.js
 * Added JavaScript visual form feedback to prevent usage errors
 * Fixed up cleaning for POSTed data from Admin portal
-
-##v1.02
-Jan 24, 2014
 * Entitlements function calls use the Demandbase IP address instead of visitor
-
-##v1.01
-Jan 23, 2014
 * Added field and checkbox for admin to specify custom testing IP address
-
-##v1.0
-Jan 22, 2014
 * First version with complex short code wrappings, admin interface, and other useful behavior as close to spec as possible
 * Written by Anthony Palazzetti for Demandbase, Inc (apalazzetti[at]demandbase[dot]com)
 
