@@ -32,15 +32,15 @@ From the left admin navigation, see *Demandbase > How To*.
 
 The Settings page allows for simulating a visitor's company using a simple drop down list or by entering an IP address.
 
-https://www.evernote.com/shard/s100/sh/6a117ec2-f714-45d7-a8eb-bf2dfae7d598/d83797595e0c144ecf27041400fda84a/deep/0/Screenshot%203/6/14,%2012:23%20PM.jpg
+<img src='https://www.evernote.com/shard/s100/sh/6a117ec2-f714-45d7-a8eb-bf2dfae7d598/d83797595e0c144ecf27041400fda84a/deep/0/Screenshot%203/6/14,%2012:23%20PM.jpg' />
 
 Shortcodes are used to conditionally display content blocks or to dynamic insert company profile attribute values.
 
-https://www.evernote.com/shard/s100/sh/a2bc222c-2022-4b26-a309-05ecfcc63e7e/c3035e33709c2ecd290cdb113c7d0a0a/deep/0/Screenshot%203/6/14,%2012:41%20PM.jpg
+<img src='https://www.evernote.com/shard/s100/sh/a2bc222c-2022-4b26-a309-05ecfcc63e7e/c3035e33709c2ecd290cdb113c7d0a0a/deep/0/Screenshot%203/6/14,%2012:41%20PM.jpg' />
 
 An easy-to-use shortcode builder is added to the bottom of the page editor to help you build shortcodes and insert them into the page editor.
 
-https://www.evernote.com/shard/s100/sh/ab95d4a2-1258-4985-a5c6-67c96a9f0e64/178792f7731474f064daeffac3a52587/deep/0/Screenshot%203/6/14,%2012:44%20PM.jpg
+<img src='https://www.evernote.com/shard/s100/sh/ab95d4a2-1258-4985-a5c6-67c96a9f0e64/178792f7731474f064daeffac3a52587/deep/0/Screenshot%203/6/14,%2012:44%20PM.jpg' />
 
 #Release Notes
 
