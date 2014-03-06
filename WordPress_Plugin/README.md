@@ -1,24 +1,40 @@
 #Demandbase Plugin for Wordpress
 
-Demandbase Content Module for creating and targeting content based on visitor attributes and segments.
+The Demandbase Plugin for Wordpress is part of Demandbase's Web Optimization Suite.
+The Content Module is used to personalize and target content based on a visitor's company profile.
+
+##Latest Production Version
+The latest production version is availble via [WordPress.org](http://wordpress.org/plugins/demandbase-content-module/)
+
+##Development Version
+This repository contains the latest development build.
+
+##Prerequisites
+* Requires Demandbase Content Module license
+* WordPress v3.0.1 or higher
+* Compatible upto WordPress v3.81
 
 #Installation
+For complete installation instructions, see http://wordpress.org/plugins/demandbase-content-module/installation/.
 
-1. If you have an existing Demandbase WordPress plugin, you MUST uninstall it before installing this one.
-2. From your WordPress dashboard, go to *"Plugins->Add New"*.
-3. Install via upload, then activate the plugin.
-4. You must set your API key after installation. To do this, click *"Demandbase"* on the left admin navigation bar.
+1. If you have an existing Demandbase WordPress plugin, you **must** uninstall it before installing this one.
+2. From your WordPress dashboard, go to *Plugins > Add New*.
+3. [Download the latest production version](http://downloads.wordpress.org/plugin/demandbase-content-module.zip)
+4. Install by uploading the `.zip` file, then activate the plugin.
+5. After installation enter your Demandbase Content Module key.
+  * Click *Demandbase* on the left admin navigation bar.
+  * Copy paste your key into the *Demandbase API Key* text box, then click *Save Changes*
 
 #Usage
 
-Instructions are available via the interface after install on the "Demandbase->How To" page.
-
+Once installed, instructions are available within the plug-in.
+From the left admin navigation, see *Demandbase > How To*.
 
 #Release Notes
 
 ##v1.10
 Feb 4, 2014
-- Added shortcode builder to all post/page editing
+* Added shortcode builder to all post/page editing
 
 ##v1.03
 Feb 3, 2014
@@ -29,7 +45,7 @@ Feb 3, 2014
 
 ##v1.02
 Jan 24, 2014
-* Made entitlements function calls use the Demandbase IP address instead of visitor
+* Entitlements function calls use the Demandbase IP address instead of visitor
 
 ##v1.01
 Jan 23, 2014
