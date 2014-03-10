@@ -1,4 +1,3 @@
-
 Demandbase JavaScript SDK
 ==============
 
@@ -317,8 +316,13 @@ Queries the Domain API using the key defined in __db.key.
 <!-- TODO: examples of using CompanyProfile, load,  -->
 
 ##Testing
-To simulate a visit from a particular IP address, add `db_ip` as a query string parameter to the URL of a page using the library.
-For example to simulate General Electric visiting `http://mysite.com/index.html`, use `http://www.mysite.com/index.html?db_ip=3.0.0.1`.
+To simulate a visit from a particular IP address, add `db_ip=[ip]` as a query string parameter to the URL of a page using the library, then set the `db_useTesIp` query string parameter to `true` to activate IP simulation..
+
+For example to simulate General Electric visiting `http://mysite.com/index.html`, use:
+
+```
+http://www.mysite.com/index.html?db_ip=3.0.0.1&db_useTestIp=true
+```
 
 ###Debug Version
 A debug version of the library is available as well.  Change the source URL to `scripts.demandbase.com/demandbase-sdk-debug.js`.  This will enable console logging, debugging alerts, and load an un-compiled version of the library.
