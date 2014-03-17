@@ -34,6 +34,7 @@ The Demandbase Form Connector provides any easy-to-deploy, light-weight solution
 #Getting Started
 1. Decide which Demandbase attributes to capture and whether they'll be hidden fields, growing fields, or visible fields.  Then, complete a Form Design Reference document (available from your Customer Success Manager).
 2. Create a test form and landing page.  (It's best to use a single, reusable form and landing page template, if possible.)
+  * This typically involves cloning one of your existing page *and* adding hidden fields for the Demandbase attributes you wish to capture.
 3. Configure your Connector JS snippet using this guide. (The initial configuration is typically provided by the Demandbase Consulting Services team).
 4. Add your configured Form Connecor JS Snippet to your landing page.
 5. Test and Deploy.
