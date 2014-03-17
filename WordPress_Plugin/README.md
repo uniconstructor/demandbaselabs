@@ -15,7 +15,10 @@ This repository contains the latest development build.
 * Compatible upto WordPress v3.81
 
 #Installation
-For complete installation instructions, see http://wordpress.org/plugins/demandbase-content-module/installation/2. From your WordPress dashboard, go to *Plugins > Add New*.
+For complete installation instructions, see http://wordpress.org/plugins/demandbase-content-module/installation/
+
+1. If you have an existing Demandbase WordPress plugin, you **must** uninstall it before installing this one.
+2. From your WordPress dashboard, go to *Plugins > Add New*.
 3. [Download the latest production version](http://downloads.wordpress.org/plugin/demandbase-content-module.zip)
 4. Install by uploading the `.zip` file, then activate the plugin.
 5. After installation enter your Demandbase Content Module key.
