@@ -167,6 +167,14 @@ Ideally, the HTML markup will have an element with an `id` that wraps both the `
 
 Fields in this list are hidden by the Form Connector when the page loads, and **must be created as visible fields on your form**.  The `_areToggleFieldsVisible` function handles hiding fields when the page loads.
 
+Pass `{force:true}` to override `toggleEmptyFieldsOnly` setting.
+
+###toggleEmptyFieldsOnly
+*Optional* (*Default:* `true`)
+When `true` only the fields in `toggleField` list that do not have a value will be shown.  (Those fields whose `getToggleFieldValue` function returns empty or null will be shown.)
+
+Set to `false` to toggle all fields every time.
+
 ####getToggleElement
 *Optional (Required in some cases)*
 
@@ -243,6 +251,11 @@ autocompleteLabel : function($, pick) {
 }
 ```
 
+####autocompletePlaceholder
+*Optional* (*Default:* 'To Select, begin typing.')
+Sets the placeholder text on the company name input field (as specified by `companyID`).
+Note: this HTML5 feature may not be supported in all browsers.
+
 ####formNameList
 *Optional (Required in some cases)* (*Default:*`[]`)
 This is only required if there is more than one `form` element on the page.  By default the Form Connector will use the first form found in the DOM.
@@ -283,7 +296,10 @@ A `String` of the IP address to use to override the IP API's `query` parameter.
 This will show a table below the form with all fields in the company profile each time a new data set is parsed.
 
 ##Styling the Company Autocomplete Menu
-You can customize the look and feel of the Company Autocomplete menu using CSS rules. The Company Autocomplete menu has custom IDs and follows the styling instructions found in the official jQuery UI Theming documentation.
+You can customize the look and feel of the Company Autocomplete menu using CSS rules.
+The Company Autocomplete menu has custom IDs and follows the styling instructions found in the official jQuery UI Theming documentation.
+
+To change the contents of the each autocomplete entry or the placeholder text, see: `autocompleteLabel` and `autocompletePlaceholder` in [Advanced Options](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#advanced-options).
 
 ###Sample CSS Rules
 Some form systems will have CSS rules that override the styles of the autocomplete menu.  The most common example is the alignment of items in an unordered list.
@@ -361,10 +377,13 @@ This function runs after all APIs have been queried, typically after the visitor
 
 For feature requests, bug fixes, or questions on configuration, email: [support@demandbase.com](mailto:support@demandbase.com)
 
-#Release Notes
-##v1.0 (February 2014)
-* Introduced hosted Form Connector solution with simplified deployment and completely asynchronous integration.
-* Provides complete backwards-compatibility with implementation using legacy `demandbaseFormStd.js` and beta `demandbaseForm.js`.  **Talk to your Demandbase Consultant or Customer Success Manager for information about upgrades.**
+#Release Notes)
+##v1.2 (March 24, 2014)
+* Growing Form Enhancement
+  * Added `toggleEmptyFieldsOnly` configuration option, defaults to `false`.  Fields in `toggleFieldList` will only be shown if their `getToggleFieldValue` function returns null or empty.
+  * Set `toggleEmptyFieldsOnly` to `false` to show all fields when `toggleFields` runs.
+* Upgraded to jQuery 1.7.1 and Sizzle 1.10.19
+* Added `autocompletePlaceholder` configuration option.
 
 ##v1.1 (February 2014)
 * Marketo Forms 2.0 Support
@@ -375,4 +394,9 @@ For feature requests, bug fixes, or questions on configuration, email: [support@
   * Removed from `connect` function
   * `toggleFields` checks visibility of each element, rather than using `areToggleFieldsVisible` property.
 * Added `hasOwnProperty` checks in all `for...each` loops to support prototypal inheritance by other libraries.
+
+##v1.0 (February 2014)
+* Introduced hosted Form Connector solution with simplified deployment and completely asynchronous integration.
+* Provides complete backwards-compatibility with implementation using legacy `demandbaseFormStd.js` and beta `demandbaseForm.js`.  **Talk to your Demandbase Consultant or Customer Success Manager for information about upgrades.**
+
 
