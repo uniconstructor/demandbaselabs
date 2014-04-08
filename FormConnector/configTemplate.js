@@ -8,35 +8,35 @@ window.dbAsyncInit = function() {
         key: 'YOUR_KEY_HERE',
         toggleFieldList: ['fieldIDsGoHere'],
         fieldMap: {
-            'company_name': '', /* These can be name or ID */
-            'industry': '',
-            'sub_industry': '',
-            'primary_sic': '',
-            'revenue_range': '',
-            'annual_sales': '',
-            'employee_range': '',
-            'employee_count': '',
-            'street_address': '',
-            'city': '',
-            'state': '',
-            'zip': '',
-            'country': '',
-            'country_name': '',
-            'latitude': '',
-            'longitude': '',
-            'phone': '',
-            'web_site': '',
-            'stock_ticker': '',
-            'traffic': '',
-            'b2b': '',
-            'b2c': '',
-            'fortune_1000': '',
-            'forbes_2000': '',
-            'duns_num': '',
-            'demandbase_sid': '',
-            'data_source': '',
-            'audience': '',
-            'audience_segment': ''
+            'company_name': '' /* These can be name or ID */
+            ,'industry': ''
+            ,'sub_industry': ''
+            ,'primary_sic': ''
+            ,'revenue_range': ''
+            ,'annual_sales': ''
+            ,'employee_range': ''
+            ,'employee_count': ''
+            ,'street_address': ''
+            ,'city': ''
+            ,'state': ''
+            ,'zip': ''
+            ,'country': ''
+            ,'country_name': ''
+            ,'latitude': ''
+            ,'longitude': ''
+            ,'phone': ''
+            ,'web_site': ''
+            ,'stock_ticker': ''
+            ,'traffic': ''
+            ,'b2b': ''
+            ,'b2c': ''
+            ,'fortune_1000': ''
+            ,'forbes_2000': ''
+            ,'duns_num': ''
+            ,'demandbase_sid': ''
+            ,'data_source': ''
+            ,'audience': ''
+            ,'audience_segment': ''
         }
     });
     /**
