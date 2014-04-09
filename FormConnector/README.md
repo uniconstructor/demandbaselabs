@@ -106,14 +106,24 @@ For a further details see our [detailed technical specification](http://www.dema
 *Required* - This is your Demandbase authentication token.
 ####companyID
 *Required* - This is the `id` of the *user-facing* (visible) company field, typically an `input` element.  This tells the Company Autocomplete Widget where to show the auto-suggest list of companies.  This will also trigger API calls based on user interactions with this field.
+
+**Eloqua 10 Users** may choose to assign the HTML `name` to this property, rather than `id`.  Eloqua 10 changes the ID when fields are reordered on a form.
+
 ####emailID
 *Required* - This is the `id` of the user-facing email field, typically an `input` element.  This tells the Company Autocomplete Widget where the user's email address is entered.  A call to the Domain API is triggered based on user interactions with this field.
+
+**Eloqua 10 Users** may choose to assign the HTML `name` to this property, rather than `id`.  Eloqua 10 changes the ID when fields are reordered on a form.
+
 ####fieldMap
-*Optional* - A JSON object used to map Demandbase attributes to input elements in the HTML.  The Demandbase API names on the left can be mapped to either the `id` (preferred) or the `name` of an HTML element.  If mapping by `name`, ensure your HTML does not have multiple elements with the same name.
+*Optional* - A JSON object used to map Demandbase attributes to input elements in the HTML.  The Demandbase API names on the left can be mapped to either the `id` (preferred) or the `name` of an HTML element.  
 
-Hidden fields are automatically created for each attribute using the default naming convention `db_[api_name]` if nothing is specified in `fieldMap`.
+**If mapping by `name`, ensure your HTML does not have multiple elements with the same name.**
 
-To establish (or match-to) your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  This tells the Connector to build/populate hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.
+Hidden fields are automatically created for each attribute using the default naming convention `db_[api_name]` if nothing (or the empty string) is specified in `fieldMap`.
+
+To establish (or match) your own naming convention, use the `fieldPrefix` *and/or* `fieldSuffix` parameters.  These tells the Connector to build/populate hidden fields with the naming convention `[fieldPrefix][api_name][fieldSuffix]`.  
+
+**Note: ** Attributes mapped using `fieldMap` will override the default naming convention as well as `fieldPrefix` and `fieldSuffix`, so both can be used if not all fields match the defined prefix/suffix.
 
 This example of using the `connect` function with `fieldMap` uses field names typically seen in Marketo:
 ```
@@ -377,7 +387,13 @@ This function runs after all APIs have been queried, typically after the visitor
 
 For feature requests, bug fixes, or questions on configuration, email: [support@demandbase.com](mailto:support@demandbase.com)
 
-#Release Notes)
+#Release Notes
+##v1.2.2 (April 9,2014)
+* **Eloqua 10 Support: ** `name` attribute is now supported for `companyID` and `emailID` properties.
+ * Provides easier support for forms with dynamic IDs (or no ID) on these `input` elements
+* **Bug Fix:** Added `encodeURIComponent` to IP API call to support page parameters with anchors, etc.
+* Removed `runTests` and `_attachUnitTests` (no longer required)
+
 ##v1.2 (March 24, 2014)
 * Growing Form Enhancement
   * Added `toggleEmptyFieldsOnly` configuration option, defaults to `false`.  Fields in `toggleFieldList` will only be shown if their `getToggleFieldValue` function returns null or empty.
