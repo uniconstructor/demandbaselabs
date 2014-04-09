@@ -389,7 +389,7 @@ For feature requests, bug fixes, or questions on configuration, email: [support@
 
 #Release Notes
 ##v1.2.2 (April 9,2014)
-* **Eloqua 10 Support: ** `name` attribute is now supported for `companyID` and `emailID` properties.
+* **Eloqua 10 Support:** `name` attribute is now supported for `companyID` and `emailID` properties.
  * Provides easier support for forms with dynamic IDs (or no ID) on these `input` elements
 * **Bug Fix:** Added `encodeURIComponent` to IP API call to support page parameters with anchors, etc.
 * Removed `runTests` and `_attachUnitTests` (no longer required)
