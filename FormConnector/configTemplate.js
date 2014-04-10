@@ -3,8 +3,8 @@ window.dbAsyncInit = function() {
     /*Form Connector Configuration*/
     var dbf = Demandbase.Connectors.WebForm;
     dbf.connect({
-        emailID: 'ID_OF_EMAIL_FIELD',     /*must be ID*/
-        companyID: 'ID_OF_COMPANY_FIELD', /*must be ID*/
+        emailID: 'ID_OR_NAME_OF_EMAIL_FIELD',     /* These can be name or ID */
+        companyID: 'ID_OR_NAME_OF_COMPANY_FIELD', 
         key: 'YOUR_KEY_HERE',
         toggleFieldList: ['fieldIDsGoHere'],
         fieldMap: {
