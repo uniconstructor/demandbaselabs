@@ -169,6 +169,14 @@ For a full list of available attributes, please visit the [Demandbase API Docume
 ##Growing Form Options
 Growing or "expanding" form functionality can be implemented on any form.  The default `getToggleElement` and `getToggleFieldValue` functions work best with Eloqua-generated markup, and they can easily be set to work with Marketo form markup or any other system.
 
+###How to Setup a Growing Form
+
+1. Define `toggleFieldList` (an Array). List the `id` of each elements to hide/show.
+2. Manually run the `toggleFields` function, and observe which elements show and hide.  If the `input` and `label` elements both hide, skip to step 4, otherwise go to step 3.
+3. Define `getToggleElement` (a function).  Establish the relationship between the values in `toggleFieldList` and the actual elements to show/hide.
+4. Define `getToggleFieldValue` (a function).   Define the relationship between the values in `toggleFieldList` and the `value` attribute on the `input` element being set.
+5. To test, run `Demandbase.Connectors.WebForm.toggleFields({force:true})`.
+
 ####toggleFieldList
 *Optional* (*Default:* `[]`)
 This property defines the HTML elements which receive the "growing" form behavior.  This `Array` of `String` values holds the IDs of the HTML elements that hide initially and are shown if they do not have a value after the visitor has provided an email address and company name. *Do not put the empty string (`''`) in this array.*
@@ -179,7 +187,7 @@ Fields in this list are hidden by the Form Connector when the page loads, and **
 
 Pass `{force:true}` to override `toggleEmptyFieldsOnly` setting.
 
-###toggleEmptyFieldsOnly
+####toggleEmptyFieldsOnly
 *Optional* (*Default:* `true`)
 When `true` only the fields in `toggleField` list that do not have a value will be shown.  (Those fields whose `getToggleFieldValue` function returns empty or null will be shown.)
 
