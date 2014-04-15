@@ -396,7 +396,12 @@ This function runs after all APIs have been queried, typically after the visitor
 For feature requests, bug fixes, or questions on configuration, email: [support@demandbase.com](mailto:support@demandbase.com)
 
 #Release Notes
-##v1.2.2 (April 9,2014)
+##v1.2.4 (April 14, 2014)
+* **Bug Fix:** `_resetFields` plays nicely with new configuration options.
+* *Enhancement:* `_attachCompanyAPI` has better support for element names and leverages existing IDs.
+* *Enhancement:* `autocompletePlaceholder` will not replace existing placeholders.
+
+##v1.2.2 (April 9, 2014)
 * **Eloqua 10 Support:** `name` attribute is now supported for `companyID` and `emailID` properties.
  * Provides easier support for forms with dynamic IDs (or no ID) on these `input` elements
 * **Bug Fix:** Added `encodeURIComponent` to IP API call to support page parameters with anchors, etc.
