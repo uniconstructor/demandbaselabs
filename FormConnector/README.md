@@ -400,6 +400,7 @@ For feature requests, bug fixes, or questions on configuration, email: [support@
 * **Bug Fix:** `_resetFields` plays nicely with new configuration options.
 * *Enhancement:* `_attachCompanyAPI` has better support for element names and leverages existing IDs.
 * *Enhancement:* `autocompletePlaceholder` will not replace existing placeholders.
+* *Enhancement:* added some more friendly console logging for API priority.
 
 ##v1.2.2 (April 9, 2014)
 * **Eloqua 10 Support:** `name` attribute is now supported for `companyID` and `emailID` properties.
