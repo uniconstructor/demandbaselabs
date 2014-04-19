@@ -1,7 +1,14 @@
 #Demandbase Google Analytics Connector
 Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 
+#Google Tag Manager
 Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/) for optimal flexibility.
+
+##Setup Guide for Google Tag Manager
+
+1.
+2.
+3.
 
 #Before You Begin
 * Obtain Administrator access to Google Analytics
