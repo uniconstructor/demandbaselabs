@@ -6,9 +6,14 @@ Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/)
 
 ##Setup Guide for Google Tag Manager
 
-1.
-2.
-3.
+1. Install Cloud Connector / Write to `dataLayer`
+2. Event `DB_Loaded`
+3. Event to write macros
+4. 
+
+###Resources
+
+
 
 #Before You Begin
 * Obtain Administrator access to Google Analytics
