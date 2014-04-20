@@ -8,7 +8,7 @@ Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/)
 
 1. Install Cloud Connector / Write to `dataLayer`
 2. Event `DB_Loaded`
-3. Event to write macros
+3. Tag to setup macros
 4. Macros Used in GA/UA Tag Setup
 
 ###Resources
