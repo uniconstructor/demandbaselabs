@@ -12,7 +12,7 @@ Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/)
 4. 
 
 ###Resources
-
+[FAQ](https://www.google.com/tagmanager/faq.html)
 
 
 #Before You Begin
