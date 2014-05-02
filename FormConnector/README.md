@@ -306,10 +306,10 @@ Turns on verbose messaging in the browser console.
 **Note:** This can also be *temporarily overridden* on page load by adding `db_logging=true` to the page's URL query string. string.
 ####useTestIp
 Tells the IP API override it's `query` parameter using the value set in `testIpAddress`.
-**Note:** This can also be *temporarily overridden* on page load by adding `db_useTestIp=true` to the page's URL query string.
+**Note:** *This option will not have an effect on the autocomplete dropdown.* This can also be *temporarily overridden* on page load by adding `db_useTestIp=true` to the page's URL query string.
 ####testIpAddress
 A `String` of the IP address to use to override the IP API's `query` parameter.
-**Note:** This can also be *temporarily overridden* on page load by adding `db_ip=3.0.0.1` (any IP address can be used) to the page's URL query string.  If set in the query string, this will override the static value of `testIpAddress`.
+**Note:** *This option will not have an effect on the autocomplete dropdown.* This can also be *temporarily overridden* on page load by adding `db_ip=3.0.0.1` (any IP address can be used) to the page's URL query string.  If set in the query string, this will override the static value of `testIpAddress`.
 ####showResult
 This will show a table below the form with all fields in the company profile each time a new data set is parsed.
 
