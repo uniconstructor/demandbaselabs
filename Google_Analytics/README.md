@@ -55,11 +55,11 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you should
 
 ###GTM Resources
 
-[Setting up Google Analytics Tags](https://support.google.com/tagmanager/answer/3281379?hl=en)
-[Tags, Rules, Macros, Data Layer](https://support.google.com/tagmanager/answer/3284009?hl=en)
-[More on Macros](https://support.google.com/tagmanager/answer/2644341?hl=en)
-[FAQ](https://www.google.com/tagmanager/faq.html)
-[Product Forum](https://productforums.google.com/forum/#!forum/tag-manager)
+* [Setting up Google Analytics Tags](https://support.google.com/tagmanager/answer/3281379?hl=en)
+* [Tags, Rules, Macros, Data Layer](https://support.google.com/tagmanager/answer/3284009?hl=en)
+* [More on Macros](https://support.google.com/tagmanager/answer/2644341?hl=en)
+* [FAQ](https://www.google.com/tagmanager/faq.html)
+* [Product Forum](https://productforums.google.com/forum/#!forum/tag-manager)
 
 
 #Installation
