@@ -45,7 +45,7 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you should
 4. Create Macros (in GTM) for each Demandbase attribute you wish to capture.
   * Each Demandbase attribute will have a corresponding Data Layer Variable.  Use "db_[api_variable_name]" in the "Data Layer Variable Name" field.
   * <img src="https://www.evernote.com/shard/s100/sh/3f2c5b4d-b07b-41d3-bddf-10204f8ef0c0/4387ce2e0851fc03a38574fa35d1f1b1/deep/0/Screenshot%205/5/14,%201:04%20PM.jpg" alt="Macro setup example"/>
-5. Now, create a *new* Universal Analytics tag.   This tag will send a Custom Event and assign Custom Dimensions using the Macros you created.
+5. Now, [create a *new* Universal Analytics tag](https://support.google.com/tagmanager/answer/3281379?hl=en).   This tag will send a Custom Event and assign Custom Dimensions using the Macros you created.
   * Under "Track Type", select "Event".
     * Use "Demandbase" / "API Resolution" / "IP Address API" as the category / action / label for your event.
     * SEt "Non-Interaction Hit" to `true`
@@ -54,7 +54,12 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you should
   * <img src="https://www.evernote.com/shard/s100/sh/e321d290-afef-4a41-b327-97a8b39fca8f/ebf52febf2f29032ee8d345490a3814e/deep/0/Screenshot%205/5/14,%201:29%20PM.jpg" alt="GTM tag setup" />
 
 ###GTM Resources
+
+[Setting up Google Analytics Tags](https://support.google.com/tagmanager/answer/3281379?hl=en)
+[Tags, Rules, Macros, Data Layer](https://support.google.com/tagmanager/answer/3284009?hl=en)
+[More on Macros](https://support.google.com/tagmanager/answer/2644341?hl=en)
 [FAQ](https://www.google.com/tagmanager/faq.html)
+[Product Forum](https://productforums.google.com/forum/#!forum/tag-manager)
 
 
 #Installation
