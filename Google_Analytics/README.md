@@ -1,14 +1,23 @@
 #Demandbase Google Analytics Connector
 Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 
+##Contents
+* [Before You Begin](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#before-you-begin)
+* [Configuration](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#configuration)
+* [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation)
+* [Google Tag Manager](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#google-tag-manager)
+* [Upgrading from Prior Versions](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#migrating-from-previous-versions)
+* [Release Notes](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#release-notes)
+
 #Before You Begin
 * Obtain Administrator access to Google Analytics
 * [Assess which version of GA you have](https://support.google.com/analytics/answer/4457764?hl=en) (either *Classic*, *Universal*, or *Premium*)
   * Demandbase highly recommends [switching to *Universal Analytics*](https://developers.google.com/analytics/devguides/collection/upgrade/) and using *Google Tag Manager* with this solution.
-* *Optional* - Install [GA Debugger Chrome extension](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna?hl=en)
+* *Recommended* - Install [Google Tag Assistant Chrome Extension](https://chrome.google.com/webstore/detail/tag-assistant-by-google/kejbdjndbnbjgmefkgdddjlbokphdefk?hl=en)
+* *Optional* - Install [GA Debugger Chrome Extension](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna?hl=en)
 * Check which (if any) Custom Variables/Custom Dimensions you are using in Google Analytics.
-  * Verify within your reports, or use the GA Debugger Chrome Extension.
-  * All new data sent to GA will be in addition to any data already in the system, so avoid re-using Custom Dimensions, if possible.
+  * Verify within your reports, or use your Chrome Extension(s).
+  * All new data sent to GA will be in addition to any data already in the system, so avoid re-using Custom Variables/Dimensions, if possible.
 
 #Configuration
 ## First Steps
@@ -20,19 +29,28 @@ Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
   * GA Classic users skip this step.
 
 ##Configuration Wizard
-* Visit the [Connector Setup Wizard](http://demandbaselabs.com/ga/) to configure and generate your connector.
+* Visit the [Connector Setup Wizard](http://demandbaselabs.com/cloud/) to configure and generate your connector.
 * Enter your key, select the attributes you wish to integrate.  (Make sure they're in the same order you created them in Universal Analytics)
 * Click *Generate*, then follow the [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation) steps.
 
 ##Manual Configuration
+**(Not Recommended)** - If you need a customized integration script, talk to your Demandbase Solutions Consultant.  Chances are we've solved the problem before and can provide you the code you need.
 * Add your Demandbase Analytics API key (replace 'YOUR_KEY_HERE' in the connector code).
 * Configure the `fields` JSON object according to the Custom Dimensions you've created in UA.
   * Use `watch_list_` as a prefix for any [Account Watch](http://demandbaselabs.com/docs/wiki/index.php?title=Account_Watch) attributes.
 
-##Google Tag Manager
+#Installation
+1. After receiving your configured script, test the code in a sandbox environment, if available.
+  * *Optional* - Within the connector code, set the `logging` property to `true` in your test environment.  This will show the connector's activities in the browser console for easy verification.
+2. Verify page tracking is functioning and Demandbase attributes are flowing into the appropriate Custom Dimensions/Variables.
+3. Place your script in the appropriate space on each analytics-enabled page.  In most cases, this will be added to a template page within your CMS or in your Tag Management System.
+4. If using [Google Tag Manager](https://www.google.com/tagmanager/), see [the Google Tag Manager instructions](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#google-tag-manager)
+  * If using another Tag Management System, talk to your Demandbase Solutions Consultant about additional setup options.
+
+#Google Tag Manager
 Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/) for optimal flexibility.
 
-###Using the Google Analytics Connector with Google Tag Manager
+##Using the Google Analytics Connector with Google Tag Manager
 In order to deploy the Demandbase Connector using Google Tag Manager, you should deploy Google Analytics using the out-of-the-box tags available in GTM.
 
 1. Generate a GTM-only Connector Tag
@@ -53,22 +71,13 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you should
   * Set the Custom Dimensions - Use the number from the Dimension you created in Google Analytics paired with the corresponding Macro created in step 4.
   * <img src="https://www.evernote.com/shard/s100/sh/e321d290-afef-4a41-b327-97a8b39fca8f/ebf52febf2f29032ee8d345490a3814e/deep/0/Screenshot%205/5/14,%201:29%20PM.jpg" alt="GTM tag setup" />
 
-###GTM Resources
+##GTM Resources
 
 * [Setting up Google Analytics Tags](https://support.google.com/tagmanager/answer/3281379?hl=en)
 * [Tags, Rules, Macros, Data Layer](https://support.google.com/tagmanager/answer/3284009?hl=en)
 * [More on Macros](https://support.google.com/tagmanager/answer/2644341?hl=en)
 * [FAQ](https://www.google.com/tagmanager/faq.html)
 * [Product Forum](https://productforums.google.com/forum/#!forum/tag-manager)
-
-
-#Installation
-1. After receiving your configured script, test the code in a sandbox environment, if available.
-  * *Optional* - Within the connector code, set the `logging` property to `true` in your test environment.  This will show the connector's activities in the browser console for easy verification.
-2. Verify page tracking is functioning and Demandbase attributes are flowing into the appropriate Custom Dimensions/Variables.
-3. Place your script in the appropriate space on each analytics-enabled page.  In most cases, this will be added to a template page within your CMS or in your Tag Management System.
-4. If using [Google Tag Manager](https://www.google.com/tagmanager/), talk to your Demandbase Solutions Consultant about additional setup options.
-
 
 #Migrating from Previous Versions
 Upgrading to v5.0+ from another version is quick and easy.
@@ -84,6 +93,11 @@ Upgrading to v5.0+ from another version is quick and easy.
 5. Follow the [Installation Steps](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation).
 
 #Release Notes
+##v6.0 - May 2014
+* Added support for Demandbase Company-Targeted Advertising pixels
+* UI refresh for Connector tool (now includes Ads and GTM)
+* *Bug Fix* Type conversions to match Google API expectations
+
 ##v5.0 - Febrauary 2014
 * Added [`dataLayer`](https://developers.google.com/tag-manager/android/reference/com/google/tagmanager/DataLayer) support for use with Google Tag Manager
 * Combined GA and UA connector automatically detects which solutions you're using, so you do not need to upgrade your connector when [switching from GA to UA](https://developers.google.com/analytics/devguides/collection/upgrade/).
