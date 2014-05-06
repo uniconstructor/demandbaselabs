@@ -6,79 +6,37 @@
   Contact Demandbase Consulting Services with questions about using this code.
   For further details, visit: demandbaselabs.com/docs
 
-  This script supports both GA Classic and Universal Analytics
-  It can be delivered via Google Tag Manager as well.
+  - This script supports both GA Classic and Universal Analytics
+  - It can be delivered via Google Tag Manager as well.
+  - This MUST be placed inside your HTML <body> tag.
 -->
-<script>
-    /**
-    Standard Google UA code
-    Note: This standard code from Google may already be in your existing UA deployment
-    **/
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-YOUR-PROPERTY-ID');
-    /*End  Standard Google UA code */
 
+<script>
     /*Start Demandbase integration */
     'use strict';
     var Demandbase = window.Demandbase || {};
     Demandbase.Connectors = window.Demandbase.Connectors || {};
     Demandbase.Connectors.Google_UniversalAnalytics = {
-        name: 'Demandbase Universal Analytics Connector',
-        version: '5.0',
+        name: 'Demandbase Universal Analytics Connector', version: '6.0',
         key:'YOUR_KEY_HERE',
-        logging: true,
         /* Customize which variables are sent to GA. (index on left, Demandbase API name on right) */
-        fields:{
+        fields: {
              '1' : 'audience'
-            ,'2' : 'industry'
-            ,'3' : 'sub_industry'
-            ,'4' : 'employee_range'
+            ,'2' : 'company_name'
+            ,'3' : 'industry'
+            ,'4' : 'sub_industry'
             ,'5' : 'revenue_range'
-            ,'6' : 'company_name'
+            ,'6' : 'employee_range'
         },
-        CompanyProfile: null,
-        gType: null,
-        track:function(data) {
-            try {
-                var dbgua = Demandbase.Connectors.Google_UniversalAnalytics,
-                dflt='(Non-company Visitor)',
-                awDflt = '(Non-AccountWatch Visitor)';
-                data = dbgua._flatA(data);
-                dbgua._toGtmDl(data);
-                dbgua.CompanyProfile = data;
-                dbgua._detectG();
-                for(var field in dbgua.fields) {
-                    if(dbgua.fields.hasOwnProperty(field)) {
-                        var num = field,
-                            lbl = dbgua.fields[field],
-                            val = data[dbgua.fields[field]] || dflt,
-                            isCompany = (data['company_name']||dflt) !==  dflt;
-
-                        if(data[dbgua.fields[field]] === false) val = 'false';
-
-                        if(lbl.indexOf('watch_list_')!==-1 && isCompany){
-                            val = data[dbgua.fields[field]] || awDflt; //swap dflt if AW
-                        }
-                        dbgua._var(num, lbl, val);
-                    }
-                }
-                dbgua._event();
-            } catch(e){ this._logE('Integration Error: '+e) };
-        },
-        load:function(){
-            try {
-                var db=document.createElement('script'); db.type='text/javascript'; db.async=true; db.id = 'db_ip_api_ua';
-                db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=Demandbase.Connectors.Google_UniversalAnalytics.track&page='+document.URL+'&referrer='+document.referrer;
-                var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s);
-                this._logE('Loaded Script ' + db.src);
-            } catch(e){ this._logE('Script Error: '+e)};
-        },
+        pixels: { 'ad' : 'YOUR_TRACKING_ID', 'rt' : 'YOUR_RETARGETING_ID', 'cn' : 'YOUR_CONVERSION_ID' },
+        CompanyProfile: null, gType: null, logging: true,
+        track:function(data) { try { var dbgua = Demandbase.Connectors.Google_UniversalAnalytics, dflt = '(Non-Company Visitor)', awDflt = '(Non-AccountWatch Visitor)'; data = dbgua._flatA(data); dbgua._toGtmDl(data); dbgua.CompanyProfile = data; dbgua._detectG(); for (var field in dbgua.fields) { if (dbgua.fields.hasOwnProperty(field)) { var num = field, lbl = dbgua.fields[field], val = data[dbgua.fields[field]].toString() || dflt, isCompany = (data['company_name'] || dflt) !== dflt; if (lbl.indexOf('watch_list_') !== -1 && isCompany) { val = data[dbgua.fields[field]].toString() || awDflt; } dbgua._var(num, lbl, val); } } dbgua._event(); } catch (e) { this._logE('Integration Error: ' + e) }; },
+        trackConversion:function(){ var id=this.pixels['cn'], img = document.createElement('img'); img.setAttribute('style', 'display:none'); img.setAttribute('alt', 'pixel'); img.id='db_cn'; img.src=('https:'==document.location.protocol?'https://':'http://')+ "a.company-target.com/pixel?type=js&id=" + id;var s=document.getElementsByTagName('body')[0]; s.appendChild(img); this._logE('Loaded Script ' + img.src);},
+        load:function(){ try { var pg,db=document.createElement('script'); this.loadPixels(); db.type='text/javascript'; db.async=true; db.id='db_ip_api_ua'; pg=document.URL; if(top !== self) { pg=document.referrer; } db.src=('https:'==document.location.protocol?'https://':'http://')+'api.demandbase.com/api/v2/ip.json?key='+this.key+'&callback=Demandbase.Connectors.Google_UniversalAnalytics.track&page='+document.URL+'&referrer='+document.referrer; var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(db,s); this._logE('Loaded Script ' + db.src); } catch(e){ this._logE('Script Error: '+e)}; },
+        loadPixels: function() { for (var pixel in this.pixels) { if (this.pixels.hasOwnProperty(pixel)) { var id = this.pixels[pixel]; if (id && pixel !== 'cn') { var img = document.createElement('img'), s = document.getElementsByTagName('body')[0]; img.setAttribute('style', 'display:none'); img.setAttribute('alt', 'pixel'); img.id = 'db_' + pixel; img.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + "a.company-target.com/pixel?type=js&id=" + id; s.appendChild(img); this._logE('Loaded Script ' + img.src); } } } },
         _flatA:function(a){ for(var d in a){ if(typeof a[d]=='object'&&a[d]!==null){ for(var cd in a[d]){a[d+'_'+cd]=a[d][cd]}; delete a[d]; } }; return a; },
         _logE:function(m){ if(this.logging && typeof(console) !== 'undefined' && window['console'] !== 'undefined') { console.log('DB UA: ' + m); } },
-        _var:function(i,k,v){ if(this.gType === 'ga') { this._p('_setCustomVar', i, k, v, 1); } else { ga('set','dimension'+i,v); } this._logE(i + ' ' + k +' : ' + v); },
+        _var:function(i,k,v){ if(this.gType === 'ga') { this._p('_setCustomVar', i >> 0, k, v, 1); } else { ga('set','dimension'+i,v); } this._logE(i + ' ' + k +' : ' + v); },
         _event:function(){ if(this.gType === 'ga') { this._p('_trackEvent', 'Demandbase', 'API Resolution', 'IP API', 0, 1); } else { ga("send", "event", { eventCategory: "Demandbase", eventAction: "API Resolution", eventLabel: "IP Address API", nonInteraction: true }); } this._logE('Sent Custom Event: Demandbase/API Resolution/IP Address API'); },
         _cEvent:function(c,a,l){ if(this.gType === 'ga') { this._p('_trackEvent', c, a, l, 0, 1); } else { ga("send", "event", { eventCategory: c, eventAction: a, eventLabel: l, nonInteraction: true }); } this._logE('Sent Custom Event:'+c+'/'+a+'/'+l); },
         _p: function(t, v1, v2, v3, v4, v5) { window._gaq.push([t, v1, v2, v3, v4, v5]); },
@@ -87,9 +45,6 @@
     };
     Demandbase.Connectors.Google_UniversalAnalytics.load();
     /* End Demandbase integration */
-
-    /* Send track page view call to Universal Analytics
-     Note: This standard code from Google may already be in your existing UA deployment */
-    ga('send', 'pageview');
 </script>
+
 <!-- End Demandbase / Google Universal Analytics -->
