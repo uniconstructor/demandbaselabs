@@ -2,14 +2,14 @@
 Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 
 ##Contents
-* [Before You Begin](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#before-you-begin)
+* [Getting Started](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#before-you-begin)
 * [Configuration](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#configuration)
 * [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation)
 * [Google Tag Manager](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#google-tag-manager)
 * [Upgrading from Prior Versions](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#migrating-from-previous-versions)
 * [Release Notes](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#release-notes)
 
-#Before You Begin
+#Getting Started
 * Obtain Administrator access to Google Analytics
 * [Assess which version of GA you have](https://support.google.com/analytics/answer/4457764?hl=en) (either *Classic*, *Universal*, or *Premium*)
   * Demandbase highly recommends [switching to *Universal Analytics*](https://developers.google.com/analytics/devguides/collection/upgrade/) and using *Google Tag Manager* with this solution.
