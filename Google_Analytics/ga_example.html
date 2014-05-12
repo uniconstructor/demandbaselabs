@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Demandbase Google Analytics Example</title>
     <script>
         /*
             Universal Analytics tracking code
@@ -20,7 +19,7 @@
 
 <body>
     <!-- Note: this is a special GTM Account just for Development -->
-    <!-- Optional:       Google Tag Manager -->
+    <!-- Google Tag Manager -->
     <noscript><iframe src="http://www.googletagmanager.com/ns.html?id=GTM-5XJR94"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -39,7 +38,7 @@
         name: 'Demandbase Universal Analytics Connector', version: '6.1',
         key: 'YOUR_KEY_HERE',
         fields: {1 : 'audience', 2 : 'company_name', 3 : 'industry', 4 : 'revenue_range', 5 : 'employee_range', 6 : 'sub_industry', 7 : 'fortune_1000', 8 : 'forbes_2000', 9 : 'watch_list_account_type', 10 : 'watch_list_buying_stage'},
-        pixels: {ad:'yourAdPixelToken',rt:'yourRetargetPixelToken',cn:'yourConversionPixelToken'},
+        pixels: {ad:'YOUR_AdPixelToken',rt:'YOUR_RetargetPixelToken',cn:'YOUR_ConversionPixelToken'},
         CompanyProfile: null, gType: null, logging: true,
         track:function(data) { try { var self = Demandbase.Connectors.Google_UniversalAnalytics, dflt = '(Non-Company Visitor)', awDflt = '(Non-AccountWatch Visitor)'; data = self._flatA(data); self._toGtmDl(data); self.CompanyProfile = data; self._detectG(); for (var field in self.fields) { if (self.fields.hasOwnProperty(field)) { var num = field, lbl = self.fields[field], val = data[self.fields[field]] || dflt, isCompany = (data['company_name'] || dflt) !== dflt; if(data[self.fields[field]] === false) { val = 'false'; } if (lbl.indexOf('watch_list_') !== -1 && isCompany) { val = data[self.fields[field]] || awDflt; } self._var(num, lbl, val.toString()); } } self._event(); } catch (e) { this._logE('Integration Error: ' + e) }; },
         trackConversion:function() { var id = this.pixels['cn']; if (id) { var img = document.createElement('img'), s = document.getElementsByTagName('body')[0]; img.setAttribute('style', 'display:none'); img.setAttribute('alt', 'conversion pixel'); img.id = 'db_cn_pixel'; img.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + "a.company-target.com/pixel?type=js&id=" + id; if('undefined' === typeof s || !s) { s = document.getElementsByTagName('head')[0]; } s.appendChild(img); this._logE('Loaded Script ' + img.src); } },
