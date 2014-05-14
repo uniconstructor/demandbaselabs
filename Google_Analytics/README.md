@@ -61,7 +61,7 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you should
 3. In GTM, Create a Rule that fires on the "DB_Loaded" event.
   * <img src="https://www.evernote.com/shard/s100/sh/21c0521a-e845-4bc2-a9e2-7da4cced8b41/eec213bd6bf19cfd05e5258bc90ddebf/deep/0/Screenshot%205/5/14,%2011:41%20AM.jpg" alt="event-based rule setup" />
 4. Create Macros (in GTM) for each Demandbase attribute you wish to capture.
-  * Each Demandbase attribute will have a corresponding Data Layer Variable.  Use "db_[api_variable_name]" in the "Data Layer Variable Name" field.
+  * Each Demandbase attribute will have a corresponding Data Layer Variable.  Use the [Demandbase IP API](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_API_Documentation#IP_Address_API) variable name (e.g. `company_name`, `revenue_range`, etc.) in the "Data Layer Variable Name" field.
   * <img src="https://www.evernote.com/shard/s100/sh/3f2c5b4d-b07b-41d3-bddf-10204f8ef0c0/4387ce2e0851fc03a38574fa35d1f1b1/deep/0/Screenshot%205/5/14,%201:04%20PM.jpg" alt="Macro setup example"/>
 5. Now, [create a *new* Universal Analytics tag](https://support.google.com/tagmanager/answer/3281379?hl=en).   This tag will send a Custom Event and assign Custom Dimensions using the Macros you created.
   * Under "Track Type", select "Event".
