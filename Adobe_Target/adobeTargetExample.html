@@ -16,7 +16,15 @@
             **/
             if(!data) return;
             try {
-                var profileAttrStr = "", delim = ',', builder;
+                var profileAttrStr = '', delim = ',', builder;
+                for (var d in data) {
+                        if (typeof data[d] == 'object' && data[d] !== null) {
+                            for (var cd in data[d]) {
+                                data[d + '_' + cd] = data[d][cd]
+                            };
+                            delete data[d];
+                        }
+                }
                 for (var key in data) {
                     if (data.hasOwnProperty(key)) {
                         var attr = 'profile.' + key + '=' + data[key] + delim;
@@ -24,9 +32,11 @@
                     }
                 }
                 profileAttrStr = profileAttrStr.split(delim);
-                builder = mboxFactoryDefault.getUrlBuilder();
-                builder.addParameters(profileAttrStr)
-            } catch (e) {}
+                if(typeof mboxFactoryDefault !== 'undefined') {
+                    builder = mboxFactoryDefault.getUrlBuilder();
+                    builder.addParameters(profileAttrStr)
+                }
+            } catch (e) { }
         }
     </script>
     <!-- mbox.js include must come before the Demandbase API call and after the callback function -->
