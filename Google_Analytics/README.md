@@ -30,8 +30,10 @@ Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 
 ##Configuration Wizard
 * Visit the [Connector Setup Wizard](http://demandbaselabs.com/cloud/) to configure and generate your connector.
+* If you are using Google Tag Manager, skip to [Using Google Tag Manager](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#google-tag-manager)
 * Enter your key, select the attributes you wish to integrate.  (Make sure they're in the same order you created them in Universal Analytics)
-* Click *Generate*, then follow the [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation) steps.
+
+* Click *Get Your Tag*, then follow the [Installation](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#installation) steps.
 
 ##Manual Configuration
 **(Not Recommended)** - If you need a customized integration script, talk to your Demandbase Solutions Consultant.  Chances are we've solved the problem before and can provide you the code you need.
