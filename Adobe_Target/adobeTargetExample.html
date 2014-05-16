@@ -2,6 +2,8 @@
 <head>
     <title>Demandbase Adobe Target Integration Example</title>
 
+    <!-- mbox.js include must come before the Demandbase API call be loaded when set_mbox_variables runs -->
+    <script type="text/javascript" src="Your/Mbox/Path/mbox.js"></script>
     <!-- Asynchronous Method - Define callback function
          Notes:
          * This must be defined before the IP API call
@@ -36,11 +38,14 @@
                     builder = mboxFactoryDefault.getUrlBuilder();
                     builder.addParameters(profileAttrStr)
                 }
-            } catch (e) { }
+            } catch (e) { 
+                if(typeof(console) !== 'undefined' && window['console'] !== 'undefined') {
+                    console.log('DB AT: ' + e);
+                }
+            }
         }
     </script>
-    <!-- mbox.js include must come before the Demandbase API call and after the callback function -->
-    <script type="text/javascript" src="Your/Mbox/Path/mbox.js"></script>
+    
 
     <!-- Asynchronous Method - Call IP API,
          This triggers callback function when data is returned
