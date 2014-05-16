@@ -50,26 +50,38 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
     This method is best when using a single global mbox.  Skip step 3 below when using this approach.
 
     ```
-    function set_mbox_variables(data) {
-        /**
-            This function is called when Demandbase returns data.
-            Iteratively add each Demandbase Company Profile to
-            the visitor's Adobe Target Profile
-        **/
-        if(!data) return;
-        try {
-            var profileAttrStr = "", delim = ',', builder;
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    var attr = 'profile.' + key + '=' + data[key] + delim;
-                    profileAttrStr += attr;
+         function set_mbox_variables(data) {
+            /**
+                This function is called when Demandbase returns data.
+                Iteratively add each Demandbase Company Profile to
+                the visitor's Adobe Target Profile
+            **/
+            if(!data) return;
+            try {
+                var profileAttrStr = '', delim = ',', builder;
+                for (var d in data) {
+                        if (typeof data[d] == 'object' && data[d] !== null) {
+                            for (var cd in data[d]) {
+                                data[d + '_' + cd] = data[d][cd]
+                            };
+                            delete data[d];
+                        }
                 }
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        var attr = 'profile.' + key + '=' + data[key] + delim;
+                        profileAttrStr += attr;
+                    }
+                }
+                profileAttrStr = profileAttrStr.split(delim);
+                if(typeof mboxFactoryDefault !== 'undefined') {
+                    builder = mboxFactoryDefault.getUrlBuilder();
+                    builder.addParameters(profileAttrStr)
+                }
+            } catch (e) {
+                console.log(e);
             }
-            profileAttrStr = profileAttrStr.split(delim);
-            builder = mboxFactoryDefault.getUrlBuilder();
-            builder.addParameters(profileAttrStr)
-        } catch (e) {}
-    }
+        }
     ```
 
 2. In the `<head>` section of the page, **after** the `mbox.js` script tag, add a call the Demandbase API with the client API Key leveraging the variables from the plugin from Step 1:
