@@ -13,7 +13,7 @@ To automatically integrate with Adobe Target, simply select "yes" from the dropd
 
 
 ##JavaScript Connector
-This solution is only recommended ff you do not have Adobe Analytics or you have not licensed the Demandbase Analytics Module.
+This **manual** solution is only recommended if you do not have Adobe Analytics or you have not licensed the Demandbase Analytics Module.
 
 ###Installation
 1. Edit your `mbox.js` file to include the following plugin (*Configuration > Mbox.js > Edit*).
@@ -21,33 +21,9 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
   * Note: You do not have to include all of the fields in this plugin. You can capture any attribute returned by Demandbase.
   * It is highly recommended to wrap the variable declarations and callback function in a namespace to avoid conflicts with other JavaScript on the site.
 
-    ```
-    <!-- Demandbase Integration Plugin -->
-    <script>
-    var company_name =''
-    ,industry =''
-    ,sub_industry =''
-    ,employee_range =''
-    ,revenue_range =''
-    ,account_status ='';
-    function set_mbox_variables (data) {
-      if(!data) return '';
-      try{
-        company_name = escape(data['company_name'] || '');
-        industry = escape(data['industry'] || '');
-        sub_industry = escape(data['sub_industry'] || '');
-        employee_range = escape(data['employee_range'] || '');
-        revenue_range = escape(data['revenue_range'] || '');
-        if(typeof data.watch_list !== 'undefined') {
-            account_status = escape(data.watch_list['account_status'] || '')
-        }
-      } catch(e) {}
-    }
-    </script>
-    ```
+The simplest solution is to iteratively add each Demandbase attribute to the visitor's profile.  This ensures all attributes (such as Account Watch are always added), and it means you won't have to make a code change if new attributes are added.
 
-    Alternatively, you can iteratively add every Demandbase attribute to the visitor's profile.
-    This method is best when using a single global mbox.  Skip step 3 below when using this approach.
+Skip step 3 below when using this approach.
 
     ```
          function set_mbox_variables(data) {
@@ -83,15 +59,38 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
             }
         }
     ```
-
-2. In the `<head>` section of the page, **after** the `mbox.js` script tag, add a call the Demandbase API with the client API Key leveraging the variables from the plugin from Step 1:
-
+    Alternatively, you can select specific Demandbase attributes to add to the visitor's profile, assigning each to a global JS variable.  This method is best if you are concerned with the size of the server call or using a single global mbox.
+    
     ```
-    <!-- Demandbase API reference tag -->
-    <script type="text/javascript" src="//api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
+    <!-- Demandbase Integration Plugin -->
+    <script>
+    var company_name =''
+    ,industry =''
+    ,sub_industry =''
+    ,employee_range =''
+    ,revenue_range =''
+    ,account_status =''
+    ,audience = '';
+    function set_mbox_variables (data) {
+      if(!data) return '';
+      try{
+        company_name = escape(data['company_name'] || '');
+        industry = escape(data['industry'] || '');
+        sub_industry = escape(data['sub_industry'] || '');
+        employee_range = escape(data['employee_range'] || '');
+        revenue_range = escape(data['revenue_range'] || '');
+        if(typeof data.watch_list !== 'undefined') {
+            account_status = escape(data.watch_list['account_status'] || '')
+        }
+        audience = escape(data['audience'] || '');
+      } catch(e) {
+       alert(e); //TODO: remove this alert in PROD
+      }
+    }
+    </script>
     ```
 
-3. Create in-mbox profile parameters that can be leveraged for personalization by appending the applicable profiles to the mbox:
+2. Create in-mbox profile parameters that can be leveraged for personalization by appending the applicable profiles to the mbox:
 
     ```
     <div class="mboxDefault"></div>
@@ -102,16 +101,25 @@ This solution is only recommended ff you do not have Adobe Analytics or you have
             'profile.subindustry='+unescape(sub_industry),
             'profile.accountstatus='+unescape(account_status),
             'profile.employeerange='+unescape(employee_range),
-            'profile.revenuerange='+unescape(revenue_range)
+            'profile.revenuerange='+unescape(revenue_range),
+            'profile.audience='+unescape(audience)
         );
     </script>
     ```
+    
+3. In the `<head>` section of the page, **after** the `mbox.js` script tag, add a `script` tag to call the Demandbase API with your API key.  This calls the `set_mbox_variables` function that sets the variables from the plugin in Step 1:
 
+    ```
+    <!-- Demandbase API reference tag -->
+    <script type="text/javascript" src="//api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=set_mbox_variables"></script>
+    ```
+    
 ###Testing
+
 1. Validate with a Web Debugger like *Firebug*, *Chrome Developer Tools*, or *Charles* to see the API response:
 
     ```
-    set_mbox_variables({"registry_company_name":"Adobe Systems","registry_city":"Menlo Park","registry_state":"CA","registry_zip_code":null,"registry_country":"United States","company_name":"Adobe Systems","demandbase_sid":581971,"marketing_alias":"Adobe","industry":"Software & Technology","sub_industry":"Software Applications","employee_count":8660,"isp":false,"primary_sic":"7372","street_address":"345 Park Ave","city":"San Jose","state":"CA","zip":"95110","country":"US","phone":"4085366000","stock_ticker":"ADBE","web_site":"adobe.co m","annual_sales":2946000000,"revenue_range":"$2.5B - $5B","employee_range":"Enterprise","latitude":37.3303,"longitude":- 121.894,"fortune_1000":true,"forbes_2000":true,"information_level":"Detailed","audience":"Enterprise Business","audience_segment":"Software & Technology","ip":"192.150.10.200"})
+    set_mbox_variables("company_name":"Adobe", "industry":"Software & Technology","sub_industry":"Software Applications","account_status":"Customer","revenue_range":"$2.5B - $5B","employee_range":"Enterprise", "audience":"Enterprise Business"})
     ```
 
 2. Validate with Digital Pulse Debugger to View Mbox Profile Parameters:
