@@ -21,7 +21,7 @@ This **manual** solution is only recommended if you do not have Adobe Analytics 
   * Note: You do not have to include all of the fields in this plugin. You can capture any attribute returned by Demandbase.
   * It is highly recommended to wrap the variable declarations and callback function in a namespace to avoid conflicts with other JavaScript on the site.
 
-The simplest solution is to iteratively add each Demandbase attribute to the visitor's profile.  This ensures all attributes (such as Account Watch are always added), and it means you won't have to make a code change if new attributes are added.
+The simplest solution is to iteratively add each Demandbase attribute to the visitor's profile.  This ensures all attributes (such as Account Watch) are always added.  This also means you won't have to make a code change if new attributes are added.
 
 Skip step 3 below when using this approach.
 
@@ -59,7 +59,12 @@ Skip step 3 below when using this approach.
             }
         }
     ```
-    Alternatively, you can select specific Demandbase attributes to add to the visitor's profile, assigning each to a global JS variable.  This method is best if you are concerned with the size of the server call or using a single global mbox.
+    
+    Alternatively, you can select specific Demandbase attributes to add to the visitor's profile, assigning each to a global JS variable.  
+    
+    This method is best if:
+    * You are concerned with the size of the server call
+    * You are using a single global mbox
     
     ```
     <!-- Demandbase Integration Plugin -->
