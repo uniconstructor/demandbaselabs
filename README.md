@@ -10,6 +10,7 @@ We keep make these resources public because we enjoy a collaborative process. **
 #Additional Resources
 * [DemandbaseLabs.com](http://www.demandbaselabs.com)
   * See live demonstrations of the solutions in this repo.
+  * Easy tools to configure and generate many of the connectors in this repo.
 * [API Documentation](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_API_Documentation)
   * This site requires a login.  Talk to your Customer Success Manager, parter contact or sales contact for a login.
 * [Our Gists](https://gist.github.com/demandbaselabs)
