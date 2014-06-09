@@ -37,7 +37,7 @@ window.dbAsyncInit = function() {
             ,'data_source': ''
             ,'audience': ''
             ,'audience_segment': ''
-            ,'ip':'ip'
+            ,'ip':''
         }
     });
     /**
