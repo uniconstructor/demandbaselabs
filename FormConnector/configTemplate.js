@@ -9,6 +9,7 @@ window.dbAsyncInit = function() {
         toggleFieldList: ['fieldIDsGoHere'],
         fieldMap: {
             'company_name': '' /* These can be name or ID */
+            ,'marketing_alias':''
             ,'industry': ''
             ,'sub_industry': ''
             ,'primary_sic': ''
@@ -32,11 +33,11 @@ window.dbAsyncInit = function() {
             ,'b2c': ''
             ,'fortune_1000': ''
             ,'forbes_2000': ''
-            ,'duns_num': ''
             ,'demandbase_sid': ''
             ,'data_source': ''
             ,'audience': ''
             ,'audience_segment': ''
+            ,'ip':'ip'
         }
     });
     /**
