@@ -40,11 +40,14 @@ window.dbAsyncInit = function() {
             ,'ip':''
         }
     });
-    /**
+    
+};
+/**
         'db_hook_' function implementations go here
         Optional - define further functionality here, if needed
-    **/
-};
+**/
+
+    
 (function() {
     /*Retrieve Form Connector core file from the cloud*/
     var dbt = document.createElement('script'); dbt.type = 'text/javascript'; dbt.async = true; dbt.id = 'demandbase-form';
