@@ -102,7 +102,7 @@ if(Demandbase.Segments.EnterpriseSegment) {
 }
 ```
 
-##How to User Demandbase Attribute Values
+##How to Use Demandbase Attribute Values
 The value of any attribute in a visitor's `CompanyProfile` are also available.  This is can be used to place attribute values as dynamic copy in a page.
 
 ```
