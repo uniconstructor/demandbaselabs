@@ -3,7 +3,7 @@ Name: Demandbase IP Widget
 Authora: Matthew Downs (mdowns[at]demandbase[dot]com)
 License: Copyright 2012. This code may not be reused without explicit permission by its owners. All rights reserved.
 ***/
-
+(function($){
 var DemandbaseLabs = {};
 DemandbaseLabs.IPWidget = {
   ipWidget : null,
@@ -252,5 +252,5 @@ DemandbaseLabs.IPWidget = {
   }  //end initIpWidget
 } //end DemandbaseLabs.IPWidget
 
-
+})(jQuery);
 
