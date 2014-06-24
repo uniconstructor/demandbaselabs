@@ -1,6 +1,5 @@
 /*Start Demandbase Form Connector Implementation*/
 window.dbAsyncInit = function() {
-
     var dbf = Demandbase.Connectors.WebForm;
     dbf.connect({
         /*Form Connector Configuration*/
@@ -10,6 +9,7 @@ window.dbAsyncInit = function() {
         toggleFieldList: ['fieldIDsGoHere'],  //optional - for growing form
         fieldMap: {
             'company_name': '' /* These can be name or ID */
+            ,'marketing_alias':''
             ,'industry': ''
             ,'sub_industry': ''
             ,'primary_sic': ''
@@ -35,13 +35,15 @@ window.dbAsyncInit = function() {
             ,'forbes_2000': ''
             ,'demandbase_sid': ''
             ,'data_source': ''
+            ,'ip':''
         }
     });
 };
 /**
-    'db_hook_' function implementations go here
-    Optional - define further functionality here, if needed
+        'db_hook_' function implementations go here
+        Optional - define further functionality here, if needed
 **/
+
 (function() {
     /*Retrieve Form Connector core file from the cloud*/
     var dbt = document.createElement('script'); dbt.type = 'text/javascript'; dbt.async = true; dbt.id = 'db_form';

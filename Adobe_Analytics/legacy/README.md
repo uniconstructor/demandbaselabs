@@ -1,6 +1,6 @@
 #Legacy Solution
 
-This custom JavaScript solution for sends Demdandbase Company Profile attributes to Adobe Analytics via Conversion Variables.
+This custom JavaScript solution sends Demandbase Company Profile attributes to Adobe Analytics via Conversion Variables.
 There are many, many advantages to using the Adobe Data Connector.
 
 Legacy solution drawbacks:

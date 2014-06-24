@@ -26,13 +26,13 @@ Demandbase.Connectors.Webtrends_Analytics={
         'primary_sic',
         'web_site'
     ],
+    /* Done customizing!  Don't touch the stuff below.  */
     registryMap : {
         'city' : 'registry_city',
         'state' : 'registry_state',
         'zip' : 'registry_zip_code',
         'country' : 'registry_country_code',
     },
-    /* Done customizing!  Don't touch the stuff below.  */
     tags:[], /* Array of variables (custom measures) to send */
     version:'2.2',
     CompanyProfile: null,
@@ -73,6 +73,7 @@ Demandbase.Connectors.Webtrends_Analytics={
         if (typeof(dcsMultiTrack)!=='undefined') {
             //Note: WT.dl 5 used for Demandbase - ensure this is open or configure
             //Consider also: ('WT.ti','DemandBase Data Collection','DCS.dcsuri','demandbase-data-collection.dbc')
+            //**Possibly Customize Here */
             Args.push('WT.dl','5');
             dcsMultiTrack.apply(this, Args);
             this._log('dcsMultiTrack Successful. With args: ' + Args);
