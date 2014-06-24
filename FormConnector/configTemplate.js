@@ -1,12 +1,13 @@
 /*Start Demandbase Form Connector Implementation*/
 window.dbAsyncInit = function() {
-    /*Form Connector Configuration*/
+
     var dbf = Demandbase.Connectors.WebForm;
     dbf.connect({
+        /*Form Connector Configuration*/
         emailID: 'ID_OR_NAME_OF_EMAIL_FIELD',     /* These can be name or ID */
-        companyID: 'ID_OR_NAME_OF_COMPANY_FIELD', 
+        companyID: 'ID_OR_NAME_OF_COMPANY_FIELD',
         key: 'YOUR_KEY_HERE',
-        toggleFieldList: ['fieldIDsGoHere'],
+        toggleFieldList: ['fieldIDsGoHere'],  //optional - for growing form
         fieldMap: {
             'company_name': '' /* These can be name or ID */
             ,'industry': ''
@@ -32,21 +33,18 @@ window.dbAsyncInit = function() {
             ,'b2c': ''
             ,'fortune_1000': ''
             ,'forbes_2000': ''
-            ,'duns_num': ''
             ,'demandbase_sid': ''
             ,'data_source': ''
-            ,'audience': ''
-            ,'audience_segment': ''
         }
     });
-    /**
-        'db_hook_' function implementations go here
-        Optional - define further functionality here, if needed
-    **/
 };
+/**
+    'db_hook_' function implementations go here
+    Optional - define further functionality here, if needed
+**/
 (function() {
     /*Retrieve Form Connector core file from the cloud*/
-    var dbt = document.createElement('script'); dbt.type = 'text/javascript'; dbt.async = true; dbt.id = 'demandbase-form';
+    var dbt = document.createElement('script'); dbt.type = 'text/javascript'; dbt.async = true; dbt.id = 'db_form';
     dbt.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'scripts.demandbase.com/formWidget.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(dbt, s);
 })();

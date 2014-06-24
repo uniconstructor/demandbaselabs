@@ -51,7 +51,6 @@ Demandbase.Connectors.Webtrends_Analytics={
                 if(data[self.fields[field]] === false) { val = 'false'; }
                 self._var(lbl,val);
             }
-
         }
         this.dcsJSONTrack(self.tags);
       } catch(e){ this._log(e); };
