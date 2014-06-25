@@ -40,8 +40,8 @@ window.dbAsyncInit = function() {
     });
 };
 /**
-        'db_hook_' function implementations go here
-        Optional - define further functionality here, if needed
+    'db_hook_' function implementations go here
+    Optional - define further functionality here, if needed
 **/
 
 (function() {
