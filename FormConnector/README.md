@@ -375,7 +375,7 @@ In each function the `data` parameter represents the JSON object of the Company 
 
 When implementing hook functions, you may need to familiarize yourself with the `Demandbase.Connectors.WebForm` class.  For a complete technical reference, see [http://www.demandbaselabs.com/docs/form_connector](http://www.demandbaselabs.com/docs/form_connector).
 
-Hook functions are implemented within the configuration snippet, and are placed within the `dbAsyncInit` function.
+Hook functions are implemented within the configuration snippet, and should be placed just after the `dbAsyncInit` function.
 
 ###db_hook_init()
 Runs at the end of the `init` function, which is called on DOM ready.  Accepts no parameters.
