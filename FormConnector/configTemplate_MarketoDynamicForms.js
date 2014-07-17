@@ -2,7 +2,7 @@
 //	correct information from your Marketo form:
 //	http://developers.marketo.com/documentation/websites/forms-2-0/
 
-//	Be sure to replace ALL XXXX characters with your relevant Marketo info
+//	Be sure to replace ALL XXXX characters with your relevant Marketo info : This can be found as of today in the Embed code for the Form.
 
 MktoForms2.loadForm("//XXX-XXX.marketo.com", "XXX-XXX-XXX", XXXX, function (form) {
 
