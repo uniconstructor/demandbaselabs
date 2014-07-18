@@ -17,7 +17,7 @@
 The Demandbase Form Connector provides any easy-to-deploy, light-weight solution for adding the Demandbase Form Module to your web forms.
 
 ##Key Features
-* Demandbase Real-Time Identification capabilities using 3-tier company idenification (by IP address, email domain, and company autocomplete, includes automatic ISP filtering)
+* Demandbase Real-Time Identification capabilities using 3-tier company identification (by IP address, email domain, and company autocomplete, includes automatic ISP filtering)
 * Capture Demandbase company profile attributes in hidden, visible, or expandable fields using a simple mapping
 * Scalable, easy-to-maintain, cloud-based solution
 * Easy deployment - a simple JS tag to place in your HTML / page templates
