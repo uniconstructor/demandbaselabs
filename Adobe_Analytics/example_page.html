@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Demandbase Adobe Analytics Integration Example</title>
+
+<!-- Option 1: Asynchronous Method - Define callback function
+     Note: this must be defined before the IP API call  -->
+<script type="text/javascript">
+    function demandbase_parse(data) {
+        /* This fcn is called when Demandbase returns data
+           Sets global JS variable for use in s_code.js (or page-level code) */
+        if(data) db_company = data;
+    }
+</script>
+
+<!-- Option 1: Asynchronous Method - Call IP API,
+     This triggers callback function when data is returned -->
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.json?key=YOUR_KEY_HERE&callback=demandbase_parse"></script>
+
+</head>
+<body>
+
+
+
+<p>Demandbase / Adobe Analytics Integration Example</p>
+<p>See also <a href="https://github.com/demandbaselabs/demandbaselabs/blob/master/AdobeSiteCatalystConnector/demandbasePlugin-scode-include.js" target="_blank">demandbasePlugin-scode-include.js</a></p>
+<hr />
+
+<!-- Option 2: Synchronously call Demandbase IP API before s_code.js is loaded
+     This assigns global JS variable directly.  -->
+<script type="text/javascript" src="http://api.demandbase.com/api/v2/ip.js?key=YOUR_KEY_HERE&var=db_company"></script>
+
+<!-- s_code.js must be loaded after Demandbase API call -->
+<script language="JavaScript" type="text/javascript" src="http://YOUR_PATH_HERE/s_code.js"></script>
+<script language="JavaScript" type="text/javascript">
+/************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+var s_code=s.t();
+if(s_code)document.write(s_code);
+
+</script>
+</body>
+</html>
