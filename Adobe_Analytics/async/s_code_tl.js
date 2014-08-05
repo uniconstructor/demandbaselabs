@@ -40,30 +40,42 @@ function s_demandbase_plugin(c) {
     this.conf = c;
     this.r = function() {
         //TODO: investigate - what/why?
-        if ("done" == this.c_r(this.conf.s, this.conf.var_name)) return;
+        //if ("done" === this.c_r(this.conf.s, this.conf.var_name)) {
+            //TODO: possibly call track (but with what?)
+            //return;
+        //}
 
-        var se = document.createElement("SCRIPT"),
-            url = window.location.protocol + this.conf.apiBase + "?key=" + this.conf.key +
-                  "&callback=s_db.track&rnd=" + Math.floor(Math.random() * 10001) +
-                  (this.conf.testIP ? '&query=' + this.conf.testIP : '');
+        if(this.c_r(this.conf.s, this.conf.contextName)) {
+            this.log('Cookie Exists...setting contextData from cookie');
 
-        se.type = "text/javascript";
-        se.setAttribute("async", "async");
-        se.src = url;
-        document.getElementsByTagName("HEAD")[0].appendChild(se);
+            var stdData = this.c_r(this.conf.s, this.conf.contextName),
+                custData = this.c_r(this.conf.s, this.conf.contextNameCustom);
+
+            s.contextData[this.conf.contextName] = stdData;
+            s.contextData[this.conf.contextNameCustom] = custData;
+        } else {
+            this.log('Cookie not set...making API call...');
+
+            var se = document.createElement('script'),
+                url = window.location.protocol + this.conf.apiBase + '?key=' + this.conf.key +
+                      '&callback=s_db.track&rnd=' + Math.floor(Math.random() * 10001) +
+                      (this.conf.testIP ? '&query=' + this.conf.testIP : '');
+
+            se.type = 'text/javascript';
+            se.setAttribute('async', 'async');
+            se.src = url;
+            se.id = 'db_ip_api_aadc';
+            document.getElementsByTagName('head')[0].appendChild(se);
+        }
     }
     this.track = function(p) {
+        this.log('Running Demandbase IP API callback');
         p = this.flatten(p);
         if (p.audience !== 'undefined') {
-            var cxd = {};
-            cxd['s_dmdbase'] = this.compact(p, this.conf.dimensionArray);
+            var cxd = this.setCxd(p);
 
-            if (this.conf.dimensionArrayCustom) {
-                cxd['s_dmdbase_custom'] = this.compact(p, this.conf.dimensionArrayCustom);
-            }
-
-            //TODO: check if cookie set before making this call
-            if (typeof(this.conf.s) !== "undefined") {
+            //TODO: why checking for s?  still need to do this?
+            if (typeof(this.conf.s) !== 'undefined') {
                 this.slb(this.conf.s, cxd, this.conf.link_name);
             }
 
@@ -71,24 +83,45 @@ function s_demandbase_plugin(c) {
                 this.setTnTParams(cxd);
             }
         }
-        this.c_w(this.conf.s, this.conf.var_name, "done");
+        this.c_w(this.conf.s, this.conf.var_name, 'done');
+        this.c_w(this.conf.s, this.conf.contextName, cxd[this.conf.contextName]);
+        this.c_w(this.conf.s, this.conf.contextNameCustom, cxd[this.conf.contextNameCustom]);
     }
-    this.slb = function(s, cxd, lname) {
-        var _ltv = s.linkTrackVars,
-            _lte = s.linkTrackEvents;
-        s.linkTrackVars = s.linkTrackEvents = '';
+    this.setCxd = function(data) {
+        var cxd = {};
+        cxd[this.conf.contextName] = this.compact(data, this.conf.dimensionArray);
+
+        if (this.conf.dimensionArrayCustom) {
+            cxd[this.conf.contextNameCustom] = this.compact(data, this.conf.dimensionArrayCustom);
+        }
+
         for (var c in cxd) {
-            s.linkTrackVars += 'contextData.' + c + ',';
             s.contextData[c] = cxd[c];
         }
-        s.tl(true, 'o', lname);
-        s.linkTrackVars = _ltv;
-        s.linkTrackEvents = _lte;
 
-        //TODO: why does this set contextData to blank?
+        return cxd;
+    }
+    this.slb = function(sObj, cxd, lname) {
+        var _ltv = s.linkTrackVars,
+            _lte = s.linkTrackEvents;
+        s.linkTrackVars = s.linkTrackEvents = ''; //TODO: why?
+
         for (var c in cxd) {
-            s.contextData[c] = '';
+            s.linkTrackVars += 'contextData.' + c + ',';
+            //s.contextData[c] = cxd[c];
         }
+
+        //If cookie is not set, call track links
+        if(!this.c_r(this.conf.contextName)) {
+            s.tl(true, 'o', lname);
+            s.linkTrackVars = _ltv;
+            s.linkTrackEvents = _lte;
+            this.log('TrackLinks called');
+        }
+        //TODO: why does this set contextData to blank?
+        /*for (var c in cxd) {
+            s.contextData[c] = '';
+        }*/
     }
     this.compact = function(p, _da) {
         var _va = [];
@@ -100,10 +133,16 @@ function s_demandbase_plugin(c) {
 
             if (_id && p[_id]) {
                 var _b = '' + p[_id] || this.conf.nonOrgMatchLabel;
+
                 _b = _b.replace(this.conf.delim, ' ');
                 _va.push(_b.substring(0, _max));
             } else {
-                _va.push(this.conf.nonOrgMatchLabel);
+                if(p[_id] == false) {
+                    _va.push('false');
+                } else {
+                    _va.push(this.conf.nonOrgMatchLabel);
+                }
+
             }
         }
         return _va.join(this.conf.delim);
@@ -122,115 +161,108 @@ function s_demandbase_plugin(c) {
         return data;
     }
     this.setTnTParams = function(cxd) {
-            console.log("in setTnTParams");
-            var did, mbn, a, i, w = window;
-            if (typeof(w.mboxDefine) !== 'undefined' && typeof(w.mboxUpdate) !== 'undefined') {
-                // add the div to the DOM
-                var ni = document.createElement('div');
-                did = this.conf.var_name + '_div';
-                ni.setAttribute('id', did);
-                ni.style.display = 'none';
-                document.body.appendChild(ni);
-                // call mboxDefine
-                mbn = 'mbox_Genesis_Demandbase_hidden';
-                w.mboxDefine(did, mbn);
-                // call mboxUpdate with all of the profile parameters set
-                var _p = [],
-                    _cData = cxd['s_dmdbase'],
-                    _cDataCustom = cxd['s_dmdbase_custom'],
-                    _cda = [],
-                    _da = this.conf.dimensionArray,
-                    _dac = this.conf.dimensionArrayCustom;
-                _p.push(mbn);
-                if (_cData) {
-                    _cda = _cData.split(this.conf.delim);
-                    if (_cda.length == 8) {
-                        // set the standard 8 params
-                        for (i = 0; i < 8; i++)
-                            if (_da[i].id) _p.push('profile.' + this.conf.tntVarPrefix + _da[i]
-                                .id + '=' + _cda[i]);
-                            // set the optional 8 params
-                        if (_cDataCustom && _dac) {
-                            _cda = _cDataCustom.split(this.conf.delim);
-                            if (_cda.length == 8)
-                                for (i = 8; i < 16; i++)
-                                    if (_dac[i - 8].id) _p.push('profile.' + this.conf.tntVarPrefix +
-                                        _dac[i - 8].id + '=' + _cda[i - 8]);
-                        }
-                        w.mboxUpdate.apply(w, _p);
+        this.log('Running setTnTParams...');
+        var did, mbn, a, i, w = window;
+        if (typeof(w.mboxDefine) !== 'undefined' && typeof(w.mboxUpdate) !== 'undefined') {
+            // add the div to the DOM
+            var ni = document.createElement('div');
+            did = this.conf.var_name + '_div';
+            ni.setAttribute('id', did);
+            ni.style.display = 'none';
+            document.body.appendChild(ni);
+            // call mboxDefine
+            mbn = 'mbox_Genesis_Demandbase_hidden';
+            w.mboxDefine(did, mbn);
+            // call mboxUpdate with all of the profile parameters set
+            var _p = [],
+                _cData = cxd['s_dmdbase'],
+                _cDataCustom = cxd['s_dmdbase_custom'],
+                _cda = [],
+                _da = this.conf.dimensionArray,
+                _dac = this.conf.dimensionArrayCustom;
+            _p.push(mbn);
+            if (_cData) {
+                _cda = _cData.split(this.conf.delim);
+                if (_cda.length == 8) {
+                    // set the standard 8 params
+                    for (i = 0; i < 8; i++)
+                        if (_da[i].id) _p.push('profile.' + this.conf.tntVarPrefix + _da[i]
+                            .id + '=' + _cda[i]);
+                        // set the optional 8 params
+                    if (_cDataCustom && _dac) {
+                        _cda = _cDataCustom.split(this.conf.delim);
+                        if (_cda.length == 8)
+                            for (i = 8; i < 16; i++)
+                                if (_dac[i - 8].id) _p.push('profile.' + this.conf.tntVarPrefix +
+                                    _dac[i - 8].id + '=' + _cda[i - 8]);
                     }
+                    w.mboxUpdate.apply(w, _p);
                 }
             }
+        }
     }
     //  Cookie read depending on which type of s_code
-    this.c_r = function(s, cname) {
+    this.c_r = function(sObj, cname) {
         if (s.Util && s.Util.cookieRead) {
             return s.Util.cookieRead(cname);
         } else {
             return s.c_r(cname);
         }
     }
-    this.c_w = function(s, cname, cval) {
+    this.c_w = function(sObj, cname, cval) {
         if (s.Util && s.Util.cookieWrite) {
             return s.Util.cookieWrite(cname, cval);
         } else {
             return s.c_w(cname, cval);
         }
     }
+    this.log = function(msg) {
+        if ((typeof window.console !== 'undefined') &&
+            (this.conf.logging) ||
+            (s.getQueryParam('db_logging') === 'true')) {
+            window.console.log('DB AADC: ' + msg);
+        }
+    }
 } //end class
 s_db = new s_demandbase_plugin({
-    testIP: '12.253.139.1', //'210.55.32.121',
+    testIP: '50.59.18.196', //'210.55.32.121',
+    logging: true,
     s: window.s,
-    key: "bea32069fc38372f9a97811e0edfac02d6863e86",
-    apiBase: "//api.demandbase.com/api/v2/ip.json",
-    delim: ":",
+    key: 'bea32069fc38372f9a97811e0edfac02d6863e86',
+    apiBase: '//api.demandbase.com/api/v2/ip.json',
+    delim: ':',
     setTnt: true,
-    tntVarPrefix: "db_",
+    tntVarPrefix: 'db_',
     dimensionArray: [
-        { "id": "demandbase_sid",   "max_size": 10 },
-        { "id": "company_name",     "max_size": 40 },
-        { "id": "industry",         "max_size": 40 },
-        { "id": "sub_industry",     "max_size": 40 },
-        { "id": "employee_range",   "max_size": 30 },
-        { "id": "revenue_range",    "max_size": 10 },
-        { "id": "audience",         "max_size": 30 },
-        { "id": "audience_segment", "max_size": 30 }
+        { 'id': 'demandbase_sid',   'max_size': 10 },
+        { 'id': 'company_name',     'max_size': 40 },
+        { 'id': 'industry',         'max_size': 40 },
+        { 'id': 'sub_industry',     'max_size': 40 },
+        { 'id': 'employee_range',   'max_size': 30 },
+        { 'id': 'revenue_range',    'max_size': 10 },
+        { 'id': 'audience',         'max_size': 30 },
+        { 'id': 'audience_segment', 'max_size': 30 }
     ],
     dimensionArrayCustom: [
-        { "id": "marketing_alias",          "max_size": 30 },
-        { "id": "street_address",           "max_size": 30 },
-        { "id": "stock_ticker",             "max_size": 30 },
-        { "id": "registry_city",            "max_size": 30 },
-        { "id": "watch_list_account_type",  "max_size": 30 },
-        { "id": "", "max_size": 30 },
-        { "id": "", "max_size": 30 },
-        { "id": "", "max_size": 30 }
+        { 'id': 'worldhq_company_name',    'max_size': 30 },
+        { 'id': 'watch_list_account_type', 'max_size': 30 },
+        { 'id': 'stock_ticker',            'max_size': 30 },
+        { 'id': 'b2b',                     'max_size': 5 },
+        { 'id': 'b2c',                     'max_size': 5 },
+        { 'id': 'fortune_1000',            'max_size': 5 },
+        { 'id': 'forbes_2000',             'max_size': 5 },
+        { 'id': '', 'max_size': 30 }
     ],
-    var_name: "s_demandbase_v2.2",
-    link_name: "Demandbase Event",
+    var_name: 's_demandbase_v2.2',
+    link_name: 'Demandbase Event',
     nonOrgMatchLabel: '[n/a]',
-    contextName: "s_dmdbase";
-    contextNameCustom: "s_dmdbase_custom";
+    contextName: 's_dmdbase',
+    contextNameCustom: 's_dmdbase_custom'
 });
 s_db.r();
 /***
     End Demandbase Data Connector v2.2
 ***/
-
-
-/* Module: Integrate  (LEGACY ONLY - this is NOT compatible with AppMeasurement for JavaScript) */
-s.m_Integrate_c="var m=s.m_i('Integrate');m.add=function(n,o){var m=this,p;if(!o)o='s_Integrate_'+n;if(!m.s.wd[o])m.s.wd[o]=new Object;m[n]=new Object;p=m[n];p._n=n;p._m=m;p._c=0;p._d=0;p.disable=0;p"
-+".get=m.get;p.delay=m.delay;p.ready=m.ready;p.beacon=m.beacon;p.script=m.script;m.l[m.l.length]=n};m._g=function(t){var m=this,s=m.s,i,p,f=(t?'use':'set')+'Vars',tcf;for(i=0;i<m.l.length;i++){p=m[m."
-+"l[i]];if(p&&!p.disable&&p[f]){if(s.apv>=5&&(!s.isopera||s.apv>=7)){tcf=new Function('s','p','f','var e;try{p[f](s,p)}catch(e){}');tcf(s,p,f)}else p[f](s,p)}}};m._t=function(){this._g(1)};m._fu=func"
-+"tion(p,u){var m=this,s=m.s,v,x,y,z,tm=new Date;if(u.toLowerCase().substring(0,4) != 'http')u='http://'+u;if(s.ssl)u=s.rep(u,'http:','https:');p.RAND=Math&&Math.random?Math.floor(Math.random()*10000"
-+"000000000):tm.getTime();p.RAND+=Math.floor(tm.getTime()/10800000)%10;x=0;while(x>=0){x=u.indexOf('[',x);if(x>=0){y=u.indexOf(']',x);if(y>x){z=u.substring(x+1,y);if(z.length>2&&z.substring(0,2)=='s."
-+"'){v=s[z.substring(2)];if(!v)v=''}else{v=''+p[z];if(!(v==p[z]||parseFloat(v)==p[z]))z=0}if(z) {u=u.substring(0,x)+s.rep(escape(v),'+','%2B')+u.substring(y+1);x=y-(z.length-v.length+1)} else {x=y}}}"
-+"}return u};m.get=function(u,v){var p=this,m=p._m;if(!p.disable){if(!v)v='s_'+m._in+'_Integrate_'+p._n+'_get_'+p._c;p._c++;p.VAR=v;p._d++;m.s.loadModule('Integrate:'+v,m._fu(p,u),0,1,p._n)}};m.delay"
-+"=function(){var p=this;if(p._d<=0)p._d=1};m.ready=function(){var p=this,m=p._m;p._d=0;if(!p.disable)m.s.dlt()};m._d=function(){var m=this,i,p;for(i=0;i<m.l.length;i++){p=m[m.l[i]];if(p&&!p.disable&"
-+"&p._d>0)return 1}return 0};m._x=function(d,n){var p=this[n],x;if(!p.disable){for(x in d)if(x&&(!Object||!Object.prototype||!Object.prototype[x]))p[x]=d[x];p._d--}};m.beacon=function(u){var p=this,m"
-+"=p._m,s=m.s,imn='s_i_'+m._in+'_Integrate_'+p._n+'_'+p._c,im;if(!p.disable&&s.d.images&&s.apv>=3&&(!s.isopera||s.apv>=7)&&(s.ns6<0||s.apv>=6.1)){p._c++;im=s.wd[imn]=new Image;im.src=m._fu(p,u)}};m.s"
-+"cript=function(u){var p=this,m=p._m;if(!p.disable)m.s.loadModule(0,m._fu(p,u),0,1)};m.l=new Array;if(m.onLoad)m.onLoad(s,m)";
-s.m_i("Integrate");
 
 
 /*
