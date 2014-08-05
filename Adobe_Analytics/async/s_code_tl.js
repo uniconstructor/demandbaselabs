@@ -26,6 +26,7 @@ s.pageURL=window.location.href;
 s.usePlugins=true
 function s_doPlugins(s) {
     //Non-Demandbase plugins go here....
+    //Demandbase plugin does NOT go here
 
 } // end s_doPlugins functions
 s.doPlugins=s_doPlugins
@@ -33,26 +34,40 @@ s.doPlugins=s_doPlugins
 
 /* PLUGIN MODULES */
 
+
+/*
+ * Plugin: getQueryParam 2.3
+ */
+s.getQueryParam=new Function("p","d","u",""
++"var s=this,v='',i,t;d=d?d:'';u=u?u:(s.pageURL?s.pageURL:s.wd.locati"
++"on);if(u=='f')u=s.gtfs().location;while(p){i=p.indexOf(',');i=i<0?p"
++".length:i;t=s.p_gpv(p.substring(0,i),u+'');if(t){t=t.indexOf('#')>-"
++"1?t.substring(0,t.indexOf('#')):t;}if(t)v+=v?d+t:t;p=p.substring(i="
++"=p.length?i:i+1)}return v");
+s.p_gpv=new Function("k","u",""
++"var s=this,v='',i=u.indexOf('?'),q;if(k&&i>-1){q=u.substring(i+1);v"
++"=s.pt(q,'&','p_gvf',k)}return v");
+s.p_gvf=new Function("t","k",""
++"if(t){var s=this,i=t.indexOf('='),p=i<0?t:t.substring(0,i),v=i<0?'T"
++"rue':t.substring(i+1);if(p.toLowerCase()==k.toLowerCase())return s."
++"epa(v)}return ''");
+
 /***
     Begin Demandbase Data Connector v2.2
 ***/
 function s_demandbase_plugin(c) {
     this.conf = c;
     this.r = function() {
-        //TODO: investigate - what/why?
-        //if ("done" === this.c_r(this.conf.s, this.conf.var_name)) {
-            //TODO: possibly call track (but with what?)
-            //return;
-        //}
-
         if(this.c_r(this.conf.s, this.conf.contextName)) {
-            this.log('Cookie Exists...setting contextData from cookie');
+            this.log('Cookie Exists...setting contextData from cookie, no s.tl call');
 
             var stdData = this.c_r(this.conf.s, this.conf.contextName),
-                custData = this.c_r(this.conf.s, this.conf.contextNameCustom);
+                custData = this.c_r(this.conf.s, this.conf.contextNameCustom),
+                downData = this.c_r(this.conf.s, this.conf.contextNameDownstream);
 
             s.contextData[this.conf.contextName] = stdData;
             s.contextData[this.conf.contextNameCustom] = custData;
+            s.contextData[this.conf.contextNameDownstream] = downData;
         } else {
             this.log('Cookie not set...making API call...');
 
@@ -74,7 +89,6 @@ function s_demandbase_plugin(c) {
         if (p.audience !== 'undefined') {
             var cxd = this.setCxd(p);
 
-            //TODO: why checking for s?  still need to do this?
             if (typeof(this.conf.s) !== 'undefined') {
                 this.slb(this.conf.s, cxd, this.conf.link_name);
             }
@@ -83,9 +97,11 @@ function s_demandbase_plugin(c) {
                 this.setTnTParams(cxd);
             }
         }
+
         this.c_w(this.conf.s, this.conf.var_name, 'done');
         this.c_w(this.conf.s, this.conf.contextName, cxd[this.conf.contextName]);
         this.c_w(this.conf.s, this.conf.contextNameCustom, cxd[this.conf.contextNameCustom]);
+        this.c_w(this.conf.s, this.conf.contextNameDownstream, cxd[this.conf.contextNameDownstream]);
     }
     this.setCxd = function(data) {
         var cxd = {};
@@ -93,6 +109,9 @@ function s_demandbase_plugin(c) {
 
         if (this.conf.dimensionArrayCustom) {
             cxd[this.conf.contextNameCustom] = this.compact(data, this.conf.dimensionArrayCustom);
+        }
+        if (this.conf.dimensionArrayDownstream) {
+            cxd[this.conf.contextNameDownstream] = this.compact(data, this.conf.dimensionArrayDownstream);
         }
 
         for (var c in cxd) {
@@ -118,23 +137,33 @@ function s_demandbase_plugin(c) {
             s.linkTrackEvents = _lte;
             this.log('TrackLinks called');
         }
-        //TODO: why does this set contextData to blank?
+
         /*for (var c in cxd) {
             s.contextData[c] = '';
         }*/
     }
     this.compact = function(p, _da) {
-        var _va = [];
+        var _va = [],
+            regMap = {
+                'city' : 'registry_city',
+                'state' : 'registry_state',
+                'zip' : 'registry_zip_code',
+                'country' : 'registry_country_code',
+                'latitude' : 'registry_latitude',
+                'longitude' : 'registry_longitude'
+            };
+
         for (var i = 0; i < _da.length; i++) {
             var _id = _da[i].id,
-                _max = _da[i].max_size;
+                _max = _da[i].max_size,
+                rn = regMap[_id];
 
             if (!_max) _max = 20;
 
-            if (_id && p[_id]) {
-                var _b = '' + p[_id] || this.conf.nonOrgMatchLabel;
-
-                _b = _b.replace(this.conf.delim, ' ');
+            if ((_id && p[_id]) || p[rn]) {
+                var _b = (p[_id] || p[rn] || this.conf.nonOrgMatchLabel);
+                _b = _b.toString(); //force string
+                _b = _b.replace(this.conf.delim, ' '); //remove delim from data
                 _va.push(_b.substring(0, _max));
             } else {
                 if(p[_id] == false) {
@@ -217,24 +246,23 @@ function s_demandbase_plugin(c) {
         }
     }
     this.log = function(msg) {
-        if ((typeof window.console !== 'undefined') &&
-            (this.conf.logging) ||
-            (s.getQueryParam('db_logging') === 'true')) {
+        if ((typeof window.console !== 'undefined') && (this.conf.logging)) {
             window.console.log('DB AADC: ' + msg);
         }
     }
-} //end class
+} //end s_demandbase_plugin
+
 s_db = new s_demandbase_plugin({
-    testIP: '50.59.18.196', //'210.55.32.121',
+    //testIP: '30.0.0.1', //'50.59.18.196', //'210.55.32.121', '30.0.0.1',//
     logging: true,
     s: window.s,
     key: 'bea32069fc38372f9a97811e0edfac02d6863e86',
     apiBase: '//api.demandbase.com/api/v2/ip.json',
     delim: ':',
-    setTnt: true,
+    setTnt: false,
     tntVarPrefix: 'db_',
     dimensionArray: [
-        { 'id': 'demandbase_sid',   'max_size': 10 },
+        { 'id': 'demandbase_sid',   'max_size': 10 }, //note: total of max_sizes cannot exceed 255 for each array
         { 'id': 'company_name',     'max_size': 40 },
         { 'id': 'industry',         'max_size': 40 },
         { 'id': 'sub_industry',     'max_size': 40 },
@@ -244,43 +272,40 @@ s_db = new s_demandbase_plugin({
         { 'id': 'audience_segment', 'max_size': 30 }
     ],
     dimensionArrayCustom: [
-        { 'id': 'worldhq_company_name',    'max_size': 30 },
-        { 'id': 'watch_list_account_type', 'max_size': 30 },
-        { 'id': 'stock_ticker',            'max_size': 30 },
-        { 'id': 'b2b',                     'max_size': 5 },
-        { 'id': 'b2c',                     'max_size': 5 },
-        { 'id': 'fortune_1000',            'max_size': 5 },
-        { 'id': 'forbes_2000',             'max_size': 5 },
-        { 'id': '', 'max_size': 30 }
+        { 'id': 'city',     'max_size': 40 },
+        { 'id': 'state',    'max_size': 4 },
+        { 'id': 'zip',      'max_size': 12 },
+        { 'id': 'country',  'max_size': 4 },
+        { 'id': 'b2b',      'max_size': 5 },
+        { 'id': 'b2c',      'max_size': 5 },
+        { 'id': 'watch_list_account_type', 'max_size': 20 }, //reserved for account watch
+        { 'id': '', 'max_size': 30 } //reserved for tech insights
+    ],
+    dimensionArrayDownstream: [
+        { 'id': 'fortune_1000',    'max_size': 5 },
+        { 'id': 'forbes_2000',     'max_size': 5 },
+        { 'id': 'primary_sic',     'max_size': 8 },
+        { 'id': 'employee_count',  'max_size': 7 },
+        { 'id': 'annual_sales',    'max_size': 15 },
+        { 'id': 'web_site',        'max_size': 30 },
+        { 'id': 'stock_ticker',    'max_size': 6 },
+        { 'id': 'traffic',         'max_size': 30 }
     ],
     var_name: 's_demandbase_v2.2',
     link_name: 'Demandbase Event',
     nonOrgMatchLabel: '[n/a]',
     contextName: 's_dmdbase',
-    contextNameCustom: 's_dmdbase_custom'
+    contextNameCustom: 's_dmdbase_custom',
+    contextNameDownstream: 's_dmdbase_downstream'
 });
+
 s_db.r();
+
 /***
     End Demandbase Data Connector v2.2
 ***/
 
 
-/*
- * Plugin: getQueryParam 2.3
- */
-s.getQueryParam=new Function("p","d","u",""
-+"var s=this,v='',i,t;d=d?d:'';u=u?u:(s.pageURL?s.pageURL:s.wd.locati"
-+"on);if(u=='f')u=s.gtfs().location;while(p){i=p.indexOf(',');i=i<0?p"
-+".length:i;t=s.p_gpv(p.substring(0,i),u+'');if(t){t=t.indexOf('#')>-"
-+"1?t.substring(0,t.indexOf('#')):t;}if(t)v+=v?d+t:t;p=p.substring(i="
-+"=p.length?i:i+1)}return v");
-s.p_gpv=new Function("k","u",""
-+"var s=this,v='',i=u.indexOf('?'),q;if(k&&i>-1){q=u.substring(i+1);v"
-+"=s.pt(q,'&','p_gvf',k)}return v");
-s.p_gvf=new Function("t","k",""
-+"if(t){var s=this,i=t.indexOf('='),p=i<0?t:t.substring(0,i),v=i<0?'T"
-+"rue':t.substring(i+1);if(p.toLowerCase()==k.toLowerCase())return s."
-+"epa(v)}return ''");
 /************* END PLUGINS SECTION **************/
 
 
