@@ -57,17 +57,18 @@ s.p_gvf=new Function("t","k",""
 ***/
 function s_demandbase_plugin(c) {
     this.conf = c;
-    this.r = function() {
-        if(this.c_r(this.conf.s, this.conf.contextName)) {
+    this.loadDemandbase = function() {
+        var sObj = this.conf.s;
+        if(this.c_r(sObj, this.conf.contextName)) {
             this.log('Cookie Exists...setting contextData from cookie, no s.tl call');
 
-            var stdData = this.c_r(this.conf.s, this.conf.contextName),
-                custData = this.c_r(this.conf.s, this.conf.contextNameCustom),
-                downData = this.c_r(this.conf.s, this.conf.contextNameDownstream);
+            var stdData = this.c_r(sObj, this.conf.contextName),
+                custData = this.c_r(sObj, this.conf.contextNameCustom),
+                downData = this.c_r(sObj, this.conf.contextNameDownstream);
 
-            s.contextData[this.conf.contextName] = stdData;
-            s.contextData[this.conf.contextNameCustom] = custData;
-            s.contextData[this.conf.contextNameDownstream] = downData;
+            sObj.contextData[this.conf.contextName] = stdData;
+            sObj.contextData[this.conf.contextNameCustom] = custData;
+            sObj.contextData[this.conf.contextNameDownstream] = downData;
         } else {
             this.log('Cookie not set...making API call...');
 
@@ -85,12 +86,14 @@ function s_demandbase_plugin(c) {
     }
     this.track = function(p) {
         this.log('Running Demandbase IP API callback');
+        var sObj = this.conf.s;
         p = this.flatten(p);
         if (p.audience !== 'undefined') {
             var cxd = this.setCxd(p);
 
-            if (typeof(this.conf.s) !== 'undefined') {
-                this.slb(this.conf.s, cxd, this.conf.link_name);
+            //If cookie is not set, call track links
+            if (typeof(sObj) !== 'undefined') {
+                this.slb(sObj, cxd, this.conf.link_name);
             }
 
             if (this.conf.setTnt) {
@@ -98,13 +101,14 @@ function s_demandbase_plugin(c) {
             }
         }
 
-        this.c_w(this.conf.s, this.conf.var_name, 'done');
-        this.c_w(this.conf.s, this.conf.contextName, cxd[this.conf.contextName]);
-        this.c_w(this.conf.s, this.conf.contextNameCustom, cxd[this.conf.contextNameCustom]);
-        this.c_w(this.conf.s, this.conf.contextNameDownstream, cxd[this.conf.contextNameDownstream]);
+        this.c_w(sObj, this.conf.var_name, 'done');
+        this.c_w(sObj, this.conf.contextName, cxd[this.conf.contextName]);
+        this.c_w(sObj, this.conf.contextNameCustom, cxd[this.conf.contextNameCustom]);
+        this.c_w(sObj, this.conf.contextNameDownstream, cxd[this.conf.contextNameDownstream]);
     }
     this.setCxd = function(data) {
-        var cxd = {};
+        var cxd = {},
+            sObj = this.conf.s;
         cxd[this.conf.contextName] = this.compact(data, this.conf.dimensionArray);
 
         if (this.conf.dimensionArrayCustom) {
@@ -115,32 +119,29 @@ function s_demandbase_plugin(c) {
         }
 
         for (var c in cxd) {
-            s.contextData[c] = cxd[c];
+            sObj.contextData[c] = cxd[c];
         }
 
         return cxd;
     }
     this.slb = function(sObj, cxd, lname) {
-        var _ltv = s.linkTrackVars,
-            _lte = s.linkTrackEvents;
-        s.linkTrackVars = s.linkTrackEvents = ''; //TODO: why?
+        var _ltv = sObj.linkTrackVars,
+            _lte = sObj.linkTrackEvents;
+        sObj.linkTrackVars = sObj.linkTrackEvents = '';  //clear these from any prior s.tl calls
 
         for (var c in cxd) {
-            s.linkTrackVars += 'contextData.' + c + ',';
-            //s.contextData[c] = cxd[c];
+            sObj.linkTrackVars += 'contextData.' + c + ',';
         }
 
-        //If cookie is not set, call track links
-        if(!this.c_r(this.conf.contextName)) {
-            s.tl(true, 'o', lname);
-            s.linkTrackVars = _ltv;
-            s.linkTrackEvents = _lte;
-            this.log('TrackLinks called');
-        }
+        sObj.tl(true, 'o', lname);
+        sObj.linkTrackVars = _ltv;
+        sObj.linkTrackEvents = _lte; //reinstate from prior s.tl calls
+        this.log('TrackLinks called');
 
-        /*for (var c in cxd) {
-            s.contextData[c] = '';
-        }*/
+        //clear from contextData to prevent multiple instances on other s.tl calls
+        for (var c in cxd) {
+            sObj.contextData[c] = '';
+        }
     }
     this.compact = function(p, _da) {
         var _va = [],
@@ -232,17 +233,17 @@ function s_demandbase_plugin(c) {
     }
     //  Cookie read depending on which type of s_code
     this.c_r = function(sObj, cname) {
-        if (s.Util && s.Util.cookieRead) {
-            return s.Util.cookieRead(cname);
+        if (sObj.Util && sObj.Util.cookieRead) {
+            return sObj.Util.cookieRead(cname);
         } else {
-            return s.c_r(cname);
+            return sObj.c_r(cname);
         }
     }
     this.c_w = function(sObj, cname, cval) {
-        if (s.Util && s.Util.cookieWrite) {
-            return s.Util.cookieWrite(cname, cval);
+        if (sObj.Util && sObj.Util.cookieWrite) {
+            return sObj.Util.cookieWrite(cname, cval);
         } else {
-            return s.c_w(cname, cval);
+            return sObj.c_w(cname, cval);
         }
     }
     this.log = function(msg) {
@@ -299,7 +300,7 @@ s_db = new s_demandbase_plugin({
     contextNameDownstream: 's_dmdbase_downstream'
 });
 
-s_db.r();
+s_db.loadDemandbase();
 
 /***
     End Demandbase Data Connector v2.2
