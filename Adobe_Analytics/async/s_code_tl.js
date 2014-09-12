@@ -63,12 +63,11 @@ function s_demandbase_plugin(c) {
             this.log('Cookie Exists...setting contextData from cookie, no s.tl call');
 
             var stdData = this.c_r(sObj, this.conf.contextName),
-                custData = this.c_r(sObj, this.conf.contextNameCustom),
-                downData = this.c_r(sObj, this.conf.contextNameDownstream);
+                custData = this.c_r(sObj, this.conf.contextNameCustom);
 
             sObj.contextData[this.conf.contextName] = stdData;
             sObj.contextData[this.conf.contextNameCustom] = custData;
-            sObj.contextData[this.conf.contextNameDownstream] = downData;
+
         } else {
             this.log('Cookie not set...making API call...');
 
@@ -104,7 +103,6 @@ function s_demandbase_plugin(c) {
         this.c_w(sObj, this.conf.var_name, 'done');
         this.c_w(sObj, this.conf.contextName, cxd[this.conf.contextName]);
         this.c_w(sObj, this.conf.contextNameCustom, cxd[this.conf.contextNameCustom]);
-        this.c_w(sObj, this.conf.contextNameDownstream, cxd[this.conf.contextNameDownstream]);
     }
     this.setCxd = function(data) {
         var cxd = {},
@@ -113,9 +111,6 @@ function s_demandbase_plugin(c) {
 
         if (this.conf.dimensionArrayCustom) {
             cxd[this.conf.contextNameCustom] = this.compact(data, this.conf.dimensionArrayCustom);
-        }
-        if (this.conf.dimensionArrayDownstream) {
-            cxd[this.conf.contextNameDownstream] = this.compact(data, this.conf.dimensionArrayDownstream);
         }
 
         for (var c in cxd) {
@@ -257,7 +252,7 @@ s_db = new s_demandbase_plugin({
     //testIP: '30.0.0.1', //'50.59.18.196', //'210.55.32.121', '30.0.0.1',//
     logging: true,
     s: window.s,
-    key: 'bea32069fc38372f9a97811e0edfac02d6863e86',
+    key: '',
     apiBase: '//api.demandbase.com/api/v2/ip.json',
     delim: ':',
     setTnt: false,
@@ -279,25 +274,14 @@ s_db = new s_demandbase_plugin({
         { 'id': 'country',  'max_size': 4 },
         { 'id': 'b2b',      'max_size': 5 },
         { 'id': 'b2c',      'max_size': 5 },
-        { 'id': 'watch_list_account_type', 'max_size': 20 }, //reserved for account watch
+        { 'id': '', 'max_size': 20 }, //reserved for account watch
         { 'id': '', 'max_size': 30 } //reserved for tech insights
-    ],
-    dimensionArrayDownstream: [
-        { 'id': 'fortune_1000',    'max_size': 5 },
-        { 'id': 'forbes_2000',     'max_size': 5 },
-        { 'id': 'primary_sic',     'max_size': 8 },
-        { 'id': 'employee_count',  'max_size': 7 },
-        { 'id': 'annual_sales',    'max_size': 15 },
-        { 'id': 'web_site',        'max_size': 30 },
-        { 'id': 'stock_ticker',    'max_size': 6 },
-        { 'id': 'traffic',         'max_size': 30 }
     ],
     var_name: 's_demandbase_v2.2',
     link_name: 'Demandbase Event',
     nonOrgMatchLabel: '[n/a]',
     contextName: 's_dmdbase',
-    contextNameCustom: 's_dmdbase_custom',
-    contextNameDownstream: 's_dmdbase_downstream'
+    contextNameCustom: 's_dmdbase_custom'
 });
 
 s_db.loadDemandbase();
