@@ -313,6 +313,10 @@ A `String` of the IP address to use to override the IP API's `query` parameter.
 ####showResult
 This will show a table below the form with all fields in the company profile each time a new data set is parsed.
 
+####Sample Testing URL
+`http://www.company.com/contactus.html?db_useTestIp=true&db_ip=3.0.0.1`
+
+
 ##Styling the Company Autocomplete Menu
 You can customize the look and feel of the Company Autocomplete menu using CSS rules.
 The Company Autocomplete menu has custom IDs and follows the styling instructions found in the official jQuery UI Theming documentation.
