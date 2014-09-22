@@ -7,7 +7,7 @@ For the latest public **production** build, visit: https://drupal.org/project/de
 
 #Prerequisities
 * Drupal version 6.x or 7.x
-* [CTools Siute Module](https://drupal.org/project/ctools) installed
+* [CTools Suite Module](https://drupal.org/project/ctools) installed
 * Optional: [Context Module](https://drupal.org/project/context) installed
 
 #Installation
