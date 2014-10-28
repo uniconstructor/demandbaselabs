@@ -43,7 +43,7 @@ The Demandbase Form Connector provides any easy-to-deploy, light-weight solution
 
 #Installation
 
-<font color='red'> Before proceeding make sure you have spoken to a Demandbase Solution Consultant as the code below may not apply to you. Demandbase has recently rolled up all the different scripts into one system and the approach below is not for everyone. </font>
+###NOTE: Before proceeding make sure you have spoken to a Demandbase Solution Consultant as the code below may not apply to you. Demandbase has recently rolled up all the different scripts into one system and the approach below is not for everyone. 
 
 To add the Demandbase Form Connector to your web forms:
 
