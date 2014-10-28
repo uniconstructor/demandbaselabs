@@ -43,7 +43,7 @@ The Demandbase Form Connector provides any easy-to-deploy, light-weight solution
 
 #Installation
 
-###NOTE: Before proceeding make sure you have spoken to a Demandbase Solution Consultant as the code below may not apply to you. Demandbase has recently rolled up all the different scripts into one system and the approach below is not for everyone. 
+###NOTE: If you are currently using the Demandbase Tag, do not manually add this code to your page. If you are unsure of your integration, please contact [Demandbase Support](http://support.demandbase.com/hc/en-us/requests/new).
 
 To add the Demandbase Form Connector to your web forms:
 
