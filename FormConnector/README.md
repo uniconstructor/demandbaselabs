@@ -42,6 +42,9 @@ The Demandbase Form Connector provides any easy-to-deploy, light-weight solution
 *If you are not already using the cloud-based Form Connector, talk to your Customer Success Manager about an upgrade!*
 
 #Installation
+
+** Before proceeding make sure you have spoken to a Demandbase Solution Consultant as the code below may not apply to you. Demandbase has recently rolled up all the different scripts into one system and the approach below is not for everyone. **
+
 To add the Demandbase Form Connector to your web forms:
 
 1. Replace "Email" and "Company" in the snippet below with the actual IDs from the email and company fields on your form.
