@@ -29,6 +29,8 @@ Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
   * GA Classic users skip this step.
 
 ##Configuration Wizard
+###NOTE: If you are currently using the Demandbase Tag, do not manually add this code to your page. If you are unsure of your integration, please contact [Demandbase Support](http://support.demandbase.com/hc/en-us/requests/new).
+
 * If you are using Google Tag Manager, skip to [Using Google Tag Manager](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#google-tag-manager)
 * Visit the [Connector Setup Wizard](http://demandbaselabs.com/cloud/) to configure and generate your connector.
 * Enter your key, select the attributes you wish to integrate.  (Make sure they're in the same order you created them in Universal Analytics)
@@ -54,6 +56,8 @@ Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/)
 
 ##Using the Google Analytics Connector with Google Tag Manager
 In order to deploy the Demandbase Connector using Google Tag Manager, you should deploy Google Analytics using the out-of-the-box tags available in GTM.
+
+###NOTE: If you are currently using the Demandbase Tag, do not manually add this code to your page or use the tool below. If you are unsure of your integration, please contact [Demandbase Support](http://support.demandbase.com/hc/en-us/requests/new).
 
 1. Generate a GTM-only Connector Tag
   * Visit [DemandbaseLabs.com/cloud](http://demandbaselabs.com/cloud/).
