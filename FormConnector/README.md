@@ -32,6 +32,8 @@ The Demandbase Form Connector provides any easy-to-deploy, light-weight solution
 
 
 #Getting Started
+>####NOTE: If you are currently using the Demandbase Tag or are a new customer, do not manually add the code below to your page as it is only for special circumstances. For form connector properties please refer to the Configuration section. If you are unsure of your integration, please contact [Demandbase Support](http://support.demandbase.com/hc/en-us/requests/new).
+
 1. Decide which Demandbase attributes to capture and whether they'll be hidden fields, growing fields, or visible fields.  Then, complete a Form Design Reference document (available from your Customer Success Manager).
 2. Create a test form and landing page.  (It's best to use a single, reusable form and landing page template, if possible.)
   * This typically involves cloning one of your existing page *and* adding hidden fields for the Demandbase attributes you wish to capture.
