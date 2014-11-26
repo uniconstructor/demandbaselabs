@@ -54,7 +54,7 @@ Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 #Google Tag Manager
 Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/) for optimal flexibility.
 
-##Using the Google Analytics Connector with Google Tag Manager
+##Using the Demandbase Tag with Google Tag Manager
 In order to deploy the Demandbase Connector using Google Tag Manager, you should deploy Google Analytics using the out-of-the-box tags available in GTM.
 
 1. If not already, create a GTM account, a container for all your scripts and a Universal Tag with a macro of your tracking ID (UA-XXXXX-X).
