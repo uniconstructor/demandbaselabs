@@ -59,7 +59,7 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you should
 
 1. If not already, create a GTM account, a container for all your scripts and a Universal Tag with a macro of your tracking ID (UA-XXXXX-X).
 2.  In Google Tag Manager, create a RULE called "All Pages after gtm.dom" with 2 conditions. All Pages (url matches regex .*) AND (event equals gtm.dom)
-3.  Create a new "Custom HTML Tag", then copy/paste the Demandbase Tag into the GTM HTML Tag. Assign the RULE from prevoius step to the Firing Rule of this tag.
+3.  Create a new "Custom HTML Tag", then copy/paste the Demandbase Tag into the GTM HTML Tag. Assign the RULE from previous step to the Firing Rule of this tag.
 4. In GTM, Create a Rule that fires on the "Demandbase_Loaded" event.
   * <img src="https://www.evernote.com/shard/s100/sh/bcb963f6-62ab-420b-99b0-f4a29253c13a/81ebc0cede3b01e9a61df1bcc88930be/deep/0/Screenshot%205/16/14,%209:58%20AM.jpg" alt="event-based rule setup" />
 5. Create Macros (in GTM) for each Demandbase attribute you wish to capture.
