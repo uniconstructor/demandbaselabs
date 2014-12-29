@@ -24,7 +24,14 @@
                 //Content customization code goes here!
                 try {
                     window.optimizely = window.optimizely || [];
-                    window.optimizely.push(['activate', 'EXPT_ID_HERE']);
+                    if(Demandbase.Segments.IndustryIsSoftware){
+                        window.optimizely.push(['activate', 'EXPT_ID_HERE']);
+                    }
+                    else if(Demandbase.Segments.SMB_Software){
+                        window.optimizely.push(['activate', 'EXPT_ID_HERE']);
+                        
+                    }
+                    
                 } catch(e) {
                     alert(e + ' : ' + e.message);
                 }
