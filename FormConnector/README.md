@@ -193,10 +193,10 @@ Fields in this list are hidden by the Form Connector when the page loads, and **
 Pass `{force:true}` to override `toggleEmptyFieldsOnly` setting.
 
 ####toggleEmptyFieldsOnly
-*Optional* (*Default:* `true`)
-When `true` only the fields in `toggleField` list that do not have a value will be shown.  (Those fields whose `getToggleFieldValue` function returns empty or null will be shown.)
+*Optional* (*Default:* `false`)
+When `false` all the fields in `toggleField` list will be shown. 
 
-Set to `false` to toggle all fields every time.
+Set to `true` to toggle only fields whose `getToggleFieldValue` function returns empty or null.
 
 ####getToggleElement
 *Optional (Required in some cases)*
