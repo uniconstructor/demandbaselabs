@@ -55,20 +55,20 @@ Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/) for optimal flexibility.
 
 ##Using the Demandbase Tag with Google Tag Manager
-In order to deploy the Demandbase Connector using Google Tag Manager, you should deploy Google Analytics using the out-of-the-box tags available in GTM.
+In order to deploy the Demandbase Connector using Google Tag Manager, you must deploy Google Analytics Tracking using the out-of-the-box tags available in GTM.
 
 1. If not already, create a GTM account, a container for all your scripts and a Universal Tag with a macro of your tracking ID (UA-XXXXX-X).
 2.  In Google Tag Manager, create a RULE called "All Pages after gtm.dom" with 2 conditions. All Pages (url matches regex .*) AND (event equals gtm.dom)
 3.  Create a new "Custom HTML Tag", then copy/paste the Demandbase Tag into the GTM HTML Tag. Assign the RULE from previous step to the Firing Rule of this tag.
 4. In GTM, Create a Rule that fires on the "Demandbase_Loaded" event.
   * <img src="https://www.evernote.com/shard/s100/sh/bcb963f6-62ab-420b-99b0-f4a29253c13a/81ebc0cede3b01e9a61df1bcc88930be/deep/0/Screenshot%205/16/14,%209:58%20AM.jpg" alt="event-based rule setup" />
-5. Create Macros (in GTM) for each Demandbase attribute you wish to capture.
+5. Create Macros (in GTM) for each Demandbase attribute you wish to capture. For all Macros EXCEPT audience the default value should be "Non-Company Visitor".
   * Each Demandbase attribute will have a corresponding Data Layer Variable.  Use the [Demandbase IP API](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_API_Documentation#IP_Address_API) variable name (e.g. `company_name`, `revenue_range`, etc.) in the "Data Layer Variable Name" field.
   * <img src="https://www.evernote.com/shard/s100/sh/278d9b6e-9b08-461f-b2e5-1e1239c557fc/de2cc954748566c624dd2e806b2496ca/deep/0/Screenshot%205/14/14,%2010:56%20AM.jpg" alt="Macro setup example"/>
 6. Now, [create a *new* Universal Analytics tag](https://support.google.com/tagmanager/answer/3281379?hl=en).   This tag will send a Custom Event and assign Custom Dimensions using the Macros you created.
   * Under "Track Type", select "Event".
     * Use "Demandbase" / "API Resolution" / "IP Address API" as the category / action / label for your event.
-    * SEt "Non-Interaction Hit" to `true`
+    * Set "Non-Interaction Hit" to `true`
   * For Firing Rules, use the "Demandbase_Loaded" Event created in step 3.
   * Set the Custom Dimensions - Use the number from the Dimension you created in Google Analytics paired with the corresponding Macro created in step 4.
   * <img src="https://www.evernote.com/shard/s100/sh/e321d290-afef-4a41-b327-97a8b39fca8f/ebf52febf2f29032ee8d345490a3814e/deep/0/Screenshot%205/5/14,%201:29%20PM.jpg" alt="GTM tag setup" />
