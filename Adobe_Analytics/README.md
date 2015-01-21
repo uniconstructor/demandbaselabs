@@ -29,7 +29,7 @@ See the [complete deployment guide](http://microsite.omniture.com/t2/help/en_US/
 #Resources
 A detailed walk-through of the Data Connector setup:
 
-http://demandbaselabs.com/docs/wiki/index.php?title=Site_Catalyst_Connector
+http://support.demandbase.com/hc/en-us/sections/200363950-Adobe
 
 Adobe Analytics in-product documentation for the Demandbase Data Connector:
 
