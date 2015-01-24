@@ -1,4 +1,9 @@
 #Demandbase Form Connector
+
+***
+NOTICE: A newer solution is now available.  For the latest, ask your Demandbase point of contact about upgrading to the new Demandbase tag.
+***
+
 ##Table of Contents
 * [Functionality Overview](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#functionality-overview)
 * [Getting Started](https://github.com/demandbaselabs/demandbaselabs/blob/master/FormConnector/README.md#getting-started)
