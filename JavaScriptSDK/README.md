@@ -1,5 +1,10 @@
-Demandbase JavaScript SDK
+Retired: Demandbase JavaScript SDK
 ==============
+
+***
+This is a legacy method for doing leveraging Demandbase using a JavaScript-based solution.
+For the latest, ask your Demandbase point of contact about upgrading to the new Demandbase tag.
+***
 
 The Demandbase JavaScript SDK is a developer toolkit for the leveraging the Demandbase Platform's Real-Time Identification APIs.  Key features include the ability to create reusable visitor segments, and easy access to a website visitor's company profile based on IP address or email domain.
 
