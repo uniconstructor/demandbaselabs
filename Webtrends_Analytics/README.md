@@ -1,6 +1,10 @@
 #Demandbase WebTrends Connector
 This connector sends Demandbase Company Profile attributes to WebTrends custom measures.
 
+***
+NOTICE: A newer solution is now available.  For the latest, ask your Demandbase point of contact about upgrading to the new Demandbase tag.
+***
+
 #Configuration
 
 1. Setup [Custom Measures](http://help.webtrends.com/en/analytics9admin/adding_calculated_measure_to_new_custom_report.html) in WebTrends
