@@ -1,6 +1,10 @@
 #Demandbase Google Analytics Connector
 Connect Demandbase to *GA Classic*, *GA Premium*, *Universal Analytics*.
 
+***
+NOTICE: A newer solution is now available.  For the latest, ask your Demandbase point of contact about upgrading to the new Demandbase tag.
+***
+
 ##Contents
 * [Getting Started](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#before-you-begin)
 * [Configuration](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#configuration)
