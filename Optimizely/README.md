@@ -1,4 +1,16 @@
 #Demandbase / Optimizely Integration
+
+#Native Integration
+Demandbase has partnered with Optimizely to provide native integration.  This integration is now available as a native feature for *Optimizely Enterprise* subscribers.
+
+For additional information see:
+* Solution Overview: https://www.optimizely.com/partners/technology/demandbase/
+* Setup Guide: https://help.optimizely.com/hc/en-us/articles/204009240-Integrating-Optimizely-with-Demandbase
+
+#Manual Integration
+
+*Optimizely Starter* subscribers can use Demandbase within Optimizely *Audiences* and for driving personlized content. 
+
 This basic HTML file demonstrates how to use the [Demandbase JavaScript SDK](https://github.com/demandbaselabs/demandbaselabs/tree/master/JavaScriptSDK) with Optimizely.
 
 There are two ways to use Demandbase within Optimizely.
