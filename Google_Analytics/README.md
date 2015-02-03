@@ -61,13 +61,16 @@ Deploy and manage via [*Google Tag Manager*](https://www.google.com/tagmanager/)
 ##Using the Demandbase Tag with Google Tag Manager
 In order to deploy the Demandbase Connector using Google Tag Manager, you must deploy Google Analytics Tracking using the out-of-the-box tags available in GTM.
 
-1. If not already, create a GTM account, a container for all your scripts and a Universal Tag with a macro of your tracking ID (UA-XXXXX-X).
+[If you are using GTM v2.](https://github.com/demandbaselabs/demandbaselabs/tree/master/Google_Analytics#google-tag-manager-v2)
+
+1. If you have not already done so, create a GTM account, a container for all your scripts and a Universal Tag with a macro of your tracking ID (UA-XXXXX-X).
 2.  In Google Tag Manager, create a RULE called "All Pages after gtm.dom" with 2 conditions. All Pages (url matches regex .*) AND (event equals gtm.dom)
 3.  Create a new "Custom HTML Tag", then copy/paste the Demandbase Tag into the GTM HTML Tag. Assign the RULE from previous step to the Firing Rule of this tag.
 4. In GTM, Create a Rule that fires on the "Demandbase_Loaded" event.
   * <img src="https://www.evernote.com/shard/s100/sh/bcb963f6-62ab-420b-99b0-f4a29253c13a/81ebc0cede3b01e9a61df1bcc88930be/deep/0/Screenshot%205/16/14,%209:58%20AM.jpg" alt="event-based rule setup" />
-5. Create Macros (in GTM) for each Demandbase attribute you wish to capture. For all Macros EXCEPT audience the default value should be "Non-Company Visitor".
+5. Create Macros (in GTM) for each Demandbase attribute you wish to capture. 
   * Each Demandbase attribute will have a corresponding Data Layer Variable.  Use the [Demandbase IP API](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_API_Documentation#IP_Address_API) variable name (e.g. `company_name`, `revenue_range`, etc.) in the "Data Layer Variable Name" field.
+  * For all Macros EXCEPT audience the default value should be "Non-Company Visitor".
   * <img src="https://www.evernote.com/shard/s100/sh/278d9b6e-9b08-461f-b2e5-1e1239c557fc/de2cc954748566c624dd2e806b2496ca/deep/0/Screenshot%205/14/14,%2010:56%20AM.jpg" alt="Macro setup example"/>
 6. Now, [create a *new* Universal Analytics tag](https://support.google.com/tagmanager/answer/3281379?hl=en).   This tag will send a Custom Event and assign Custom Dimensions using the Macros you created.
   * Under "Track Type", select "Event".
@@ -77,6 +80,33 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you must d
   * Set the Custom Dimensions - Use the number from the Dimension you created in Google Analytics paired with the corresponding Macro created in step 4.
   * <img src="https://www.evernote.com/shard/s100/sh/e321d290-afef-4a41-b327-97a8b39fca8f/ebf52febf2f29032ee8d345490a3814e/deep/0/Screenshot%205/5/14,%201:29%20PM.jpg" alt="GTM tag setup" />
 
+###Google Tag Manager v2
+1. If you have not already done so, create a GTM account, a container for all your scripts and a Universal Tag with a user-defined Variable of your tracking ID (UA-XXXXX-X).
+2. In Google Tag Manager, create three Triggers:
+  * Custom Event Trigger called "All Events after gtm.dom". Set Firing Filters value to 'event equals gtm.dom'.
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/all-events.png" />
+  * Page View Trigger called "All Pages". Set Firing Filters value to 'Page URL matches RegEx .*'.
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/all-pages.png" />
+  * Custom Event Trigger called "Demandbase_Loaded". Set Firing Filters value to 'event equals Demandbase_Loaded'.
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/Demandbase_Loaded.png" />
+3. Create a new Custom HTML Tag and call it "Demandbase Tag", then copy/paste the Demandbase Tag code snippet into this new tag. Assign the following two Triggers from the previous step to the Firing Triggers of this tag. (Click the More button to see your user-defined Triggers.)
+  * All Events after gtm.dom
+  * All Pages
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/demandbase-tag.png" />
+4. Create user-defined Variables for each Demandbase attribute you wish to capture. 
+  * Each Demandbase attribute will have a corresponding Data Layer Variable.  Use the [Demandbase IP API](http://demandbaselabs.com/docs/wiki/index.php?title=Demandbase_API_Documentation#IP_Address_API) variable name (e.g. `company_name`, `revenue_range`, etc.) in the "Data Layer Variable Name" field.
+  * For all Variables EXCEPT audience the default value should be "Non-Company Visitor".
+  * <img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/Audience-Variable.png" />
+5. Now, [create a *new* Universal Analytics tag](https://support.google.com/tagmanager/answer/3281379?hl=en) and call it "Demandbase Set Custom Dimensions." This tag will send a Custom Event and assign Custom Dimensions using the user-defined Variables you created.
+  * Under "Track Type", select "Event".
+    * Use "Demandbase" / "API Resolution" / "IP Address API" as the category / action / label for your event.
+    * Set "Non-Interaction Hit" to `true`
+  * For Firing Triggers, use the "Demandbase_Loaded" Event created in step 2.
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/Demandbase-Set-Custom-Dims-Tag.png" />
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/Demandbase-Set-Custom-Dims-Tag-2.png" />
+  * Set the Custom Dimensions - Use the number from the Dimension you created in Google Analytics paired with the corresponding Variable created in step 4.c
+<img src="http://demandbaselabs.com/docs/github/images/GTM-New-UI/Demandbase-Set-Custom-Dims-Tag-3.png" />
+  
 ##GTM Resources
 
 * [Setting up Google Analytics Tags](https://support.google.com/tagmanager/answer/3281379?hl=en)
@@ -84,6 +114,7 @@ In order to deploy the Demandbase Connector using Google Tag Manager, you must d
 * [More on Macros](https://support.google.com/tagmanager/answer/2644341?hl=en)
 * [FAQ](https://www.google.com/tagmanager/faq.html)
 * [Product Forum](https://productforums.google.com/forum/#!forum/tag-manager)
+* [v2 - About Google Tag Manager](https://support.google.com/tagmanager/answer/6102821)
 
 #Migrating from Previous Versions
 Upgrading to v5.0+ from another version is quick and easy.
@@ -108,4 +139,3 @@ Upgrading to v5.0+ from another version is quick and easy.
 * Added [`dataLayer`](https://developers.google.com/tag-manager/android/reference/com/google/tagmanager/DataLayer) support for use with Google Tag Manager
 * Combined GA and UA connector automatically detects which solutions you're using, so you do not need to upgrade your connector when [switching from GA to UA](https://developers.google.com/analytics/devguides/collection/upgrade/).
 * Boolean attributes now return `false` where appropriate, rather than the default non-company value.
-
