@@ -70,10 +70,13 @@ class demandbase_client {
       $ip = $ip_address;
     }
 	
-	$options = array(
-		'key' 	=> $this->dbkey,
-		'query' => $ip
-	);
+	$data = 'key='.$this->dbkey.'&query='.$ip;
+
+  $options = array(
+    'method' => 'GET', // HTTP Request Type
+    'data' => $data, // Parameters
+    'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+  );
 	
     $result = drupal_http_request($this->url, $options); //JB 12/20/2013 - POST returns 'unauthorized' use GET instead (similar to JS method)
     $this->code = json_decode($result->code);
